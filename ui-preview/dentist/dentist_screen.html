@@ -1,0 +1,5112 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Cerillo Dental Clinic Dentist workspace" name="description"/>
+<title>
+   Dentist · Cerillo Dental Clinic
+  </title>
+<link href="../assets/images/cerillo-logo.png" rel="icon"/>
+<link href="../assets/css/app.css" rel="stylesheet"/>
+</head>
+<body class="workspace-body">
+<aside class="workspace-sidebar">
+<a class="workspace-brand" href="../index.html">
+<img alt="Cerillo Dental Clinic logo" src="../assets/images/cerillo-logo.png"/>
+<span>
+     Cerillo
+     <small>
+      Dental Clinic
+     </small>
+</span>
+</a>
+<div class="role-label">
+    Dentist Workspace
+   </div>
+<nav aria-label="Dentist navigation" class="side-nav">
+<a class="side-link" href="#dashboard">
+<span>
+      Dashboard
+     </span>
+</a>
+<a class="side-link" href="#calendar">
+<span>
+      Calendar
+     </span>
+</a>
+<a class="side-link" href="#appointments">
+<span>
+      Appointments
+     </span>
+</a>
+<a class="side-link" href="#patients">
+<span>
+      Patient Records
+     </span>
+</a>
+<a class="side-link" href="#settings">
+<span>
+      Settings
+     </span>
+</a>
+</nav>
+<div class="sidebar-profile">
+<div class="avatar">
+     D
+    </div>
+<div>
+<strong id="dentistAccountName">
+      Dr. Angela Cerillo
+     </strong>
+<small>
+      Dentist
+     </small>
+</div>
+<button aria-label="Sign out" class="sidebar-logout" onclick="document.getElementById('logoutConfirmModal').showModal()" type="button">
+     ↪
+    </button>
+</div>
+</aside>
+<main class="workspace-main">
+<header class="workspace-topbar">
+<div>
+<p class="eyebrow">
+      Cerillo Dental Clinic
+     </p>
+<h1>
+      Dentist Workspace
+     </h1>
+</div>
+<div aria-label="Current date and time" class="topbar-clock">
+<span data-live-date="">
+      October 5, 2026
+     </span>
+<strong data-live-time="">
+      --:-- --
+     </strong>
+</div>
+</header>
+<section class="workspace-section active-section" id="dashboard">
+<div class="section-heading">
+<div>
+<p class="eyebrow">
+       Clinical workspace
+      </p>
+<h2>
+       Dentist Dashboard
+      </h2>
+<p>
+       Today's clinical schedule uses only Completed, Checked In, In Progress, and Cancelled statuses.
+      </p>
+</div>
+</div>
+<div class="stats-grid">
+<article class="stat-card">
+<p>
+       Completed
+      </p>
+<strong>
+       4
+      </strong>
+<span>
+       Completed appointments today
+      </span>
+</article>
+<article class="stat-card">
+<p>
+       Checked In
+      </p>
+<strong>
+       2
+      </strong>
+<span>
+       Patients ready for care
+      </span>
+</article>
+<article class="stat-card">
+<p>
+       In Progress
+      </p>
+<strong>
+       1
+      </strong>
+<span>
+       Current clinical case
+      </span>
+</article>
+<article class="stat-card">
+<p>
+       Cancelled
+      </p>
+<strong>
+       1
+      </strong>
+<span>
+       Cancelled today
+      </span>
+</article>
+</div>
+<div class="panel table-panel">
+<div class="table-wrap">
+<div class="table-filter-dock">
+<input aria-label="Search this table" class="table-search table-search-inline" data-table-search="dentist-table-1" placeholder="Search records..." type="search"/>
+<select aria-label="Sort table" class="table-sort-control" data-table-sort="dentist-table-1">
+<option value="">
+         Sort: Default
+        </option>
+<option value="asc">
+         A–Z / Oldest first
+        </option>
+<option value="desc">
+         Z–A / Newest first
+        </option>
+</select>
+<details class="filter-popover" data-filter-for="dentist-table-1">
+<summary aria-label="Open table filters" class="filter-icon-trigger" title="Filter table">
+<svg aria-hidden="true" viewbox="0 0 24 24">
+<path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8">
+</path>
+</svg>
+</summary>
+<div class="filter-popover-panel">
+<div class="filter-popover-heading">
+<strong>
+           Filter &amp; refine
+          </strong>
+<small>
+           Narrow the records in this table.
+          </small>
+</div>
+<label>
+          Search rows
+          <input data-filter-query="" placeholder="Type patient, dentist, status..." type="search"/>
+</label>
+<label>
+          Quick status
+          <select data-filter-status="">
+<option value="">
+            All statuses
+           </option>
+<option>
+            Completed
+           </option>
+<option>
+            Checked In
+           </option>
+<option>
+            In Progress
+           </option>
+<option>
+            Cancelled
+           </option>
+</select>
+</label>
+<div class="filter-popover-actions">
+<button class="btn secondary sm" data-filter-reset="" type="button">
+           Reset
+          </button>
+<button class="btn sm" data-filter-apply="" type="button">
+           Apply
+          </button>
+</div>
+</div>
+</details>
+</div>
+<table id="dentist-table-1">
+<thead>
+<tr>
+<th>
+          Time
+         </th>
+<th>
+          Patient
+         </th>
+<th>
+          Procedure
+         </th>
+<th>
+          Status
+         </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+          8:30 AM
+         </td>
+<td>
+          Maria Santos
+         </td>
+<td>
+          Oral Prophylaxis
+         </td>
+<td>
+<span class="status success">
+           Completed
+          </span>
+</td>
+</tr>
+<tr>
+<td>
+          9:30 AM
+         </td>
+<td>
+          Joshua Lim
+         </td>
+<td>
+          Composite Restoration
+         </td>
+<td>
+<span class="status info">
+           Checked In
+          </span>
+</td>
+</tr>
+<tr>
+<td>
+          10:30 AM
+         </td>
+<td>
+          Andrea Cruz
+         </td>
+<td>
+          Root Canal Therapy
+         </td>
+<td>
+<span class="status warning">
+           In Progress
+          </span>
+</td>
+</tr>
+<tr>
+<td>
+          1:30 PM
+         </td>
+<td>
+          Paolo Garcia
+         </td>
+<td>
+          Tooth Extraction
+         </td>
+<td>
+<span class="status danger">
+           Cancelled
+          </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="workspace-section" id="calendar">
+<div class="section-heading">
+<div>
+<p class="eyebrow">
+       Clinical availability
+      </p>
+<h2>
+       Calendar
+      </h2>
+<p>
+       Review appointments and mark specific dates, time ranges, or full weeks as unavailable.
+      </p>
+</div>
+<button class="btn" id="startAvailabilityPicker" type="button">
+      + Mark Unavailable
+     </button>
+</div>
+<div class="availability-pick-hint" id="availabilityPickHint">
+     Select a day header for an all-day block, or choose an empty time box for a specific one-hour block. The selected date and time will be filled automatically.
+    </div>
+<div class="panel calendar-shell">
+<div class="calendar-toolbar">
+<button class="btn btn-secondary" type="button">
+       ‹
+      </button>
+<strong>
+       October 2026
+      </strong>
+<button class="btn btn-secondary" type="button">
+       ›
+      </button>
+<div class="segmented">
+<button class="active" data-dentist-calendar-view="week" type="button">
+        Week
+       </button>
+<button data-dentist-calendar-view="month" type="button">
+        Month
+       </button>
+</div>
+</div>
+<div class="weekly-calendar-scroll" id="dentistCalendarWeek">
+<div class="weekly-calendar wide-calendar" id="dentistInteractiveWeek">
+<div class="calendar-time">
+        Time
+       </div>
+<div class="calendar-day">
+<strong>
+         Mon 5
+        </strong>
+</div>
+<div class="calendar-day">
+<strong>
+         Tue 6
+        </strong>
+</div>
+<div class="calendar-day">
+<strong>
+         Wed 7
+        </strong>
+</div>
+<div class="calendar-day">
+<strong>
+         Thu 8
+        </strong>
+</div>
+<div class="calendar-day">
+<strong>
+         Fri 9
+        </strong>
+</div>
+<div class="calendar-time">
+        8 AM
+       </div>
+<div class="calendar-slot event completed">
+        Maria Santos
+        <br/>
+<small>
+         Completed
+        </small>
+</div>
+<div class="calendar-slot">
+</div>
+<div class="calendar-slot event checked">
+        Joshua Lim
+        <br/>
+<small>
+         Checked In
+        </small>
+</div>
+<div class="calendar-slot">
+</div>
+<div class="calendar-slot">
+</div>
+<div class="calendar-time">
+        9 AM
+       </div>
+<div class="calendar-slot">
+</div>
+<div class="calendar-slot event progress">
+        Andrea Cruz
+        <br/>
+<small>
+         In Progress
+        </small>
+</div>
+<div class="calendar-slot">
+</div>
+<div class="calendar-slot blocked">
+        Unavailable
+        <br/>
+<small>
+         Conference
+        </small>
+</div>
+<div class="calendar-slot">
+</div>
+<div class="calendar-time">
+        10 AM
+       </div>
+<div class="calendar-slot event cancelled">
+        Paolo Garcia
+        <br/>
+<small>
+         Cancelled
+        </small>
+</div>
+<div class="calendar-slot">
+</div>
+<div class="calendar-slot">
+</div>
+<div class="calendar-slot">
+</div>
+<div class="calendar-slot event completed">
+        Carlo Mendoza
+        <br/>
+<small>
+         Completed
+        </small>
+</div>
+</div>
+</div>
+<div class="dentist-month-calendar" hidden="" id="dentistCalendarMonth"></div>
+</div>
+<div class="panel availability-schedule-panel">
+<div class="panel-header">
+<div>
+<h3>Unavailable Schedules</h3>
+<p>Dates and times when this dentist is not available for appointments.</p>
+</div>
+</div>
+<div class="availability-records" id="dentistAvailabilityTable">
+<article class="availability-record">
+<div><small>Dentist</small><strong>Dr. Angela Cerillo</strong></div>
+<div><small>Date</small><strong>08 Oct 2026</strong></div>
+<div><small>Time</small><strong>1:00 PM–5:00 PM</strong></div>
+<div><small>Reason</small><strong>Personal leave</strong></div>
+</article>
+<article class="availability-record">
+<div><small>Dentist</small><strong>Dr. Angela Cerillo</strong></div>
+<div><small>Date</small><strong>12–16 Oct 2026</strong></div>
+<div><small>Time</small><strong><span class="badge info">Full Week</span></strong></div>
+<div><small>Reason</small><strong>Continuing education conference</strong></div>
+</article>
+</div>
+</div>
+</section>
+<section class="workspace-section" id="appointments">
+<div class="section-heading">
+<div>
+<p class="eyebrow">
+       My schedule
+      </p>
+<h2>
+       Appointments
+      </h2>
+<p>
+       Appointments assigned to this dentist. Availability is managed from Calendar.
+      </p>
+</div>
+</div>
+<div class="weekly-calendar-scroll">
+<div class="mini-week-strip">
+<article>
+<strong>
+        Mon 5
+       </strong>
+<span>
+        4 appointments
+       </span>
+</article>
+<article>
+<strong>
+        Tue 6
+       </strong>
+<span>
+        5 appointments
+       </span>
+</article>
+<article>
+<strong>
+        Wed 7
+       </strong>
+<span>
+        3 appointments
+       </span>
+</article>
+<article>
+<strong>
+        Thu 8
+       </strong>
+<span>
+        Unavailable PM
+       </span>
+</article>
+<article>
+<strong>
+        Fri 9
+       </strong>
+<span>
+        6 appointments
+       </span>
+</article>
+<article>
+<strong>
+        Sat 10
+       </strong>
+<span>
+        2 appointments
+       </span>
+</article>
+</div>
+</div>
+<div class="panel table-panel">
+<div class="table-wrap">
+<div class="table-filter-dock">
+<input aria-label="Search this table" class="table-search table-search-inline" data-table-search="dentist-table-2" placeholder="Search records..." type="search"/>
+<select aria-label="Sort table" class="table-sort-control" data-table-sort="dentist-table-2">
+<option value="">
+         Sort: Default
+        </option>
+<option value="asc">
+         A–Z / Oldest first
+        </option>
+<option value="desc">
+         Z–A / Newest first
+        </option>
+</select>
+<details class="filter-popover" data-filter-for="dentist-table-2">
+<summary aria-label="Open table filters" class="filter-icon-trigger" title="Filter table">
+<svg aria-hidden="true" viewbox="0 0 24 24">
+<path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8">
+</path>
+</svg>
+</summary>
+<div class="filter-popover-panel">
+<div class="filter-popover-heading">
+<strong>
+           Filter &amp; refine
+          </strong>
+<small>
+           Narrow the records in this table.
+          </small>
+</div>
+<label>
+          Search rows
+          <input data-filter-query="" placeholder="Type patient, dentist, status..." type="search"/>
+</label>
+<label>
+          Quick status
+          <select data-filter-status="">
+<option value="">
+            All statuses
+           </option>
+<option>
+            Completed
+           </option>
+<option>
+            Checked In
+           </option>
+<option>
+            In Progress
+           </option>
+<option>
+            Cancelled
+           </option>
+</select>
+</label>
+<div class="filter-popover-actions">
+<button class="btn secondary sm" data-filter-reset="" type="button">
+           Reset
+          </button>
+<button class="btn sm" data-filter-apply="" type="button">
+           Apply
+          </button>
+</div>
+</div>
+</details>
+</div>
+<table id="dentist-table-2">
+<thead>
+<tr>
+<th>
+          Name
+         </th>
+<th>
+          Procedure
+         </th>
+<th>
+          Date
+         </th>
+<th>
+          Time
+         </th>
+<th>
+          Status
+         </th>
+<th>
+          Action
+         </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+          Maria Santos
+         </td>
+<td>
+          Oral Prophylaxis
+         </td>
+<td>
+          05 Oct 2026
+         </td>
+<td>
+          8:30 AM
+         </td>
+<td>
+<span class="status success">
+           Completed
+          </span>
+</td>
+<td>
+<button class="table-action" onclick="document.getElementById('dentistPatientModal').showModal()" type="button">
+           View
+          </button>
+</td>
+</tr>
+<tr>
+<td>
+          Joshua Lim
+         </td>
+<td>
+          Composite Restoration
+         </td>
+<td>
+          05 Oct 2026
+         </td>
+<td>
+          9:30 AM
+         </td>
+<td>
+<span class="status info">
+           Checked In
+          </span>
+</td>
+<td>
+<button class="table-action" onclick="document.getElementById('dentistPatientModal').showModal()" type="button">
+           View
+          </button>
+</td>
+</tr>
+<tr>
+<td>
+          Andrea Cruz
+         </td>
+<td>
+          Root Canal Therapy
+         </td>
+<td>
+          05 Oct 2026
+         </td>
+<td>
+          10:30 AM
+         </td>
+<td>
+<span class="status warning">
+           In Progress
+          </span>
+</td>
+<td>
+<button class="table-action" onclick="document.getElementById('dentistPatientModal').showModal()" type="button">
+           View
+          </button>
+</td>
+</tr>
+<tr>
+<td>
+          Paolo Garcia
+         </td>
+<td>
+          Tooth Extraction
+         </td>
+<td>
+          05 Oct 2026
+         </td>
+<td>
+          1:30 PM
+         </td>
+<td>
+<span class="status danger">
+           Cancelled
+          </span>
+</td>
+<td>
+<button class="table-action" onclick="document.getElementById('dentistPatientModal').showModal()" type="button">
+           View
+          </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="workspace-section" id="patients">
+<div class="section-heading">
+<div>
+<p class="eyebrow">
+       Clinical files
+      </p>
+<h2>
+       Patient Records
+      </h2>
+<p>
+       Same patient-file structure as Admin, with clinical updates enabled for patients appointed to you today.
+      </p>
+</div>
+<button class="btn secondary" data-export-current-patient-pdf="" type="button">Export patient record PDF</button></div>
+<div class="stats-grid">
+<article class="stat-card">
+<p>
+       Assigned Today
+      </p>
+<strong>
+       8
+      </strong>
+<span>
+       Current schedule
+      </span>
+</article>
+<article class="stat-card">
+<p>
+       Checked In
+      </p>
+<strong>
+       2
+      </strong>
+<span>
+       Ready for care
+      </span>
+</article>
+<article class="stat-card">
+<p>
+       Clinical Updates
+      </p>
+<strong>
+       5
+      </strong>
+<span>
+       Documented today
+      </span>
+</article>
+<article class="stat-card">
+<p>
+       Follow-up Needed
+      </p>
+<strong>
+       3
+      </strong>
+<span>
+       After today's visits
+      </span>
+</article>
+</div>
+<div class="panel table-panel">
+<div class="table-wrap">
+<div class="table-filter-dock"><select aria-label="Patient segment" class="patient-segment-control" data-patient-segment-for="dentist-table-3"><option value="">All segments</option><option value="Orthodontics">Orthodontics</option><option value="Preventive">Preventive</option><option value="Restorative">Restorative</option><option value="Endodontics">Endodontics</option><option value="Oral Surgery">Oral Surgery</option><option value="General">General</option></select><select aria-label="Procedure filter" class="patient-procedure-control" data-patient-procedure-for="dentist-table-3"><option value="">All procedures</option><option value="Oral Prophylaxis">Oral Prophylaxis</option><option value="Composite Restoration">Composite Restoration</option><option value="Root Canal Therapy">Root Canal Therapy</option><option value="Orthodontic Braces">Orthodontic Braces</option><option value="Dental Checkup">Dental Checkup</option></select>
+<input aria-label="Search this table" class="table-search table-search-inline" data-table-search="dentist-table-3" placeholder="Search records..." type="search"/>
+<select aria-label="Sort table" class="table-sort-control" data-table-sort="dentist-table-3">
+<option value="">
+         Sort: Default
+        </option>
+<option value="asc">
+         A–Z / Oldest first
+        </option>
+<option value="desc">
+         Z–A / Newest first
+        </option>
+</select>
+<details class="filter-popover" data-filter-for="dentist-table-3">
+<summary aria-label="Open table filters" class="filter-icon-trigger" title="Filter table">
+<svg aria-hidden="true" viewbox="0 0 24 24">
+<path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8">
+</path>
+</svg>
+</summary>
+<div class="filter-popover-panel">
+<div class="filter-popover-heading">
+<strong>
+           Filter &amp; refine
+          </strong>
+<small>
+           Narrow the records in this table.
+          </small>
+</div>
+<label>
+          Search rows
+          <input data-filter-query="" placeholder="Type patient, dentist, status..." type="search"/>
+</label>
+<div class="filter-popover-actions">
+<button class="btn secondary sm" data-filter-reset="" type="button">
+           Reset
+          </button>
+<button class="btn sm" data-filter-apply="" type="button">
+           Apply
+          </button>
+</div>
+</div>
+</details>
+</div>
+<table id="dentist-table-3">
+<thead>
+<tr>
+<th>
+          Patient
+         </th>
+<th>
+          Age
+         </th>
+<th>
+          Phone
+         </th>
+<th>
+          Allergies
+         </th>
+<th>
+          Appointment
+         </th>
+<th>
+          Status
+         </th>
+<th>
+          Action
+         </th>
+</tr>
+</thead>
+<tbody>
+<tr data-procedure="Composite Restoration" data-segment="Restorative">
+<td>
+          Maria Santos
+         </td>
+<td>
+          34
+         </td>
+<td>
+          +63 917 842 1180
+         </td>
+<td>
+          Penicillin
+         </td>
+<td>
+          8:30 AM · Oral Prophylaxis
+         </td>
+<td>
+          Completed
+         </td>
+<td>
+<button class="table-action" onclick="document.getElementById('dentistPatientModal').showModal()" type="button">
+           View / Update
+          </button>
+</td>
+</tr>
+<tr data-procedure="Composite Restoration" data-segment="Restorative">
+<td>
+          Joshua Lim
+         </td>
+<td>
+          29
+         </td>
+<td>
+          +63 918 337 1401
+         </td>
+<td>
+          None
+         </td>
+<td>
+          9:30 AM · Composite Restoration
+         </td>
+<td>
+          Checked In
+         </td>
+<td>
+<button class="table-action" onclick="document.getElementById('dentistPatientModal').showModal()" type="button">
+           View / Update
+          </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="workspace-section" id="settings">
+<div class="section-heading">
+<div>
+<p class="eyebrow">
+       Accessibility
+      </p>
+<h2>
+       Settings
+      </h2>
+<p>
+       Personalize readability, contrast, motion and keyboard visibility for this workspace.
+      </p>
+</div>
+</div>
+<article class="panel accessibility-settings-panel">
+<div class="panel-heading">
+<div>
+<h3>
+        Accessibility preferences
+       </h3>
+<p>
+        These preferences are saved on this browser and apply across Cerillo workspaces.
+       </p>
+</div>
+</div>
+<div class="access-grid access-grid-vertical">
+<label class="access-option">
+<span>
+<strong>
+         Dark mode
+        </strong>
+<small>
+         Use a darker interface theme with reduced screen brightness.
+        </small>
+</span>
+<input id="darkModeToggle" type="checkbox"/>
+</label>
+<label class="access-option">
+<span>
+<strong>
+         Large text
+        </strong>
+<small>
+         Increase interface text size while preserving responsive layout.
+        </small>
+</span>
+<input id="largeText" type="checkbox"/>
+</label>
+<label class="access-option">
+<span>
+<strong>
+         High contrast
+        </strong>
+<small>
+         Increase foreground and background contrast.
+        </small>
+</span>
+<input id="highContrast" type="checkbox"/>
+</label>
+<label class="access-option">
+<span>
+<strong>
+         Reduced motion
+        </strong>
+<small>
+         Limit non-essential animation and movement.
+        </small>
+</span>
+<input id="reducedMotion" type="checkbox"/>
+</label>
+<label class="access-option">
+<span>
+<strong>
+         Enhanced focus
+        </strong>
+<small>
+         Show stronger keyboard focus indicators.
+        </small>
+</span>
+<input checked="" id="enhancedFocus" type="checkbox"/>
+</label>
+</div>
+</article>
+</section>
+</main>
+<dialog aria-label="Logout confirmation" class="modal modal-sm logout-modal" id="logoutConfirmModal">
+<div class="modal-shell">
+<div class="modal-head">
+<div>
+<p class="eyebrow">
+       Account session
+      </p>
+<h3>
+       Sign out?
+      </h3>
+<p>
+       You will need to sign in again to access your workspace.
+      </p>
+</div>
+<button aria-label="Close logout confirmation" class="icon-btn" onclick="this.closest('dialog').close()" type="button">
+      ×
+     </button>
+</div>
+<div class="logout-dialog-body">
+<div class="logout-icon">
+      ↪
+     </div>
+<div>
+<strong>
+       Are you sure you want to sign out?
+      </strong>
+<p>
+       Any unsaved form changes on this page will be discarded.
+      </p>
+</div>
+</div>
+<div class="dialog-footer">
+<button class="btn secondary" onclick="this.closest('dialog').close()" type="button">
+      Stay signed in
+     </button>
+<button class="btn danger" onclick="window.location.href='../auth/login.html'" type="button">
+      Sign out
+     </button>
+</div>
+</div>
+</dialog>
+<dialog aria-label="Mark Dentist Unavailable" class="modal modal-lg" id="availabilityModal">
+<div class="modal-shell">
+<div class="modal-head">
+<div>
+<p class="eyebrow">Dentist schedule</p>
+<h3>Confirm unavailable schedule</h3>
+<p>The calendar selection is filled automatically. Add the reason and an optional note before confirming.</p>
+</div>
+<button aria-label="Close" class="icon-btn" onclick="this.closest('dialog').close()" type="button">×</button>
+</div>
+<form class="modal-body" id="availabilityForm">
+<div class="availability-selected-slot">
+<div><small>Dentist</small><strong id="availabilityDentistDisplay">Dr. Angela Cerillo</strong></div>
+<div><small>Selected schedule</small><strong id="availabilitySelectedDisplay">Choose a day or time box from the calendar</strong></div>
+</div>
+<input id="availabilityType" type="hidden" value="date"/>
+<input id="availabilityDentist" type="hidden" value="Dr. Angela Cerillo"/>
+<input id="availabilityDate" type="hidden"/>
+<input id="availabilityEndDate" type="hidden"/>
+<input id="availabilityStartTime" type="hidden"/>
+<input id="availabilityEndTime" type="hidden"/>
+<div class="form-section">
+<div class="form-grid">
+<label class="span-2">
+        Reason for unavailability
+        <select id="availabilityReason" required="">
+<option value="">Select reason</option>
+<option>Personal leave</option>
+<option>Training / continuing education</option>
+<option>Conference</option>
+<option>Clinical meeting</option>
+<option>Emergency leave</option>
+<option>Other</option>
+</select>
+</label>
+<label class="span-2">
+        Notes
+        <textarea id="availabilityNotes" placeholder="Optional note for Front Desk and Admin" rows="4"></textarea>
+</label>
+</div>
+</div>
+<div class="form-actions">
+<button class="btn secondary" onclick="this.closest('dialog').close()" type="button">Cancel</button>
+<button class="btn" type="submit">Confirm Unavailability</button>
+</div>
+</form>
+</div>
+</dialog>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+      const navigationLinks = document.querySelectorAll(".side-nav .side-link");
+      const workspaceSections = document.querySelectorAll(".workspace-main > .workspace-section");
+
+      function showSection(sectionId, updateHash = true) {
+        const targetSection = document.getElementById(sectionId);
+
+        if (!targetSection || !targetSection.classList.contains("workspace-section")) {
+          return;
+        }
+
+        workspaceSections.forEach(function (section) {
+          section.classList.remove("active-section");
+        });
+
+        navigationLinks.forEach(function (link) {
+          link.classList.remove("active");
+          link.removeAttribute("aria-current");
+        });
+
+        targetSection.classList.add("active-section");
+
+        const activeLink = document.querySelector(
+          '.side-nav .side-link[href="#' + sectionId + '"]'
+        );
+
+        if (activeLink) {
+          activeLink.classList.add("active");
+          activeLink.setAttribute("aria-current", "page");
+        }
+
+        if (updateHash) {
+          history.replaceState(null, "", "#" + sectionId);
+        }
+
+        window.scrollTo({
+          top: 0,
+          behavior: "auto"
+        });
+      }
+
+      navigationLinks.forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          const sectionId = link.getAttribute("href").substring(1);
+          const targetSection = document.getElementById(sectionId);
+
+          if (targetSection && targetSection.classList.contains("workspace-section")) {
+            event.preventDefault();
+            showSection(sectionId);
+          }
+        });
+      });
+
+      const requestedSection = window.location.hash.substring(1);
+      const requestedElement = document.getElementById(requestedSection);
+
+      if (requestedElement && requestedElement.classList.contains("workspace-section")) {
+        showSection(requestedSection, false);
+      } else {
+        const defaultSection = document.querySelector(
+          ".workspace-main > .workspace-section.active-section"
+        ) || workspaceSections[0];
+
+        if (defaultSection) {
+          showSection(defaultSection.id, false);
+        }
+      }
+    });
+  </script>
+<dialog aria-label="Patient Record — Maria Santos" class="modal modal-xl clinical-record-modal" data-patient-id="PT-2026-0018" data-patient-name="Maria Santos" id="dentistPatientModal">
+<div class="modal-shell patient-file-shell">
+<header class="modal-header patient-file-header">
+<div class="patient-identity-row">
+<div class="avatar avatar-lg">
+       MS
+      </div>
+<div>
+<p class="eyebrow">
+        Patient Record
+       </p>
+<h3>
+        Maria Santos
+       </h3>
+<div class="patient-inline-data">
+<span>
+         ID: PT-2026-0018
+        </span>
+</div>
+</div>
+</div>
+<div class="modal-header-actions"><button class="btn secondary compact" data-export-patient-pdf="" type="button">Export PDF</button>
+<button class="btn" data-clinical-edit="" type="button">
+       Update Today's Record
+      </button>
+</div>
+</header>
+<div class="record-tabs" data-record-tabs="">
+<button class="record-tab active" data-record-tab="summary" type="button">
+      Overview
+     </button>
+<button class="record-tab" data-record-tab="medical" type="button">
+      Medical Record
+     </button>
+<button class="record-tab" data-record-tab="chart" type="button">
+      Dental Chart
+     </button>
+<button class="record-tab" data-record-tab="pxray" type="button">
+      X-rays
+     </button>
+<button class="record-tab" data-record-tab="visits" type="button">
+      Visit History
+     </button>
+<button class="record-tab" data-record-tab="ledger" type="button">
+      Billing Ledger
+     </button>
+</div>
+<div class="modal-body patient-file-body">
+<section class="record-tab-panel active" data-record-panel="summary">
+<div class="patient-overview-grid">
+<article class="info-card patient-profile-card">
+<div class="record-card-heading">
+<div>
+<span class="record-card-icon">
+           01
+          </span>
+<div>
+<h4>
+            Personal &amp; Contact Details
+           </h4>
+<p>
+            Core identity and communication information.
+           </p>
+</div>
+</div>
+<span class="record-meta">
+          Verified 05 Oct 2026
+         </span>
+</div>
+<dl class="patient-detail-grid">
+<div>
+<dt>
+           Date of birth
+          </dt>
+<dd>
+           14 March 1992
+          </dd>
+</div>
+<div>
+<dt>
+           Age
+          </dt>
+<dd>
+           34 years
+          </dd>
+</div>
+<div>
+<dt>
+           Sex
+          </dt>
+<dd>
+           Female
+          </dd>
+</div>
+<div>
+<dt>
+           Mobile
+          </dt>
+<dd>
+           +63 917 842 1180
+          </dd>
+</div>
+<div>
+<dt>
+           Email
+          </dt>
+<dd>
+           maria.santos@gmail.com
+          </dd>
+</div>
+<div class="wide">
+<dt>
+           Address
+          </dt>
+<dd>
+           J.P. Laurel Ave., Davao City
+          </dd>
+</div>
+<div>
+<dt>
+           Insurance / HMO
+          </dt>
+<dd>
+           Maxicare Dental
+          </dd>
+</div>
+<div>
+<dt>
+           Preferred contact
+          </dt>
+<dd>
+           SMS
+          </dd>
+</div>
+</dl>
+</article>
+<article class="info-card patient-care-card">
+<div class="record-card-heading">
+<div>
+<span class="record-card-icon blue">
+           02
+          </span>
+<div>
+<h4>
+            Dental Care Snapshot
+           </h4>
+<p>
+            Useful context before opening the clinical tabs.
+           </p>
+</div>
+</div>
+</div>
+<dl class="patient-detail-grid compact">
+<div class="wide">
+<dt>
+           Chief concern
+          </dt>
+<dd>
+           Sensitivity on lower-right posterior teeth
+          </dd>
+</div>
+<div>
+<dt>
+           Preferred dentist
+          </dt>
+<dd>
+           Dr. Ana Cerillo
+          </dd>
+</div>
+<div>
+<dt>
+           Last visit
+          </dt>
+<dd>
+           03 Oct 2026
+          </dd>
+</div>
+<div>
+<dt>
+           Next appointment
+          </dt>
+<dd>
+           18 Oct 2026 · 10:00 AM
+          </dd>
+</div>
+<div>
+<dt>
+           Last radiograph
+          </dt>
+<dd>
+           04 Oct 2026
+          </dd>
+</div>
+<div>
+<dt>
+           Recall interval
+          </dt>
+<dd>
+           6 months
+          </dd>
+</div>
+<div>
+<dt>
+           Dental anxiety
+          </dt>
+<dd>
+           Low
+          </dd>
+</div>
+</dl>
+</article>
+</div>
+<div class="clinical-alert-strip">
+<div>
+<span class="alert-indicator red">
+</span>
+<span>
+<small>
+          Drug allergy
+         </small>
+<strong>
+          Penicillin
+         </strong>
+</span>
+</div>
+<div>
+<span class="alert-indicator amber">
+</span>
+<span>
+<small>
+          Current medication
+         </small>
+<strong>
+          Losartan 50 mg daily
+         </strong>
+</span>
+</div>
+<div>
+<span class="alert-indicator blue">
+</span>
+<span>
+<small>
+          Medical history
+         </small>
+<strong>
+          Controlled hypertension
+         </strong>
+</span>
+</div>
+<div>
+<span class="alert-indicator green">
+</span>
+<span>
+<small>
+          Health history review
+         </small>
+<strong>
+          05 Oct 2026
+         </strong>
+</span>
+</div>
+</div>
+</section>
+<section class="record-tab-panel" data-record-panel="visits">
+<div class="panel-header">
+<div>
+<h4>
+         Completed Visit History
+        </h4>
+<p>
+         Clinical encounters are retained as an audit trail.
+        </p>
+</div>
+</div>
+<div class="visit-timeline">
+<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
+<span class="timeline-dot complete">
+</span>
+<strong>
+         Dr. Ana Cerillo
+        </strong>
+<span>
+         03 Oct 2026 · 10:15 AM
+        </span>
+<span class="status success">
+         Completed
+        </span>
+<span aria-hidden="true" class="visit-chevron">
+         ›
+        </span>
+</button>
+<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
+<span class="timeline-dot complete">
+</span>
+<strong>
+         Dr. Paolo Reyes
+        </strong>
+<span>
+         12 Aug 2026 · 2:30 PM
+        </span>
+<span class="status success">
+         Completed
+        </span>
+<span aria-hidden="true" class="visit-chevron">
+         ›
+        </span>
+</button>
+<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
+<span class="timeline-dot complete">
+</span>
+<strong>
+         Dr. Ana Cerillo
+        </strong>
+<span>
+         10 Feb 2026 · 9:00 AM
+        </span>
+<span class="status success">
+         Completed
+        </span>
+<span aria-hidden="true" class="visit-chevron">
+         ›
+        </span>
+</button>
+</div>
+</section>
+<section class="record-tab-panel" data-record-panel="medical">
+<div class="medical-record-intro">
+<div>
+<p class="eyebrow">
+         Medical safety profile
+        </p>
+<h4>
+         Health History &amp; Treatment Considerations
+        </h4>
+<p>
+         Review medical conditions, medications, allergies and risk factors before treatment. Health history last reviewed 05 Oct 2026.
+        </p>
+</div>
+<div class="medical-risk-badges">
+<span>
+         ASA II
+        </span>
+<span>
+         BP controlled
+        </span>
+</div>
+</div>
+<div class="medical-record-grid">
+<article class="info-card medical-record-card">
+<div class="medical-card-title">
+<span>
+          01
+         </span>
+<div>
+<h4>
+           Medical Conditions
+          </h4>
+<p>
+           Current and relevant past history.
+          </p>
+</div>
+</div>
+<dl class="detail-list">
+<div>
+<dt>
+           Hypertension
+          </dt>
+<dd>
+           Yes · controlled
+          </dd>
+</div>
+<div>
+<dt>
+           Diabetes
+          </dt>
+<dd>
+           No
+          </dd>
+</div>
+<div>
+<dt>
+           Cardiovascular disease
+          </dt>
+<dd>
+           No known condition
+          </dd>
+</div>
+<div>
+<dt>
+           Bleeding disorder
+          </dt>
+<dd>
+           No
+          </dd>
+</div>
+<div>
+<dt>
+           Respiratory condition
+          </dt>
+<dd>
+           No
+          </dd>
+</div>
+<div>
+<dt>
+           Pregnancy
+          </dt>
+<dd>
+           No
+          </dd>
+</div>
+<div>
+<dt>
+           Smoking / tobacco
+          </dt>
+<dd>
+           Never
+          </dd>
+</div>
+</dl>
+</article>
+<article class="info-card medical-record-card">
+<div class="medical-card-title">
+<span>
+          02
+         </span>
+<div>
+<h4>
+           Allergies &amp; Medications
+          </h4>
+<p>
+           Medication and sensitivity review.
+          </p>
+</div>
+</div>
+<dl class="detail-list">
+<div>
+<dt>
+           Drug allergy
+          </dt>
+<dd>
+           Penicillin · rash
+          </dd>
+</div>
+<div>
+<dt>
+           Food / latex allergy
+          </dt>
+<dd>
+           None reported
+          </dd>
+</div>
+<div>
+<dt>
+           Current medication
+          </dt>
+<dd>
+           Losartan 50 mg daily
+          </dd>
+</div>
+<div>
+<dt>
+           Supplements
+          </dt>
+<dd>
+           Multivitamin
+          </dd>
+</div>
+<div>
+<dt>
+           Anticoagulants
+          </dt>
+<dd>
+           None
+          </dd>
+</div>
+<div>
+<dt>
+           Previous surgery
+          </dt>
+<dd>
+           Appendectomy · 2017
+          </dd>
+</div>
+</dl>
+</article>
+<article class="info-card medical-record-card">
+<div class="medical-card-title">
+<span>
+          03
+         </span>
+<div>
+<h4>
+           Vitals &amp; Clinical Risk
+          </h4>
+<p>
+           Latest measurements relevant to dental care.
+          </p>
+</div>
+</div>
+<dl class="detail-list">
+<div>
+<dt>
+           Blood pressure
+          </dt>
+<dd>
+           128 / 82 mmHg
+          </dd>
+</div>
+<div>
+<dt>
+           Pulse
+          </dt>
+<dd>
+           72 bpm
+          </dd>
+</div>
+<div>
+<dt>
+           ASA classification
+          </dt>
+<dd>
+           ASA II
+          </dd>
+</div>
+<div>
+<dt>
+           Antibiotic prophylaxis
+          </dt>
+<dd>
+           Not indicated
+          </dd>
+</div>
+<div>
+<dt>
+           Local anesthetic alert
+          </dt>
+<dd>
+           None
+          </dd>
+</div>
+<div>
+<dt>
+           Primary physician
+          </dt>
+<dd>
+           Dr. M. Villanueva
+          </dd>
+</div>
+</dl>
+</article>
+<article class="info-card medical-record-card">
+<div class="medical-card-title">
+<span>
+          04
+         </span>
+<div>
+<h4>
+           Dental &amp; Health History
+          </h4>
+<p>
+           Context that may influence treatment planning.
+          </p>
+</div>
+</div>
+<dl class="detail-list">
+<div>
+<dt>
+           Last dental examination
+          </dt>
+<dd>
+           03 Oct 2026
+          </dd>
+</div>
+<div>
+<dt>
+           Last radiographs
+          </dt>
+<dd>
+           04 Oct 2026
+          </dd>
+</div>
+<div>
+<dt>
+           Prior recommended treatment
+          </dt>
+<dd>
+           Composite restoration
+          </dd>
+</div>
+<div>
+<dt>
+           Hospitalization
+          </dt>
+<dd>
+           None in past 5 years
+          </dd>
+</div>
+<div>
+<dt>
+           Dental anxiety
+          </dt>
+<dd>
+           Low
+          </dd>
+</div>
+<div>
+<dt>
+           History verified by
+          </dt>
+<dd>
+           Dr. Ana Cerillo
+          </dd>
+</div>
+</dl>
+</article>
+</div>
+<article class="medical-clinical-note">
+<div>
+<span class="alert-indicator amber">
+</span>
+<div>
+<strong>
+          Treatment consideration
+         </strong>
+<p>
+          Confirm blood pressure before procedures requiring local anesthetic with vasoconstrictor. Avoid penicillin-class antibiotics.
+         </p>
+</div>
+</div>
+<small>
+        Clinical note · updated 05 Oct 2026
+       </small>
+</article>
+</section>
+<section class="record-tab-panel premium-dental-chart" data-record-panel="chart">
+<div class="chart-toolbar premium-chart-toolbar">
+<div class="premium-chart-title">
+<span class="premium-chart-kicker">Clinical odontogram</span>
+<h4>
+         Dental Chart
+        </h4>
+<p>
+         Select one or more teeth to record findings, diagnoses and treatment.
+        </p>
+</div>
+<div class="premium-chart-actions">
+<button class="btn secondary compact" data-chart-clear="" type="button">Clear Selection</button>
+<button class="btn secondary compact" data-chart-print="" type="button">Print Chart</button>
+<button class="btn compact" data-chart-save="" type="button">Save Changes</button>
+</div>
+<div class="segmented dentition-toggle">
+<button class="active" data-dentition="permanent" type="button">
+         Permanent
+        </button>
+<button data-dentition="primary" type="button">
+         Primary
+        </button>
+<button data-dentition="mixed" type="button">
+         Mixed
+        </button>
+</div>
+</div>
+<div class="tooth-legend">
+<span>
+<i class="legend sound">
+</i>
+        Sound
+       </span>
+<span>
+<i class="legend decay">
+</i>
+        Tooth decay
+       </span>
+<span>
+<i class="legend finding">
+</i>
+        Other finding
+       </span>
+<span>
+<i class="legend planned">
+</i>
+        Treatment planned
+       </span>
+<span>
+<i class="legend completed">
+</i>
+        Completed/restored
+       </span>
+<span>
+<i class="legend missing">
+</i>
+        Missing/extracted
+       </span>
+<span>
+<i class="legend impacted">
+</i>
+        Impacted
+       </span>
+</div>
+<div class="odontogram-workspace">
+<div class="odontogram-panel">
+<div class="tooth-category-strip tooth-category-strip-upper" data-permanent-chart-decor="">
+<span class="group-molar-left">Molar</span>
+<span class="group-premolar-left">Premolar</span>
+<span class="group-canine-left">Canine</span>
+<span class="group-incisors">Incisors</span>
+<span class="group-canine-right">Canine</span>
+<span class="group-premolar-right">Premolar</span>
+<span class="group-molar-right">Molar</span>
+</div>
+<div class="tooth-grid" data-dentition-grid="permanent">
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="1" data-tooth-name="Maxillary Right Third Molar" style="--tooth-x:7.00%;--tooth-y:39.00%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 1 · Maxillary Right Third Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            1
+           </span>
+</span>
+<small>
+           Right Third Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="2" data-tooth-name="Maxillary Right Second Molar" style="--tooth-x:12.73%;--tooth-y:33.74%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 2 · Maxillary Right Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            2
+           </span>
+</span>
+<small>
+           Right Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-decay" data-tooth="3" data-tooth-name="Maxillary Right First Molar" style="--tooth-x:18.47%;--tooth-y:28.99%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 3 · Maxillary Right First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            3
+           </span>
+</span>
+<small>
+           Right First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="4" data-tooth-name="Maxillary Right Second Premolar" style="--tooth-x:24.20%;--tooth-y:24.76%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 4 · Maxillary Right Second Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            4
+           </span>
+</span>
+<small>
+           Right Second Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="5" data-tooth-name="Maxillary Right First Premolar" style="--tooth-x:29.93%;--tooth-y:21.11%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 5 · Maxillary Right First Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            5
+           </span>
+</span>
+<small>
+           Right First Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="6" data-tooth-name="Maxillary Right Canine" style="--tooth-x:35.67%;--tooth-y:18.08%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 6 · Maxillary Right Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            6
+           </span>
+</span>
+<small>
+           Right Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="7" data-tooth-name="Maxillary Right Lateral Incisor" style="--tooth-x:41.40%;--tooth-y:15.76%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 7 · Maxillary Right Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            7
+           </span>
+</span>
+<small>
+           Right Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-completed" data-tooth="8" data-tooth-name="Maxillary Right Central Incisor" style="--tooth-x:47.13%;--tooth-y:14.29%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 8 · Maxillary Right Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            8
+           </span>
+</span>
+<small>
+           Right Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-completed" data-tooth="9" data-tooth-name="Maxillary Left Central Incisor" style="--tooth-x:52.87%;--tooth-y:14.29%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 9 · Maxillary Left Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            9
+           </span>
+</span>
+<small>
+           Left Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="10" data-tooth-name="Maxillary Left Lateral Incisor" style="--tooth-x:58.60%;--tooth-y:15.76%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 10 · Maxillary Left Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            10
+           </span>
+</span>
+<small>
+           Left Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="11" data-tooth-name="Maxillary Left Canine" style="--tooth-x:64.33%;--tooth-y:18.08%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 11 · Maxillary Left Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            11
+           </span>
+</span>
+<small>
+           Left Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="12" data-tooth-name="Maxillary Left First Premolar" style="--tooth-x:70.07%;--tooth-y:21.11%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 12 · Maxillary Left First Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            12
+           </span>
+</span>
+<small>
+           Left First Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="13" data-tooth-name="Maxillary Left Second Premolar" style="--tooth-x:75.80%;--tooth-y:24.76%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 13 · Maxillary Left Second Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            13
+           </span>
+</span>
+<small>
+           Left Second Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-decay" data-tooth="14" data-tooth-name="Maxillary Left First Molar" style="--tooth-x:81.53%;--tooth-y:28.99%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 14 · Maxillary Left First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            14
+           </span>
+</span>
+<small>
+           Left First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="15" data-tooth-name="Maxillary Left Second Molar" style="--tooth-x:87.27%;--tooth-y:33.74%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 15 · Maxillary Left Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            15
+           </span>
+</span>
+<small>
+           Left Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="16" data-tooth-name="Maxillary Left Third Molar" style="--tooth-x:93.00%;--tooth-y:39.00%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 16 · Maxillary Left Third Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            16
+           </span>
+</span>
+<small>
+           Left Third Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-missing" data-tooth="17" data-tooth-name="Mandibular Left Third Molar" style="--tooth-x:93.00%;--tooth-y:61.00%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 17 · Mandibular Left Third Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            17
+           </span>
+</span>
+<small>
+           Left Third Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="18" data-tooth-name="Mandibular Left Second Molar" style="--tooth-x:87.27%;--tooth-y:66.26%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 18 · Mandibular Left Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            18
+           </span>
+</span>
+<small>
+           Left Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-planned" data-tooth="19" data-tooth-name="Mandibular Left First Molar" style="--tooth-x:81.53%;--tooth-y:71.01%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 19 · Mandibular Left First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            19
+           </span>
+</span>
+<small>
+           Left First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="20" data-tooth-name="Mandibular Left Second Premolar" style="--tooth-x:75.80%;--tooth-y:75.24%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 20 · Mandibular Left Second Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            20
+           </span>
+</span>
+<small>
+           Left Second Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="21" data-tooth-name="Mandibular Left First Premolar" style="--tooth-x:70.07%;--tooth-y:78.89%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 21 · Mandibular Left First Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            21
+           </span>
+</span>
+<small>
+           Left First Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="22" data-tooth-name="Mandibular Left Canine" style="--tooth-x:64.33%;--tooth-y:81.92%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 22 · Mandibular Left Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            22
+           </span>
+</span>
+<small>
+           Left Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="23" data-tooth-name="Mandibular Left Lateral Incisor" style="--tooth-x:58.60%;--tooth-y:84.24%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 23 · Mandibular Left Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            23
+           </span>
+</span>
+<small>
+           Left Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="24" data-tooth-name="Mandibular Left Central Incisor" style="--tooth-x:52.87%;--tooth-y:85.71%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 24 · Mandibular Left Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            24
+           </span>
+</span>
+<small>
+           Left Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="25" data-tooth-name="Mandibular Right Central Incisor" style="--tooth-x:47.13%;--tooth-y:85.71%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 25 · Mandibular Right Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            25
+           </span>
+</span>
+<small>
+           Right Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="26" data-tooth-name="Mandibular Right Lateral Incisor" style="--tooth-x:41.40%;--tooth-y:84.24%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 26 · Mandibular Right Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            26
+           </span>
+</span>
+<small>
+           Right Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="27" data-tooth-name="Mandibular Right Canine" style="--tooth-x:35.67%;--tooth-y:81.92%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 27 · Mandibular Right Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            27
+           </span>
+</span>
+<small>
+           Right Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="28" data-tooth-name="Mandibular Right First Premolar" style="--tooth-x:29.93%;--tooth-y:78.89%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 28 · Mandibular Right First Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            28
+           </span>
+</span>
+<small>
+           Right First Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="29" data-tooth-name="Mandibular Right Second Premolar" style="--tooth-x:24.20%;--tooth-y:75.24%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 29 · Mandibular Right Second Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            29
+           </span>
+</span>
+<small>
+           Right Second Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-decay" data-tooth="30" data-tooth-name="Mandibular Right First Molar" style="--tooth-x:18.47%;--tooth-y:71.01%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 30 · Mandibular Right First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            30
+           </span>
+</span>
+<small>
+           Right First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-completed" data-tooth="31" data-tooth-name="Mandibular Right Second Molar" style="--tooth-x:12.73%;--tooth-y:66.26%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 31 · Mandibular Right Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            31
+           </span>
+</span>
+<small>
+           Right Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="32" data-tooth-name="Mandibular Right Third Molar" style="--tooth-x:7.00%;--tooth-y:61.00%;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 32 · Mandibular Right Third Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            32
+           </span>
+</span>
+<small>
+           Right Third Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+</div>
+<div class="tooth-category-strip tooth-category-strip-lower" data-permanent-chart-decor="">
+<span class="group-molar-left">Molar</span>
+<span class="group-premolar-left">Premolar</span>
+<span class="group-canine-left">Canine</span>
+<span class="group-incisors">Incisors</span>
+<span class="group-canine-right">Canine</span>
+<span class="group-premolar-right">Premolar</span>
+<span class="group-molar-right">Molar</span>
+</div>
+<div class="tooth-grid hidden" data-dentition-grid="primary">
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="A" data-tooth-name="Primary Maxillary Right Second Molar" title="Tooth A · Primary Maxillary Right Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            A
+           </span>
+</span>
+<small>
+           Right Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="B" data-tooth-name="Primary Maxillary Right First Molar" title="Tooth B · Primary Maxillary Right First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            B
+           </span>
+</span>
+<small>
+           Right First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="C" data-tooth-name="Primary Maxillary Right Canine" title="Tooth C · Primary Maxillary Right Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            C
+           </span>
+</span>
+<small>
+           Right Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="D" data-tooth-name="Primary Maxillary Right Lateral Incisor" title="Tooth D · Primary Maxillary Right Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            D
+           </span>
+</span>
+<small>
+           Right Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="E" data-tooth-name="Primary Maxillary Right Central Incisor" title="Tooth E · Primary Maxillary Right Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            E
+           </span>
+</span>
+<small>
+           Right Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="F" data-tooth-name="Primary Maxillary Left Central Incisor" title="Tooth F · Primary Maxillary Left Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            F
+           </span>
+</span>
+<small>
+           Left Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="G" data-tooth-name="Primary Maxillary Left Lateral Incisor" title="Tooth G · Primary Maxillary Left Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            G
+           </span>
+</span>
+<small>
+           Left Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="H" data-tooth-name="Primary Maxillary Left Canine" title="Tooth H · Primary Maxillary Left Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            H
+           </span>
+</span>
+<small>
+           Left Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="I" data-tooth-name="Primary Maxillary Left First Molar" title="Tooth I · Primary Maxillary Left First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            I
+           </span>
+</span>
+<small>
+           Left First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="J" data-tooth-name="Primary Maxillary Left Second Molar" title="Tooth J · Primary Maxillary Left Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            J
+           </span>
+</span>
+<small>
+           Left Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="K" data-tooth-name="Primary Mandibular Left Second Molar" title="Tooth K · Primary Mandibular Left Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            K
+           </span>
+</span>
+<small>
+           Left Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="L" data-tooth-name="Primary Mandibular Left First Molar" title="Tooth L · Primary Mandibular Left First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            L
+           </span>
+</span>
+<small>
+           Left First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="M" data-tooth-name="Primary Mandibular Left Canine" title="Tooth M · Primary Mandibular Left Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            M
+           </span>
+</span>
+<small>
+           Left Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="N" data-tooth-name="Primary Mandibular Left Lateral Incisor" title="Tooth N · Primary Mandibular Left Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            N
+           </span>
+</span>
+<small>
+           Left Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="O" data-tooth-name="Primary Mandibular Left Central Incisor" title="Tooth O · Primary Mandibular Left Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            O
+           </span>
+</span>
+<small>
+           Left Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="P" data-tooth-name="Primary Mandibular Right Central Incisor" title="Tooth P · Primary Mandibular Right Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            P
+           </span>
+</span>
+<small>
+           Right Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="Q" data-tooth-name="Primary Mandibular Right Lateral Incisor" title="Tooth Q · Primary Mandibular Right Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            Q
+           </span>
+</span>
+<small>
+           Right Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="R" data-tooth-name="Primary Mandibular Right Canine" title="Tooth R · Primary Mandibular Right Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            R
+           </span>
+</span>
+<small>
+           Right Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="S" data-tooth-name="Primary Mandibular Right First Molar" title="Tooth S · Primary Mandibular Right First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            S
+           </span>
+</span>
+<small>
+           Right First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="T" data-tooth-name="Primary Mandibular Right Second Molar" title="Tooth T · Primary Mandibular Right Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            T
+           </span>
+</span>
+<small>
+           Right Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+</div>
+<div class="tooth-grid hidden" data-dentition-grid="mixed">
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="1" data-tooth-name="Maxillary Right Third Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 1 · Maxillary Right Third Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            1
+           </span>
+</span>
+<small>
+           Right Third Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="2" data-tooth-name="Maxillary Right Second Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 2 · Maxillary Right Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            2
+           </span>
+</span>
+<small>
+           Right Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-decay" data-tooth="3" data-tooth-name="Maxillary Right First Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 3 · Maxillary Right First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            3
+           </span>
+</span>
+<small>
+           Right First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="4" data-tooth-name="Maxillary Right Second Premolar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 4 · Maxillary Right Second Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            4
+           </span>
+</span>
+<small>
+           Right Second Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="5" data-tooth-name="Maxillary Right First Premolar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 5 · Maxillary Right First Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            5
+           </span>
+</span>
+<small>
+           Right First Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="6" data-tooth-name="Maxillary Right Canine" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 6 · Maxillary Right Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            6
+           </span>
+</span>
+<small>
+           Right Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="7" data-tooth-name="Maxillary Right Lateral Incisor" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 7 · Maxillary Right Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            7
+           </span>
+</span>
+<small>
+           Right Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-completed" data-tooth="8" data-tooth-name="Maxillary Right Central Incisor" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 8 · Maxillary Right Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            8
+           </span>
+</span>
+<small>
+           Right Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-completed" data-tooth="9" data-tooth-name="Maxillary Left Central Incisor" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 9 · Maxillary Left Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            9
+           </span>
+</span>
+<small>
+           Left Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="10" data-tooth-name="Maxillary Left Lateral Incisor" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 10 · Maxillary Left Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            10
+           </span>
+</span>
+<small>
+           Left Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="11" data-tooth-name="Maxillary Left Canine" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 11 · Maxillary Left Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            11
+           </span>
+</span>
+<small>
+           Left Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="12" data-tooth-name="Maxillary Left First Premolar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 12 · Maxillary Left First Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            12
+           </span>
+</span>
+<small>
+           Left First Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="13" data-tooth-name="Maxillary Left Second Premolar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 13 · Maxillary Left Second Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            13
+           </span>
+</span>
+<small>
+           Left Second Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-decay" data-tooth="14" data-tooth-name="Maxillary Left First Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 14 · Maxillary Left First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            14
+           </span>
+</span>
+<small>
+           Left First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="15" data-tooth-name="Maxillary Left Second Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 15 · Maxillary Left Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            15
+           </span>
+</span>
+<small>
+           Left Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="16" data-tooth-name="Maxillary Left Third Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 16 · Maxillary Left Third Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            16
+           </span>
+</span>
+<small>
+           Left Third Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-missing" data-tooth="17" data-tooth-name="Mandibular Left Third Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 17 · Mandibular Left Third Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            17
+           </span>
+</span>
+<small>
+           Left Third Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="18" data-tooth-name="Mandibular Left Second Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 18 · Mandibular Left Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            18
+           </span>
+</span>
+<small>
+           Left Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-planned" data-tooth="19" data-tooth-name="Mandibular Left First Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 19 · Mandibular Left First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            19
+           </span>
+</span>
+<small>
+           Left First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="20" data-tooth-name="Mandibular Left Second Premolar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 20 · Mandibular Left Second Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            20
+           </span>
+</span>
+<small>
+           Left Second Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="21" data-tooth-name="Mandibular Left First Premolar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 21 · Mandibular Left First Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            21
+           </span>
+</span>
+<small>
+           Left First Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="22" data-tooth-name="Mandibular Left Canine" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 22 · Mandibular Left Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            22
+           </span>
+</span>
+<small>
+           Left Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="23" data-tooth-name="Mandibular Left Lateral Incisor" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 23 · Mandibular Left Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            23
+           </span>
+</span>
+<small>
+           Left Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="24" data-tooth-name="Mandibular Left Central Incisor" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 24 · Mandibular Left Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            24
+           </span>
+</span>
+<small>
+           Left Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="25" data-tooth-name="Mandibular Right Central Incisor" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 25 · Mandibular Right Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            25
+           </span>
+</span>
+<small>
+           Right Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="26" data-tooth-name="Mandibular Right Lateral Incisor" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 26 · Mandibular Right Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            26
+           </span>
+</span>
+<small>
+           Right Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="27" data-tooth-name="Mandibular Right Canine" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 27 · Mandibular Right Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            27
+           </span>
+</span>
+<small>
+           Right Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="28" data-tooth-name="Mandibular Right First Premolar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 28 · Mandibular Right First Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            28
+           </span>
+</span>
+<small>
+           Right First Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="29" data-tooth-name="Mandibular Right Second Premolar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 29 · Mandibular Right Second Premolar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            29
+           </span>
+</span>
+<small>
+           Right Second Premolar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-decay" data-tooth="30" data-tooth-name="Mandibular Right First Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 30 · Mandibular Right First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            30
+           </span>
+</span>
+<small>
+           Right First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-completed" data-tooth="31" data-tooth-name="Mandibular Right Second Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 31 · Mandibular Right Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            31
+           </span>
+</span>
+<small>
+           Right Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="32" data-tooth-name="Mandibular Right Third Molar" style="border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;" title="Tooth 32 · Mandibular Right Third Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            32
+           </span>
+</span>
+<small>
+           Right Third Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="A" data-tooth-name="Primary Maxillary Right Second Molar" title="Tooth A · Primary Maxillary Right Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            A
+           </span>
+</span>
+<small>
+           Right Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="B" data-tooth-name="Primary Maxillary Right First Molar" title="Tooth B · Primary Maxillary Right First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            B
+           </span>
+</span>
+<small>
+           Right First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="C" data-tooth-name="Primary Maxillary Right Canine" title="Tooth C · Primary Maxillary Right Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            C
+           </span>
+</span>
+<small>
+           Right Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="D" data-tooth-name="Primary Maxillary Right Lateral Incisor" title="Tooth D · Primary Maxillary Right Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            D
+           </span>
+</span>
+<small>
+           Right Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="E" data-tooth-name="Primary Maxillary Right Central Incisor" title="Tooth E · Primary Maxillary Right Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            E
+           </span>
+</span>
+<small>
+           Right Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="F" data-tooth-name="Primary Maxillary Left Central Incisor" title="Tooth F · Primary Maxillary Left Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            F
+           </span>
+</span>
+<small>
+           Left Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="G" data-tooth-name="Primary Maxillary Left Lateral Incisor" title="Tooth G · Primary Maxillary Left Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            G
+           </span>
+</span>
+<small>
+           Left Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="H" data-tooth-name="Primary Maxillary Left Canine" title="Tooth H · Primary Maxillary Left Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            H
+           </span>
+</span>
+<small>
+           Left Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="I" data-tooth-name="Primary Maxillary Left First Molar" title="Tooth I · Primary Maxillary Left First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            I
+           </span>
+</span>
+<small>
+           Left First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="J" data-tooth-name="Primary Maxillary Left Second Molar" title="Tooth J · Primary Maxillary Left Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            J
+           </span>
+</span>
+<small>
+           Left Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="K" data-tooth-name="Primary Mandibular Left Second Molar" title="Tooth K · Primary Mandibular Left Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            K
+           </span>
+</span>
+<small>
+           Left Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="L" data-tooth-name="Primary Mandibular Left First Molar" title="Tooth L · Primary Mandibular Left First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            L
+           </span>
+</span>
+<small>
+           Left First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="M" data-tooth-name="Primary Mandibular Left Canine" title="Tooth M · Primary Mandibular Left Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            M
+           </span>
+</span>
+<small>
+           Left Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="N" data-tooth-name="Primary Mandibular Left Lateral Incisor" title="Tooth N · Primary Mandibular Left Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            N
+           </span>
+</span>
+<small>
+           Left Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="O" data-tooth-name="Primary Mandibular Left Central Incisor" title="Tooth O · Primary Mandibular Left Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            O
+           </span>
+</span>
+<small>
+           Left Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="P" data-tooth-name="Primary Mandibular Right Central Incisor" title="Tooth P · Primary Mandibular Right Central Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            P
+           </span>
+</span>
+<small>
+           Right Central Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="Q" data-tooth-name="Primary Mandibular Right Lateral Incisor" title="Tooth Q · Primary Mandibular Right Lateral Incisor" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            Q
+           </span>
+</span>
+<small>
+           Right Lateral Incisor
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="R" data-tooth-name="Primary Mandibular Right Canine" title="Tooth R · Primary Mandibular Right Canine" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            R
+           </span>
+</span>
+<small>
+           Right Canine
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="S" data-tooth-name="Primary Mandibular Right First Molar" title="Tooth S · Primary Mandibular Right First Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            S
+           </span>
+</span>
+<small>
+           Right First Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+<button aria-pressed="false" class="tooth-unit tooth-sound" data-tooth="T" data-tooth-name="Primary Mandibular Right Second Molar" title="Tooth T · Primary Mandibular Right Second Molar" type="button">
+<span aria-hidden="true" class="tooth-silhouette">
+<span class="tooth-number">
+            T
+           </span>
+</span>
+<small>
+           Right Second Molar
+          </small>
+<i aria-hidden="true" class="tooth-status-dot">
+</i>
+</button>
+</div>
+</div>
+<aside class="tooth-detail-panel">
+<div aria-label="Tooth status legend" class="chart-status-card">
+<div class="chart-status-heading">
+<span class="chart-status-icon">◇</span>
+<div>
+<h5>Tooth Status</h5>
+<p>Visual condition guide</p>
+</div>
+</div>
+<div class="chart-status-grid">
+<span><i class="legend sound"></i>Sound / Healthy</span>
+<span><i class="legend decay"></i>Decay / Caries</span>
+<span><i class="legend planned"></i>Treatment Planned</span>
+<span><i class="legend completed"></i>Restored / Completed</span>
+<span><i class="legend missing"></i>Missing / Extracted</span>
+<span><i class="legend impacted"></i>Impacted</span>
+<span><i class="legend finding"></i>Other Finding</span>
+<span><i class="legend selected"></i>Selected</span>
+</div>
+</div>
+<p class="eyebrow">
+         Selected teeth
+        </p>
+<h4 id="selectedToothTitle">
+         Select one or more teeth
+        </h4>
+<span class="selected-teeth-count" data-selected-tooth-count="">
+         No teeth selected
+        </span>
+<label>
+         Clinical status
+         <select id="toothClinicalStatus">
+<option>
+           Sound / Healthy
+          </option>
+<option>
+           Finding Documented
+          </option>
+<option>
+           Treatment Planned
+          </option>
+<option>
+           Completed / Restored
+          </option>
+<option>
+           Missing / Extracted
+          </option>
+<option>
+           Impacted
+          </option>
+</select>
+</label>
+<label>
+         Tooth presence
+         <select id="toothPresence">
+<option>
+           Present
+          </option>
+<option>
+           Missing
+          </option>
+<option>
+           Previously Extracted
+          </option>
+<option>
+           Unerupted
+          </option>
+<option>
+           Partially Erupted
+          </option>
+<option>
+           Impacted
+          </option>
+<option>
+           Retained Primary Tooth
+          </option>
+<option>
+           Supernumerary Tooth
+          </option>
+</select>
+</label>
+<fieldset class="surface-fieldset">
+<legend>
+          Tooth surfaces
+         </legend>
+<label>
+<input type="checkbox" value="M"/>
+          M · Mesial
+         </label>
+<label>
+<input type="checkbox" value="O"/>
+          O/I · Occlusal/Incisal
+         </label>
+<label>
+<input type="checkbox" value="D"/>
+          D · Distal
+         </label>
+<label>
+<input type="checkbox" value="B"/>
+          B/F · Buccal/Facial
+         </label>
+<label>
+<input type="checkbox" value="L"/>
+          L/P · Lingual/Palatal
+         </label>
+</fieldset>
+<label>
+         Finding / Condition
+         <select id="toothCondition">
+<option value="Sound / Healthy">/</option>
+<option value="Missing / Extracted">M</option>
+<option value="Unerupted">Un</option>
+<option value="Present">P</option>
+<option value="Root Fragment">RF</option>
+<option value="Amalgam Restoration">Am</option>
+<option value="Composite Restoration">Co</option>
+<option value="Extraction Indicated">X</option>
+<option value="Observation">O</option>
+<option value="Temporary Filling">TF</option>
+<option value="Dentinal Caries">C</option>
+<option value="Root Canal Treated">RCT</option>
+<option value="Impacted">Im</option>
+<option value="Jacket Crown">Jc</option>
+<option value="Glass Ionomer">GI</option>
+<option value="Sealant">S</option>
+<option value="Erupted">ER</option>
+<option value="3/Q">3/Q</option>
+<option value="Metal Crown">MC</option>
+<option value="Partially Erupted">PE</option>
+<option value="Treatment Planned">TP</option>
+<option value="QC">QC</option>
+</select>
+</label>
+<label>
+         Pulpal diagnosis
+         <select id="toothPulpalDiagnosis">
+<option>
+           Normal pulp
+          </option>
+<option>
+           Reversible pulpitis
+          </option>
+<option>
+           Symptomatic irreversible pulpitis
+          </option>
+<option>
+           Asymptomatic irreversible pulpitis
+          </option>
+<option>
+           Pulp necrosis
+          </option>
+<option>
+           Previously treated
+          </option>
+<option>
+           Previously initiated therapy
+          </option>
+</select>
+</label>
+<label>
+         Apical diagnosis
+         <select id="toothApicalDiagnosis">
+<option>
+           Normal apical tissues
+          </option>
+<option>
+           Symptomatic apical periodontitis
+          </option>
+<option>
+           Asymptomatic apical periodontitis
+          </option>
+<option>
+           Acute apical abscess
+          </option>
+<option>
+           Chronic apical abscess
+          </option>
+<option>
+           Condensing osteitis
+          </option>
+</select>
+</label>
+<label>
+         Treatment
+         <select id="toothTreatment">
+<option>
+           None
+          </option>
+<option>
+           COMP · Composite Filling
+          </option>
+<option>
+           AMAL · Amalgam Filling
+          </option>
+<option>
+           RCT · Root Canal Therapy
+          </option>
+<option>
+           EXT · Planned Extraction
+          </option>
+<option>
+           Crown
+          </option>
+<option>
+           Inlay / Onlay
+          </option>
+<option>
+           Sealant
+          </option>
+<option>
+           Implant-supported crown
+          </option>
+</select>
+</label>
+<label>
+         CDT / Procedure code
+         <input id="toothProcedureCode" value="D2391"/>
+</label>
+<label>
+         Clinical notes
+         <textarea id="toothClinicalNotes" placeholder="Add clinical observations, material details or follow-up notes." rows="3"></textarea>
+</label>
+<label>
+         Auto-generated progress note
+         <textarea id="autoProgressNote" rows="4">Select one or more teeth to draft the clinical progress note.</textarea>
+</label>
+<div class="tooth-form-actions">
+<span data-tooth-form-message="">
+          Choose one or more teeth, then apply the chart data.
+         </span>
+<button class="btn" data-apply-to-selected="" type="button">
+          Apply to selected teeth
+         </button>
+</div>
+</aside>
+</div>
+<details class="clinical-details" open="">
+<summary>
+<span class="clinical-details-title">Periodontal layer</span>
+<span class="clinical-details-subtitle">Record periodontal findings for the selected tooth.</span>
+<span class="clinical-details-tooth">Tooth #30</span>
+</summary>
+<div class="perio-grid">
+<label>
+         MB probing
+         <input max="12" min="1" type="number" value="3"/>
+</label>
+<label>
+         B probing
+         <input max="12" min="1" type="number" value="2"/>
+</label>
+<label>
+         DB probing
+         <input max="12" min="1" type="number" value="3"/>
+</label>
+<label>
+         ML probing
+         <input max="12" min="1" type="number" value="3"/>
+</label>
+<label>
+         L probing
+         <input max="12" min="1" type="number" value="2"/>
+</label>
+<label>
+         DL probing
+         <input max="12" min="1" type="number" value="3"/>
+</label>
+<label>
+         Recession (mm)
+         <input max="12" min="0" type="number" value="0"/>
+</label>
+<label>
+         Mobility
+         <select>
+<option>
+           0
+          </option>
+<option>
+           Grade I
+          </option>
+<option>
+           Grade II
+          </option>
+<option>
+           Grade III
+          </option>
+</select>
+</label>
+<label>
+<input type="checkbox"/>
+         Bleeding on probing
+        </label>
+<label>
+<input type="checkbox"/>
+         Suppuration
+        </label>
+<label>
+<input type="checkbox"/>
+         Plaque
+        </label>
+<label>
+<input type="checkbox"/>
+         Calculus
+        </label>
+</div>
+</details>
+<div class="chart-history">
+<div class="chart-history-heading">
+<div>
+<h4>Cross-referenced history · Tooth #30</h4>
+<p>Previous findings, treatments and linked clinical records for this tooth.</p>
+</div>
+<span class="history-count">2 records</span>
+</div>
+<div class="history-card">
+<strong>
+         12 Aug 2026 · Composite restoration
+        </strong>
+<span>
+         Material: Nanohybrid composite · Dr. Paolo Reyes
+        </span>
+</div>
+<div class="history-card">
+<strong>
+         03 Oct 2026 · Recurrent caries finding
+        </strong>
+<span>
+         Radiograph linked · Treatment plan created
+        </span>
+</div>
+</div>
+<div class="tooth-quick-popover" data-tooth-quick-popover="" popover="manual">
+<div class="tooth-quick-head"><div><small>Selected tooth</small><strong data-tq-tooth="">Tooth</strong></div><button aria-label="Close" class="icon-btn tq-close" type="button">×</button></div>
+<label>Finding / condition<select data-tq-finding=""><option value="">Select finding...</option><option value="Sound / Healthy">/</option><option value="Missing / Extracted">M</option><option value="Unerupted">Un</option><option value="Present">P</option><option value="Root Fragment">RF</option><option value="Amalgam Restoration">Am</option><option value="Composite Restoration">Co</option><option value="Extraction Indicated">X</option><option value="Observation">O</option><option value="Temporary Filling">TF</option><option value="Dentinal Caries">C</option><option value="Root Canal Treated">RCT</option><option value="Impacted">Im</option><option value="Jacket Crown">Jc</option><option value="Glass Ionomer">GI</option><option value="Sealant">S</option><option value="Erupted">ER</option><option value="3/Q">3/Q</option><option value="Metal Crown">MC</option><option value="Partially Erupted">PE</option><option value="Treatment Planned">TP</option><option value="QC">QC</option></select></label>
+<small class="tooth-billing-note">Choose the clinical finding for this tooth. Billable findings continue to treatment and pricing.</small>
+</div>
+<div class="tooth-charge-popover" data-tooth-charge-popover="" popover="manual">
+<div class="tooth-quick-head"><div><small>Treatment charge</small><strong data-tqc-tooth="">Tooth</strong></div><button aria-label="Close" class="icon-btn tqc-close" type="button">×</button></div>
+<div class="tooth-charge-summary"><span>Finding</span><strong data-tqc-finding="">—</strong></div>
+<label>Treatment / procedure<select data-tqc-procedure=""><option>Composite Restoration</option><option>Root Canal Treatment</option><option>Dental Crown</option><option>Tooth Extraction</option><option>Surgical Extraction</option><option>Restorative Treatment</option><option>Observation / Review</option><option>Other Dental Procedure</option></select></label>
+<label>Price for this tooth (₱)<input data-tqc-price="" min="0" placeholder="0.00" required="" step="0.01" type="number"/></label>
+<label>Clinical / billing note <span class="optional-label">Optional</span><textarea data-tqc-notes="" placeholder="Add a short note for this tooth charge..." rows="3"></textarea></label>
+<div class="tooth-charge-message" data-tqc-message="" aria-live="polite"></div>
+<small class="tooth-billing-note">Confirming creates a charge in this patient's Billing Ledger and Billing &amp; Payments records.</small>
+<div class="tooth-charge-actions"><button class="btn secondary" data-tqc-cancel="" type="button">Cancel</button><button class="btn" data-tqc-save="" type="button">Add charge to patient</button></div>
+</div></section>
+<section class="record-tab-panel" data-record-panel="pxray">
+<div class="panel-header">
+<div>
+<h4>
+         Patient X-ray Records
+        </h4>
+<p>
+         Radiographs are attached to this patient file and can be linked to individual teeth.
+        </p>
+</div>
+<button class="btn" onclick="document.getElementById('patientXrayModal').showModal()" type="button">
+        + Add patient X-ray
+       </button>
+</div>
+<div class="xray-record-grid">
+<article class="xray-record-card">
+<img alt="Panoramic radiograph" src="../assets/images/xray-panoramic.png"/>
+<div>
+<strong>
+          Panoramic · 03 Oct 2026
+         </strong>
+<p>
+          General survey. No acute osseous abnormality. Tooth #30 restoration reviewed.
+         </p>
+<span>
+          Dr. Ana Cerillo
+         </span>
+</div>
+</article>
+<article class="xray-record-card">
+<img alt="Periapical radiograph" src="../assets/images/xray-periapical.png"/>
+<div>
+<strong>
+          Periapical · Tooth #30 · 03 Oct 2026
+         </strong>
+<p>
+          Recurrent distal caries suspected beneath restoration. Apical tissues within normal limits.
+         </p>
+<span>
+          Dr. Ana Cerillo
+         </span>
+</div>
+</article>
+</div>
+</section>
+<section class="record-tab-panel" data-record-panel="ledger">
+<div class="panel-header">
+<div>
+<h4>
+         Billing Ledger
+        </h4>
+<p>
+         Read-only financial history for this patient.
+        </p>
+</div>
+</div>
+<div class="ledger-summary">
+<article>
+<span>
+         Total charges
+        </span>
+<strong>
+         ₱18,500.00
+        </strong>
+</article>
+<article>
+<span>
+         Payments
+        </span>
+<strong>
+         ₱13,500.00
+        </strong>
+</article>
+<article>
+<span>
+         Adjustments
+        </span>
+<strong>
+         -₱500.00
+        </strong>
+</article>
+<article>
+<span>
+         Outstanding
+        </span>
+<strong>
+         ₱4,500.00
+        </strong>
+</article>
+</div>
+<div class="table-wrap">
+<table data-patient-ledger="">
+<thead>
+<tr>
+<th>
+           Date
+          </th>
+<th>
+           Reference
+          </th>
+<th>
+           Description
+          </th>
+<th>
+           Charge
+          </th>
+<th>
+           Payment / Adjustment
+          </th>
+<th>
+           Balance
+          </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+           03 Oct 2026
+          </td>
+<td>
+           INV-2026-1048
+          </td>
+<td>
+           Tooth #30 composite restoration
+          </td>
+<td>
+           ₱3,500
+          </td>
+<td>
+           ₱3,500 payment
+          </td>
+<td>
+           ₱0
+          </td>
+</tr>
+<tr>
+<td>
+           04 Oct 2026
+          </td>
+<td>
+           INV-2026-1052
+          </td>
+<td>
+           Root canal treatment plan
+          </td>
+<td>
+           ₱15,000
+          </td>
+<td>
+           -₱500 professional adjustment
+          </td>
+<td>
+           ₱4,500
+          </td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<footer class="modal-footer">
+<span>
+      Last updated 04 Oct 2026 · 6:40 PM
+     </span>
+<button class="btn btn-secondary" onclick="this.closest('dialog').close()" type="button">
+      Close record
+     </button>
+</footer>
+</div>
+</dialog>
+<script>
+   document.querySelectorAll("dialog.modal").forEach((dialog) => {
+    dialog.addEventListener("click", (event) => {
+     if (event.target === dialog) {
+      dialog.close();
+     }
+    });
+
+    dialog.addEventListener("close", () => {
+     const openerId = dialog.dataset.openerId;
+     if (openerId) {
+      document.getElementById(openerId)?.focus();
+     }
+    });
+   });
+  </script>
+<script id="cerilloRecordTabs">
+   document.querySelectorAll("[data-record-tabs]").forEach((tabs) => {
+    tabs.addEventListener("click", (event) => {
+     const button = event.target.closest("[data-record-tab]");
+     if (!button) return;
+
+     const dialog = button.closest("dialog");
+     const target = button.dataset.recordTab;
+
+     dialog.querySelectorAll("[data-record-tab]").forEach((item) => {
+      item.classList.toggle("active", item === button);
+     });
+
+     dialog.querySelectorAll("[data-record-panel]").forEach((panel) => {
+      panel.classList.toggle("active", panel.dataset.recordPanel === target);
+     });
+    });
+   });
+  </script>
+<script id="cerilloThemeBootstrap">
+   (function(){
+  const saved = localStorage.getItem('cerilloDarkMode') === 'true';
+  document.body.classList.toggle('dark-mode', saved);
+  const toggle = document.getElementById('darkModeToggle');
+  if (toggle) {
+    toggle.checked = saved;
+    toggle.addEventListener('change', function(){
+      document.body.classList.toggle('dark-mode', this.checked);
+      localStorage.setItem('cerilloDarkMode', String(this.checked));
+    });
+  }
+})();
+  </script>
+<script id="dentistAvailabilityWorkflow">
+   (function hydrateDentistIdentity(){
+  const storedName = localStorage.getItem('cerilloCurrentUserName');
+  const displayName = storedName && /^Dr\./.test(storedName) ? storedName : 'Dr. Angela Cerillo';
+  const accountName = document.getElementById('dentistAccountName');
+  if (accountName) accountName.textContent = displayName;
+  const dentistInput = document.getElementById('availabilityDentist');
+  const dentistDisplay = document.getElementById('availabilityDentistDisplay');
+  if (dentistInput) dentistInput.value = displayName;
+  if (dentistDisplay) dentistDisplay.textContent = displayName;
+})();
+
+function getDentistBlocks() {
+  try {
+    return JSON.parse(localStorage.getItem('cerilloDentistBlocks') || '[]');
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveDentistBlocks(blocks) {
+  localStorage.setItem('cerilloDentistBlocks', JSON.stringify(blocks));
+}
+
+function renderDentistAppointmentAvailability() {
+  const holder = document.getElementById('dentistAppointmentAvailabilityChips');
+  if (!holder) return;
+
+  const blocks = getDentistBlocks();
+  holder.innerHTML = blocks.length
+    ? blocks.map((block) => `
+        <span class="availability-chip">
+          ${block.label || block.date} · ${block.time || 'All day'} · ${block.reason}
+        </span>
+      `).join('')
+    : '<span class="availability-empty">No additional blocked schedules.</span>';
+}
+
+function renderDentistBlocks() {
+  const holder = document.getElementById('dentistAvailabilityTable');
+  if (!holder) return;
+  holder.querySelectorAll('[data-local-block]').forEach((item) => item.remove());
+  getDentistBlocks().forEach((block, index) => {
+    const item = document.createElement('article');
+    item.className = 'availability-record';
+    item.dataset.localBlock = '1';
+    const dateText = block.type === 'week' ? `${block.date} – ${block.endDate}` : block.date;
+    const timeText = block.type === 'week' ? '<span class="badge info">Full Week</span>' : (block.time || 'All day');
+    item.innerHTML = `
+      <div><small>Dentist</small><strong>${block.dentist || 'Dr. Angela Cerillo'}</strong></div>
+      <div><small>Date</small><strong>${dateText}</strong></div>
+      <div><small>Time</small><strong>${timeText}</strong></div>
+      <div><small>Reason</small><strong>${block.reason || 'Unavailable'}${block.notes ? ` · ${block.notes}` : ''}</strong></div>
+      <button class="availability-remove" type="button" data-remove-block="${index}">Remove</button>`;
+    holder.prepend(item);
+  });
+  holder.querySelectorAll('[data-remove-block]').forEach((button) => button.addEventListener('click', () => {
+    const blocks = getDentistBlocks(); blocks.splice(Number(button.dataset.removeBlock),1); saveDentistBlocks(blocks); renderDentistBlocks();
+  }));
+  renderDentistAppointmentAvailability();
+}
+
+function openAvailabilitySelection(selection) {
+  const modal = document.getElementById('availabilityModal');
+  const accountName = document.getElementById('dentistAccountName')?.textContent.trim() || 'Dentist';
+  document.getElementById('availabilityDentist').value = accountName;
+  document.getElementById('availabilityDentistDisplay').textContent = accountName;
+  document.getElementById('availabilityType').value = selection.type;
+  document.getElementById('availabilityDate').value = selection.date;
+  document.getElementById('availabilityEndDate').value = selection.endDate || selection.date;
+  document.getElementById('availabilityStartTime').value = selection.startTime || '';
+  document.getElementById('availabilityEndTime').value = selection.endTime || '';
+  document.getElementById('availabilitySelectedDisplay').textContent = selection.display;
+  document.getElementById('availabilityReason').value = '';
+  document.getElementById('availabilityNotes').value = '';
+  modal.showModal();
+}
+
+(function bindCalendarAvailabilityPicker() {
+  const calendarSection = document.getElementById('calendar');
+  const startButton = document.getElementById('startAvailabilityPicker');
+  const grid = calendarSection?.querySelector('.weekly-calendar');
+  if (!calendarSection || !startButton || !grid) return;
+
+  const dates = ['2026-10-05','2026-10-06','2026-10-07','2026-10-08','2026-10-09'];
+  const dayHeaders = Array.from(grid.querySelectorAll('.calendar-day'));
+  const slots = Array.from(grid.querySelectorAll('.calendar-slot'));
+  const hours = ['08:00','09:00','10:00'];
+
+  dayHeaders.forEach((header, index) => {
+    header.dataset.availabilityDate = dates[index] || '';
+    header.title = 'Mark this whole day unavailable';
+  });
+  slots.forEach((slot, index) => {
+    slot.dataset.availabilityDate = dates[index % 5] || '';
+    const row = Math.floor(index / 5);
+    const start = hours[row] || '09:00';
+    const endHour = String(Number(start.slice(0,2)) + 1).padStart(2,'0') + ':00';
+    slot.dataset.availabilityStart = start;
+    slot.dataset.availabilityEnd = endHour;
+    if (!slot.classList.contains('event') && !slot.classList.contains('blocked')) {
+      slot.title = 'Mark this time unavailable';
+    }
+  });
+
+  startButton.addEventListener('click', () => {
+    calendarSection.classList.toggle('availability-pick-mode');
+    if (calendarSection.classList.contains('availability-pick-mode')) {
+      calendarSection.querySelector('.weekly-calendar-scroll')?.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  });
+
+  grid.addEventListener('click', (event) => {
+    if (!calendarSection.classList.contains('availability-pick-mode')) return;
+    const day = event.target.closest('.calendar-day');
+    const slot = event.target.closest('.calendar-slot:not(.event):not(.blocked)');
+    if (!day && !slot) return;
+
+    if (day) {
+      const date = day.dataset.availabilityDate;
+      openAvailabilitySelection({type:'date', date, endDate:date, display:`${day.textContent.trim()} · All day`});
+    } else {
+      const date = slot.dataset.availabilityDate;
+      const startTime = slot.dataset.availabilityStart;
+      const endTime = slot.dataset.availabilityEnd;
+      openAvailabilitySelection({type:'time', date, endDate:date, startTime, endTime, display:`${date} · ${startTime}–${endTime}`});
+    }
+    calendarSection.classList.remove('availability-pick-mode');
+  });
+})();
+
+document.getElementById('availabilityForm')?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const type = document.getElementById('availabilityType').value;
+  const date = document.getElementById('availabilityDate').value;
+  const endDate = document.getElementById('availabilityEndDate').value || date;
+  const startTime = document.getElementById('availabilityStartTime').value;
+  const endTime = document.getElementById('availabilityEndTime').value;
+  if (!date) {
+    alert('Select a day or time box from the calendar first.');
+    document.getElementById('availabilityModal').close();
+    return;
+  }
+  const block = {
+    type,
+    date,
+    endDate,
+    startTime: type === 'time' ? startTime : '',
+    endTime: type === 'time' ? endTime : '',
+    time: type === 'time' ? `${startTime} – ${endTime}` : 'All day',
+    dentist: document.getElementById('availabilityDentist').value,
+    reason: document.getElementById('availabilityReason').value,
+    notes: document.getElementById('availabilityNotes').value,
+    label: date
+  };
+  const blocks = getDentistBlocks();
+  blocks.push(block);
+  saveDentistBlocks(blocks);
+  renderDentistBlocks();
+  document.getElementById('availabilityModal').close();
+});
+
+renderDentistBlocks();
+renderDentistAppointmentAvailability();
+
+(function bindDentistXrayForm() {
+  const modal = document.getElementById('addXrayModal');
+  if (!modal) return;
+
+  const patientSelect = modal.querySelector('.xrayPatientSelect');
+  const files = document.getElementById('xrayFiles');
+  const preview = document.getElementById('xrayUploadPreview');
+
+  patientSelect.addEventListener('change', () => {
+    const option = patientSelect.selectedOptions[0];
+    modal.querySelector('.xrayPatientName').textContent = option.value || 'Select a patient';
+    modal.querySelector('.xrayPatientId').textContent = `Patient ID ${option.dataset.id || '—'}`;
+    modal.querySelector('.xrayPatientPhone').textContent = `Phone ${option.dataset.phone || '—'}`;
+    modal.querySelector('.xrayPatientEmail').textContent = `Email ${option.dataset.email || '—'}`;
+    modal.querySelector('.xrayPatientDob').textContent = `DOB ${option.dataset.dob || '—'}`;
+  });
+
+  files?.addEventListener('change', () => {
+    preview.innerHTML = '';
+
+    [...files.files].slice(0, 3).forEach((file) => {
+      const image = document.createElement('img');
+      image.src = URL.createObjectURL(file);
+      image.alt = 'Selected X-ray preview';
+      preview.appendChild(image);
+    });
+
+    if (!files.files.length) {
+      preview.innerHTML = '<span>No images selected.</span>';
+    }
+  });
+
+  document.getElementById('addXrayForm')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const patient = patientSelect.value;
+    const record = {
+      patient,
+      type: document.getElementById('xrayType').value,
+      date: document.getElementById('xrayDate').value,
+      area: document.getElementById('xrayArea').value,
+      findings: document.getElementById('xrayFindings').value
+    };
+
+    const records = JSON.parse(localStorage.getItem('cerilloXrayRecords') || '[]');
+    records.unshift(record);
+    localStorage.setItem('cerilloXrayRecords', JSON.stringify(records));
+
+    document.getElementById('addXrayModal').close();
+    event.target.reset();
+    preview.innerHTML = '<span>No images selected.</span>';
+    alert(`X-ray record attached to ${patient}'s patient record.`);
+  });
+})();
+  </script>
+<dialog class="modal modal-lg visit-history-detail-modal" id="visitHistoryModal">
+<div class="modal-shell">
+<header class="modal-header">
+<div>
+<p class="eyebrow">
+       Completed Visit
+      </p>
+<h3>
+       Composite Restoration
+      </h3>
+</div>
+<button class="icon-btn" onclick="this.closest('dialog').close()" type="button">
+      ×
+     </button>
+</header>
+<div class="modal-body">
+<div class="clinical-grid two-col">
+<article class="info-card">
+<h4>
+        Visit details
+       </h4>
+<dl class="detail-list">
+<div>
+<dt>
+          Dentist
+         </dt>
+<dd>
+          Dr. Ana Cerillo
+         </dd>
+</div>
+<div>
+<dt>
+          Service
+         </dt>
+<dd>
+          Composite Restoration · Tooth #30
+         </dd>
+</div>
+<div>
+<dt>
+          Date &amp; Time
+         </dt>
+<dd>
+          03 Oct 2026 · 10:15 AM – 12:30 PM
+         </dd>
+</div>
+<div>
+<dt>
+          Status
+         </dt>
+<dd>
+          Completed
+         </dd>
+</div>
+</dl>
+</article>
+<article class="info-card">
+<h4>
+        Clinical findings
+       </h4>
+<p>
+        Recurrent occlusal caries beneath an older restoration. Pulp testing normal; no spontaneous pain.
+       </p>
+<h4>
+        Dentist notes
+       </h4>
+<p>
+        Old restoration removed, caries excavated and restored using nanohybrid composite. Occlusion checked and polished.
+       </p>
+</article>
+</div>
+</div>
+<footer class="modal-footer">
+<button class="btn btn-secondary" onclick="this.closest('dialog').close()" type="button">
+      Close
+     </button>
+</footer>
+</div>
+</dialog>
+<dialog class="modal modal-lg" id="patientXrayModal">
+<div class="modal-shell xray-add-shell">
+<header class="modal-header">
+<div>
+<p class="eyebrow">
+       Patient X-ray
+      </p>
+<h3>
+       Add X-ray to Maria Santos
+      </h3>
+</div>
+<button class="icon-btn" onclick="this.closest('dialog').close()" type="button">
+      ×
+     </button>
+</header>
+<div class="modal-body xray-add-body">
+<form class="form-grid">
+<label>
+       Patient
+       <input readonly="" value="Maria Santos · PT-2026-0018"/>
+</label>
+<label>
+       X-ray type
+       <select required="">
+<option>
+         Full-mouth series (FMX)
+        </option>
+<option>
+         Panoramic
+        </option>
+<option>
+         Bitewing series
+        </option>
+<option>
+         Periapical series
+        </option>
+<option>
+         CBCT
+        </option>
+</select>
+</label>
+<label>
+       Date taken
+       <input required="" type="date" value="2026-10-04"/>
+</label>
+<label>
+       Clinical indication
+       <select required="">
+<option>
+         New-patient baseline assessment
+        </option>
+<option>
+         Routine diagnostic review
+        </option>
+<option>
+         Pain / swelling evaluation
+        </option>
+<option>
+         Pre-operative assessment
+        </option>
+<option>
+         Post-operative review
+        </option>
+<option>
+         Periodontal assessment
+        </option>
+<option>
+         Implant / prosthetic planning
+        </option>
+<option>
+         Orthodontic assessment
+        </option>
+</select>
+</label>
+<label class="span-2">
+       Clinical findings
+       <textarea required="" rows="4"></textarea>
+</label>
+<label class="span-2">
+       Attach image(s)
+       <input accept="image/*" multiple="" required="" type="file"/>
+</label>
+</form>
+</div>
+<footer class="modal-footer xray-add-footer">
+<button class="btn btn-secondary" onclick="this.closest('dialog').close()" type="button">
+      Cancel
+     </button>
+<button class="btn" type="button">
+      Attach to Patient Record
+     </button>
+</footer>
+</div>
+</dialog>
+<script id="multiToothChartWorkflow">
+   (function bindMultiToothChart() {
+  function selectedTeeth(dialog) {
+    return Array.from(dialog.querySelectorAll('.tooth-unit.tooth-picked'));
+  }
+
+  function updateSelectionSummary(dialog) {
+    const selected = selectedTeeth(dialog);
+    const title = dialog.querySelector('#selectedToothTitle');
+    const count = dialog.querySelector('[data-selected-tooth-count]');
+    if (count) count.textContent = selected.length ? `${selected.length} selected` : 'No teeth selected';
+    if (title) {
+      if (!selected.length) {
+        title.textContent = 'Select one or more teeth';
+      } else if (selected.length === 1) {
+        title.textContent = `Tooth #${selected[0].dataset.tooth} — ${selected[0].dataset.toothName}`;
+      } else {
+        title.textContent = `${selected.length} teeth selected · ${selected.map((tooth) => '#' + tooth.dataset.tooth).join(', ')}`;
+      }
+    }
+    draftProgressNote(dialog);
+  }
+
+  function draftProgressNote(dialog) {
+    const selected = selectedTeeth(dialog);
+    const note = dialog.querySelector('#autoProgressNote');
+    if (!note) return;
+    if (!selected.length) {
+      note.value = 'Select one or more teeth to draft the clinical progress note.';
+      return;
+    }
+    const condition = dialog.querySelector('#toothCondition')?.value || 'clinical finding';
+    const clinicalStatus = dialog.querySelector('#toothClinicalStatus')?.value || 'Finding documented';
+    const surfaces = Array.from(dialog.querySelectorAll('.surface-fieldset input:checked')).map((item) => item.value).join('') || 'unspecified surface';
+    const treatment = dialog.querySelector('#toothTreatment')?.value || 'None';
+    note.value = `${selected.map((tooth) => 'Tooth #' + tooth.dataset.tooth).join(', ')}: ${condition} on ${surfaces}. Status: ${clinicalStatus}. Treatment: ${treatment}.`;
+  }
+
+  function statusClass(status, presence, condition, treatment) {
+    if (['Missing', 'Previously Extracted'].includes(presence)) return 'tooth-missing';
+    if (presence === 'Impacted' || condition.includes('Impacted')) return 'tooth-impacted';
+    if (status === 'Completed / Restored') return 'tooth-completed';
+    if (status === 'Treatment Planned') return 'tooth-planned';
+    if (condition.includes('Caries')) return 'tooth-decay';
+    if (status === 'Sound / Healthy') return 'tooth-sound';
+    return 'tooth-finding';
+  }
+
+  document.addEventListener('click', (event) => {
+    const tooth = event.target.closest('.tooth-unit');
+    if (tooth && tooth.closest('.clinical-record-modal')) {
+      const dialog = tooth.closest('.clinical-record-modal');
+      tooth.classList.toggle('tooth-picked');
+      tooth.setAttribute('aria-pressed', tooth.classList.contains('tooth-picked') ? 'true' : 'false');
+      updateSelectionSummary(dialog);
+      return;
+    }
+
+    const toggle = event.target.closest('[data-dentition]');
+    if (toggle) {
+      const dialog = toggle.closest('dialog');
+      if (!dialog) return;
+      dialog.querySelectorAll('[data-dentition]').forEach((button) => button.classList.remove('active'));
+      toggle.classList.add('active');
+      dialog.querySelectorAll('[data-dentition-grid]').forEach((grid) => {
+        grid.classList.toggle('hidden', grid.dataset.dentitionGrid !== toggle.dataset.dentition);
+      });
+      dialog.querySelectorAll('.tooth-unit.tooth-picked').forEach((tooth) => {
+        tooth.classList.remove('tooth-picked');
+        tooth.setAttribute('aria-pressed', 'false');
+      });
+      updateSelectionSummary(dialog);
+      return;
+    }
+
+    const apply = event.target.closest('[data-apply-to-selected]');
+    if (apply) {
+      const dialog = apply.closest('dialog');
+      const selected = selectedTeeth(dialog);
+      if (!selected.length) {
+        const message = dialog.querySelector('[data-tooth-form-message]');
+        if (message) message.textContent = 'Select at least one tooth before applying chart data.';
+        return;
+      }
+      const presence = dialog.querySelector('#toothPresence')?.value || 'Present';
+      const condition = dialog.querySelector('#toothCondition')?.value || 'Sound / Healthy (S)';
+      const treatment = dialog.querySelector('#toothTreatment')?.value || 'None';
+      const status = dialog.querySelector('#toothClinicalStatus')?.value || 'Finding Documented';
+      const pulpal = dialog.querySelector('#toothPulpalDiagnosis')?.value || '';
+      const apical = dialog.querySelector('#toothApicalDiagnosis')?.value || '';
+      const code = dialog.querySelector('#toothProcedureCode')?.value || '';
+      const notes = dialog.querySelector('#toothClinicalNotes')?.value || '';
+      const surfaces = Array.from(dialog.querySelectorAll('.surface-fieldset input:checked')).map((item) => item.value).join('');
+      const cls = statusClass(status, presence, condition, treatment);
+      const allStateClasses = ['tooth-sound','tooth-decay','tooth-finding','tooth-planned','tooth-completed','tooth-missing','tooth-impacted'];
+
+      selected.forEach((tooth) => {
+        tooth.classList.remove(...allStateClasses);
+        tooth.classList.add(cls);
+        tooth.dataset.presence = presence;
+        tooth.dataset.condition = condition;
+        tooth.dataset.treatment = treatment;
+        tooth.dataset.clinicalStatus = status;
+        tooth.dataset.pulpal = pulpal;
+        tooth.dataset.apical = apical;
+        tooth.dataset.code = code;
+        tooth.dataset.notes = notes;
+        tooth.dataset.surfaces = surfaces;
+      });
+
+      const message = dialog.querySelector('[data-tooth-form-message]');
+      if (message) message.textContent = `Chart data applied to ${selected.length} ${selected.length === 1 ? 'tooth' : 'teeth'}.`;
+      draftProgressNote(dialog);
+    }
+  });
+
+  document.addEventListener('change', (event) => {
+    if (!event.target.closest('.clinical-record-modal')) return;
+    if (event.target.matches('#toothPresence, #toothCondition, #toothTreatment, #toothClinicalStatus, #toothPulpalDiagnosis, #toothApicalDiagnosis, #toothProcedureCode') || event.target.closest('.surface-fieldset')) {
+      const dialog = event.target.closest('.clinical-record-modal');
+      const presence = dialog.querySelector('#toothPresence')?.value || 'Present';
+      const treatment = dialog.querySelector('#toothTreatment');
+      if (treatment) treatment.disabled = ['Missing', 'Previously Extracted'].includes(presence);
+      draftProgressNote(dialog);
+    }
+  });
+})();
+  </script>
+<dialog class="modal modal-lg today-patient-modal" id="clinicalUpdateModal">
+<div class="modal-shell">
+<header class="modal-header">
+<div>
+<p class="eyebrow">
+       Today's Patient
+      </p>
+<h3>
+       Update Clinical Record
+      </h3>
+</div>
+<button class="icon-btn" onclick="this.closest('dialog').close()" type="button">
+      ×
+     </button>
+</header>
+<div class="modal-body">
+<form class="form-grid">
+<label>
+       Patient
+       <input readonly="" value="Maria Santos · PT-2026-0018"/>
+</label>
+<label>
+       Appointment
+       <input readonly="" value="05 Oct 2026 · 8:30 AM"/>
+</label>
+<label>
+       Procedure
+       <select>
+<option>
+         Oral Prophylaxis
+        </option>
+<option>
+         Composite Restoration
+        </option>
+<option>
+         Root Canal Therapy
+        </option>
+<option>
+         Extraction
+        </option>
+</select>
+</label>
+<label>
+       Status
+       <select>
+<option>
+         Checked In
+        </option>
+<option>
+         In Progress
+        </option>
+<option>
+         Completed
+        </option>
+<option>
+         Cancelled
+        </option>
+</select>
+</label>
+<label class="span-2">
+       Findings
+       <textarea required="" rows="4">Generalized light calculus. Tooth #30 recurrent caries noted clinically.</textarea>
+</label>
+<label class="span-2">
+       Dentist notes
+       <textarea required="" rows="4"></textarea>
+</label>
+<label>
+       Follow-up date
+       <input type="date" value="2026-10-19"/>
+</label>
+<label>
+       Next recommended service
+       <input value="Restorative consultation"/>
+</label>
+<div class="form-actions span-2">
+<button class="btn btn-secondary" onclick="this.closest('dialog').close()" type="button">
+        Cancel
+       </button>
+<button class="btn" onclick="this.closest('dialog').close(); alert('Clinical record updated for today's patient.')" type="button">
+        Save Clinical Update
+       </button>
+</div>
+</form>
+</div>
+</div>
+</dialog>
+<script id="dentistClinicalUpdate">
+   document.querySelectorAll('[data-clinical-edit]').forEach(function(b){b.addEventListener('click',function(){document.getElementById('clinicalUpdateModal').showModal();});});
+  </script>
+<script>
+   (function () {
+  function updateWorkspaceClock() {
+    const now = new Date();
+    const dateText = now.toLocaleDateString(undefined, {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    });
+    const timeText = now.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+
+    document.querySelectorAll("[data-live-date]").forEach(function (node) {
+      node.textContent = dateText;
+    });
+    document.querySelectorAll("[data-live-time]").forEach(function (node) {
+      node.textContent = timeText;
+    });
+  }
+
+  function applyTableFilter(details) {
+    const tableId = details.dataset.filterFor;
+    const table = document.getElementById(tableId);
+    if (!table) return;
+
+    const query = (details.querySelector("[data-filter-query]")?.value || "")
+      .trim()
+      .toLowerCase();
+    const status = (details.querySelector("[data-filter-status]")?.value || "")
+      .trim()
+      .toLowerCase();
+
+    table.querySelectorAll("tbody tr").forEach(function (row) {
+      const text = (row.textContent + " " + (row.dataset.filterTags || "")).toLowerCase();
+      const matchesQuery = !query || text.includes(query);
+      const matchesStatus = !status || text.includes(status);
+      row.hidden = !(matchesQuery && matchesStatus);
+    });
+  }
+
+  updateWorkspaceClock();
+  window.setInterval(updateWorkspaceClock, 1000);
+
+  document.addEventListener("click", function (event) {
+    const applyButton = event.target.closest("[data-filter-apply]");
+    if (applyButton) {
+      const details = applyButton.closest(".filter-popover");
+      if (details) {
+        applyTableFilter(details);
+        details.open = false;
+      }
+      return;
+    }
+
+    const resetButton = event.target.closest("[data-filter-reset]");
+    if (resetButton) {
+      const details = resetButton.closest(".filter-popover");
+      if (!details) return;
+      const query = details.querySelector("[data-filter-query]");
+      const status = details.querySelector("[data-filter-status]");
+      if (query) query.value = "";
+      if (status) status.value = "";
+      applyTableFilter(details);
+      details.open = false;
+      return;
+    }
+
+    if (!event.target.closest(".filter-popover")) {
+      document.querySelectorAll(".filter-popover[open]").forEach(function (item) {
+        item.open = false;
+      });
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Enter") return;
+    const input = event.target.closest("[data-filter-query]");
+    if (!input) return;
+    event.preventDefault();
+    const details = input.closest(".filter-popover");
+    if (details) {
+      applyTableFilter(details);
+      details.open = false;
+    }
+  });
+})();
+  </script>
+<script id="cerilloTableToolsV2">
+   (function bindCerilloTableTools() {
+  function rowsFor(tableId) {
+    const table = document.getElementById(tableId);
+    return table ? Array.from(table.querySelectorAll('tbody tr')) : [];
+  }
+
+  document.querySelectorAll('[data-table-search]').forEach((input) => {
+    if (input.dataset.boundTableSearch === 'true') return;
+    input.dataset.boundTableSearch = 'true';
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      rowsFor(input.dataset.tableSearch).forEach((row) => {
+        const matches = !query || row.textContent.toLowerCase().includes(query);
+        row.dataset.searchHidden = matches ? 'false' : 'true';
+        const filterHidden = row.dataset.filterHidden === 'true';
+        row.hidden = !matches || filterHidden;
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-table-sort]').forEach((select) => {
+    if (select.dataset.boundTableSort === 'true') return;
+    select.dataset.boundTableSort = 'true';
+    select.addEventListener('change', () => {
+      const table = document.getElementById(select.dataset.tableSort);
+      if (!table) return;
+      const body = table.querySelector('tbody');
+      const rows = Array.from(body.querySelectorAll('tr'));
+      const direction = select.value;
+      if (!direction) {
+        rows.sort((a, b) => Number(a.dataset.originalIndex) - Number(b.dataset.originalIndex));
+      } else {
+        rows.sort((a, b) => {
+          const aa = (a.cells[0]?.textContent || '').trim();
+          const bb = (b.cells[0]?.textContent || '').trim();
+          const ad = Date.parse(aa);
+          const bd = Date.parse(bb);
+          let result;
+          if (!Number.isNaN(ad) && !Number.isNaN(bd)) {
+            result = ad - bd;
+          } else {
+            const an = Number(aa.replace(/[^0-9.-]/g, ''));
+            const bn = Number(bb.replace(/[^0-9.-]/g, ''));
+            result = aa && bb && Number.isFinite(an) && Number.isFinite(bn) && /\d/.test(aa) && /\d/.test(bb)
+              ? an - bn
+              : aa.toLowerCase().localeCompare(bb.toLowerCase());
+          }
+          return direction === 'asc' ? result : -result;
+        });
+      }
+      rows.forEach((row) => body.appendChild(row));
+    });
+  });
+
+  document.querySelectorAll('table tbody tr').forEach((row, index) => {
+    if (!row.dataset.originalIndex) row.dataset.originalIndex = String(index);
+  });
+
+  document.querySelectorAll('.filter-popover').forEach((details) => {
+    const apply = details.querySelector('[data-filter-apply]');
+    const reset = details.querySelector('[data-filter-reset]');
+    const status = details.querySelector('[data-filter-status]');
+    const keyword = details.querySelector('[data-filter-query]');
+    const tableId = details.dataset.filterFor;
+
+    function applyAdvancedFilter() {
+      const statusValue = (status?.value || '').trim().toLowerCase();
+      const keywordValue = (keyword?.value || '').trim().toLowerCase();
+      rowsFor(tableId).forEach((row) => {
+        const text = (row.textContent + ' ' + (row.dataset.filterTags || '')).toLowerCase();
+        const matches = (!statusValue || text.includes(statusValue)) && (!keywordValue || text.includes(keywordValue));
+        row.dataset.filterHidden = matches ? 'false' : 'true';
+        const searchHidden = row.dataset.searchHidden === 'true';
+        row.hidden = !matches || searchHidden;
+      });
+    }
+
+    if (apply && apply.dataset.boundFilterV2 !== 'true') {
+      apply.dataset.boundFilterV2 = 'true';
+      apply.addEventListener('click', () => {
+        applyAdvancedFilter();
+        details.removeAttribute('open');
+      });
+    }
+    if (reset && reset.dataset.boundFilterV2 !== 'true') {
+      reset.dataset.boundFilterV2 = 'true';
+      reset.addEventListener('click', () => {
+        if (status) status.value = '';
+        if (keyword) keyword.value = '';
+        rowsFor(tableId).forEach((row) => {
+          row.dataset.filterHidden = 'false';
+          row.hidden = row.dataset.searchHidden === 'true';
+        });
+        details.removeAttribute('open');
+      });
+    }
+  });
+})();
+  </script>
+<script id="sharedAccessibilitySettings">
+   (function bindSharedAccessibilitySettings() {
+  const settings = [
+    { id: 'largeText', key: 'cerilloLargeText', className: 'large-text' },
+    { id: 'highContrast', key: 'cerilloHighContrast', className: 'high-contrast' },
+    { id: 'reducedMotion', key: 'cerilloReducedMotion', className: 'reduced-motion' },
+    { id: 'enhancedFocus', key: 'cerilloEnhancedFocus', className: 'enhanced-focus' }
+  ];
+
+  settings.forEach((setting) => {
+    const input = document.getElementById(setting.id);
+    if (!input) return;
+
+    const savedValue = localStorage.getItem(setting.key);
+    const enabled = savedValue === null ? Boolean(input.checked) : savedValue === 'true';
+    input.checked = enabled;
+    document.body.classList.toggle(setting.className, enabled);
+
+    input.addEventListener('change', () => {
+      document.body.classList.toggle(setting.className, input.checked);
+      localStorage.setItem(setting.key, String(input.checked));
+    });
+  });
+})();
+  </script>
+<script id="archOdontogramLayout">
+   (function () {
+    function classifyTooth(tooth) {
+     const name = (tooth.dataset.toothName || '').toLowerCase();
+     const numeric = Number(tooth.dataset.tooth);
+     tooth.classList.remove('tooth-upper','tooth-lower','tooth-molar','tooth-premolar','tooth-canine','tooth-incisor');
+     if (!Number.isNaN(numeric)) tooth.classList.add(numeric <= 16 ? 'tooth-upper' : 'tooth-lower');
+     if (name.includes('molar')) tooth.classList.add('tooth-molar');
+     else if (name.includes('premolar')) tooth.classList.add('tooth-premolar');
+     else if (name.includes('canine')) tooth.classList.add('tooth-canine');
+     else tooth.classList.add('tooth-incisor');
+     tooth.style.removeProperty('--tooth-x');
+     tooth.style.removeProperty('--tooth-y');
+     tooth.style.removeProperty('--tooth-rotate');
+     tooth.style.removeProperty('--tooth-size');
+    }
+
+    function prepareCharts() {
+     document.querySelectorAll('.premium-dental-chart .tooth-unit').forEach(classifyTooth);
+    }
+
+    document.addEventListener('DOMContentLoaded', prepareCharts);
+    document.addEventListener('click', function (event) {
+     if (event.target.closest('[data-record-tab="chart"], [data-dentition]')) {
+      requestAnimationFrame(prepareCharts);
+     }
+    });
+    prepareCharts();
+   })();
+  </script>
+<script id="premiumDentalChartUX">
+   (function () {
+    function selected(dialog) {
+     return Array.from(dialog.querySelectorAll('.tooth-unit.tooth-picked'));
+    }
+
+    function renderChips(dialog) {
+     const holder = dialog.querySelector('[data-selected-tooth-count]');
+     const title = dialog.querySelector('#selectedToothTitle');
+     if (!holder) return;
+     const teeth = selected(dialog);
+     if (!teeth.length) {
+      holder.textContent = 'No teeth selected';
+      if (title) title.textContent = 'Select one or more teeth';
+      return;
+     }
+     holder.innerHTML = teeth.map(function (tooth) {
+      const id = tooth.dataset.tooth;
+      return '<span class="selected-tooth-chip">#' + id + '<button type="button" aria-label="Remove tooth ' + id + '" data-remove-selected-tooth="' + id + '">&times;</button></span>';
+     }).join('');
+     if (title) {
+      title.textContent = teeth.length === 1
+       ? 'Tooth #' + teeth[0].dataset.tooth + ' — ' + teeth[0].dataset.toothName
+       : 'Selected Teeth (' + teeth.length + ')';
+     }
+    }
+
+    function refresh(dialog) {
+     requestAnimationFrame(function () { renderChips(dialog); });
+    }
+
+    document.addEventListener('click', function (event) {
+     const dialog = event.target.closest('.clinical-record-modal');
+     if (!dialog) return;
+
+     const remove = event.target.closest('[data-remove-selected-tooth]');
+     if (remove) {
+      event.preventDefault();
+      event.stopPropagation();
+      const tooth = dialog.querySelector('.tooth-unit[data-tooth="' + remove.dataset.removeSelectedTooth + '"]');
+      if (tooth && tooth.classList.contains('tooth-picked')) tooth.click();
+      refresh(dialog);
+      return;
+     }
+
+     if (event.target.closest('.tooth-unit')) {
+      refresh(dialog);
+      return;
+     }
+
+     if (event.target.closest('[data-chart-clear]')) {
+      dialog.querySelectorAll('.tooth-unit.tooth-picked').forEach(function (tooth) { tooth.click(); });
+      refresh(dialog);
+      return;
+     }
+
+     if (event.target.closest('[data-chart-print]')) {
+      window.print();
+      return;
+     }
+
+     if (event.target.closest('[data-chart-save]')) {
+      const message = dialog.querySelector('[data-tooth-form-message]');
+      if (message) message.textContent = 'Dental chart changes saved for this patient record.';
+      return;
+     }
+
+     const ref = event.target.closest('[data-chart-reference]');
+     if (ref) {
+      const target = ref.dataset.chartReference;
+      if (target === 'history') dialog.querySelector('[data-record-tab="visits"]')?.click();
+      if (target === 'images') dialog.querySelector('[data-record-tab="pxray"]')?.click();
+      if (target === 'notes') dialog.querySelector('#toothClinicalNotes')?.focus();
+     }
+    });
+
+    document.addEventListener('click', function (event) {
+     if (event.target.closest('[data-record-tab="chart"]')) {
+      const dialog = event.target.closest('.clinical-record-modal');
+      if (dialog) refresh(dialog);
+     }
+    });
+   })();
+  </script>
+<dialog class="modal modal-lg patient-xray-detail-modal" id="patientXrayDetailModal">
+<div class="modal-shell">
+<header class="modal-header">
+<div>
+<p class="eyebrow">Patient Radiograph</p>
+<h3 data-xray-detail-title="">Radiograph Details</h3>
+<p data-xray-detail-subtitle="">Maria Santos · PT-2026-0018</p>
+</div>
+<button aria-label="Close X-ray details" class="icon-btn" onclick="this.closest('dialog').close()" type="button">×</button>
+</header>
+<div class="modal-body xray-detail-layout">
+<div class="patient-xray-detail-image">
+<img alt="Patient dental radiograph" data-xray-detail-image="" src="../assets/images/xray-panoramic.png"/>
+</div>
+<div class="patient-xray-detail-info">
+<div class="xray-detail-summary">
+<div><small>Patient</small><strong>Maria Santos</strong></div>
+<div><small>Date taken</small><strong data-xray-detail-date="">03 Oct 2026</strong></div>
+<div><small>Imaging type</small><strong data-xray-detail-type="">Panoramic</strong></div>
+<div><small>Dentist</small><strong data-xray-detail-dentist="">Dr. Ana Cerillo</strong></div>
+</div>
+<article class="xray-detail-note">
+<small>Clinical findings</small>
+<p data-xray-detail-findings="">General survey of the dentition.</p>
+</article>
+<article class="xray-detail-note">
+<small>Record note</small>
+<p data-xray-detail-note="">This radiograph is part of the patient clinical record and should be interpreted together with the dental examination.</p>
+</article>
+</div>
+</div>
+<footer class="modal-footer">
+<button class="btn secondary" onclick="this.closest('dialog').close()" type="button">Close</button>
+</footer>
+</div>
+</dialog>
+<script id="patientRecordFinalEnhancements">
+   (function () {
+    function classifyTooth(tooth) {
+     const name = (tooth.dataset.toothName || '').toLowerCase();
+     tooth.classList.remove('tooth-upper','tooth-lower','tooth-molar','tooth-premolar','tooth-canine','tooth-incisor');
+     if (name.includes('maxillary')) tooth.classList.add('tooth-upper');
+     if (name.includes('mandibular')) tooth.classList.add('tooth-lower');
+     if (name.includes('molar')) tooth.classList.add('tooth-molar');
+     else if (name.includes('premolar')) tooth.classList.add('tooth-premolar');
+     else if (name.includes('canine')) tooth.classList.add('tooth-canine');
+     else tooth.classList.add('tooth-incisor');
+    }
+
+    function prepareDentitions(dialog) {
+     dialog.querySelectorAll('.premium-dental-chart [data-dentition-grid] .tooth-unit').forEach(classifyTooth);
+    }
+
+    function relocatePeriodontal(dialog) {
+     const chart = dialog.querySelector('.premium-dental-chart');
+     const left = chart?.querySelector('.odontogram-panel');
+     const perio = chart?.querySelector('.clinical-details');
+     if (left && perio && perio.parentElement !== left) left.appendChild(perio);
+     chart?.querySelectorAll('.chart-history').forEach((node) => node.remove());
+    }
+
+    function bindXrays(dialog) {
+     const detail = document.getElementById('patientXrayDetailModal');
+     if (!detail) return;
+     dialog.querySelectorAll('.xray-record-card').forEach((card) => {
+      card.setAttribute('role','button');
+      card.setAttribute('tabindex','0');
+      card.setAttribute('aria-label','View X-ray record details');
+      function open() {
+       const strong = card.querySelector('strong')?.textContent.trim() || 'Radiograph';
+       const parts = strong.split('·').map((part) => part.trim());
+       const type = parts[0] || 'Radiograph';
+       const date = parts[parts.length - 1] || '—';
+       const dentist = card.querySelector('span')?.textContent.trim() || 'Dr. Ana Cerillo';
+       const findings = card.querySelector('p')?.textContent.trim() || 'No additional findings recorded.';
+       const src = card.querySelector('img')?.getAttribute('src') || '../assets/images/xray-panoramic.png';
+       detail.querySelector('[data-xray-detail-title]').textContent = type + ' Radiograph';
+       detail.querySelector('[data-xray-detail-date]').textContent = date;
+       detail.querySelector('[data-xray-detail-type]').textContent = type;
+       detail.querySelector('[data-xray-detail-dentist]').textContent = dentist;
+       detail.querySelector('[data-xray-detail-findings]').textContent = findings;
+       detail.querySelector('[data-xray-detail-image]').src = src;
+       detail.showModal();
+      }
+      card.addEventListener('click', open);
+      card.addEventListener('keydown', (event) => {
+       if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); }
+      });
+     });
+    }
+
+    function initialize() {
+     document.querySelectorAll('.clinical-record-modal').forEach((dialog) => {
+      prepareDentitions(dialog);
+      relocatePeriodontal(dialog);
+      bindXrays(dialog);
+     });
+    }
+
+    document.addEventListener('DOMContentLoaded', initialize);
+    initialize();
+   })();
+  </script>
+<dialog class="modal modal-lg dentist-appointment-detail-modal" id="dentistAppointmentDetailModal">
+<div class="modal-shell">
+<header class="modal-header">
+<div>
+<p class="eyebrow">Appointment Record</p>
+<h3 data-dentist-appt-title="">Appointment Details</h3>
+<p>Clinical schedule information for the selected appointment.</p>
+</div>
+<button class="icon-btn" onclick="this.closest('dialog').close()" type="button">×</button>
+</header>
+<div class="modal-body">
+<div class="appointment-detail-summary">
+<div><small>Patient</small><strong data-da-patient="">—</strong></div>
+<div><small>Procedure</small><strong data-da-procedure="">—</strong></div>
+<div><small>Date</small><strong data-da-date="">—</strong></div>
+<div><small>Time</small><strong data-da-time="">—</strong></div>
+<div><small>Status</small><strong data-da-status="">—</strong></div>
+<div><small>Dentist</small><strong data-da-dentist="">Dr. Angela Cerillo</strong></div>
+</div>
+<article class="appointment-detail-note">
+<h4>Appointment notes</h4>
+<p>Review the scheduled procedure and patient status before beginning treatment. Clinical documentation is completed from Patient Records.</p>
+</article>
+</div>
+<footer class="modal-footer">
+<button class="btn secondary" onclick="this.closest('dialog').close()" type="button">Close</button>
+</footer>
+</div>
+</dialog>
+<script id="dentistAppointmentDetailBinding">
+   (function () {
+    const section = document.getElementById('appointments');
+    const modal = document.getElementById('dentistAppointmentDetailModal');
+    if (!section || !modal) return;
+    section.querySelectorAll('table tbody .table-action').forEach((button) => {
+     button.removeAttribute('onclick');
+     button.addEventListener('click', () => {
+      const cells = button.closest('tr')?.querySelectorAll('td');
+      if (!cells || cells.length < 5) return;
+      const patient = cells[0].textContent.trim();
+      const procedure = cells[1].textContent.trim();
+      const date = cells[2].textContent.trim();
+      const time = cells[3].textContent.trim();
+      const status = cells[4].textContent.trim();
+      modal.querySelector('[data-dentist-appt-title]').textContent = patient + ' · ' + procedure;
+      modal.querySelector('[data-da-patient]').textContent = patient;
+      modal.querySelector('[data-da-procedure]').textContent = procedure;
+      modal.querySelector('[data-da-date]').textContent = date;
+      modal.querySelector('[data-da-time]').textContent = time;
+      modal.querySelector('[data-da-status]').textContent = status;
+      modal.querySelector('[data-da-dentist]').textContent = document.getElementById('dentistAccountName')?.textContent.trim() || 'Dr. Angela Cerillo';
+      modal.showModal();
+     });
+    });
+   })();
+  </script>
+<script id="dentistCalendarInteractionV2">
+   (function () {
+    const section=document.getElementById('calendar');
+    const grid=document.getElementById('dentistInteractiveWeek');
+    const weekWrap=document.getElementById('dentistCalendarWeek');
+    const month=document.getElementById('dentistCalendarMonth');
+    const title=section?.querySelector('.calendar-toolbar > strong');
+    if(!section||!grid||!month||!title)return;
+    let anchor=new Date(2026,9,5),view='week';
+    const hours=[9,10,11,12,13,14,15,16,17];
+    const events={
+     '2026-10-05-9':['Maria Santos','Completed','completed'],
+     '2026-10-05-13':['Paolo Garcia','Cancelled','cancelled'],
+     '2026-10-06-10':['Andrea Cruz','In Progress','progress'],
+     '2026-10-07-9':['Joshua Lim','Checked In','checked'],
+     '2026-10-08-13':['Unavailable','Conference','blocked'],
+     '2026-10-09-16':['Carlo Mendoza','Completed','completed']
+    };
+    const pad=n=>String(n).padStart(2,'0'); const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    const time=h=>h===12?'12 PM':h>12?`${h-12} PM`:`${h} AM`;
+    function monday(d){const x=new Date(d);const day=x.getDay()||7;x.setDate(x.getDate()-day+1);return x;}
+    function renderWeek(){
+     const start=monday(anchor); const days=Array.from({length:5},(_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return d;});
+     title.textContent=`${days[0].toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${days[4].toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+     let html='<div class="calendar-time">Time</div>'+days.map(d=>`<button class="calendar-day" data-availability-date="${iso(d)}" type="button"><strong>${d.toLocaleDateString('en-US',{weekday:'short'})} ${d.getDate()}</strong></button>`).join('');
+     hours.forEach(h=>{html+=`<div class="calendar-time">${time(h)}</div>`;days.forEach(d=>{const k=`${iso(d)}-${h}`,e=events[k];if(e){html+=`<div class="calendar-slot ${e[2]==='blocked'?'blocked':'event '+e[2]}"><strong>${e[0]}</strong><br><small>${e[1]}</small></div>`;}else if(h===17){html+='<div class="calendar-slot calendar-closing"><small>Clinic close</small></div>';}else{html+=`<button class="calendar-slot" data-availability-date="${iso(d)}" data-availability-start="${pad(h)}:00" data-availability-end="${pad(h+1)}:00" type="button"></button>`;}});});
+     grid.innerHTML=html;
+    }
+    function renderMonth(){
+     const y=anchor.getFullYear(),m=anchor.getMonth();title.textContent=new Date(y,m,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+     const first=new Date(y,m,1),count=new Date(y,m+1,0).getDate(),offset=first.getDay();let html=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="month-weekday">${x}</div>`).join('');
+     for(let i=0;i<offset;i++)html+='<div class="month-day muted"></div>';
+     for(let day=1;day<=count;day++){const d=new Date(y,m,day);html+=`<button class="month-day" data-dentist-month-date="${iso(d)}" type="button"><strong>${day}</strong><span>${day===8?'Unavailable':day===5?'3 visits':''}</span></button>`;}month.innerHTML=html;
+    }
+    function show(v){view=v;weekWrap.hidden=v!=='week';month.hidden=v!=='month';section.querySelectorAll('[data-dentist-calendar-view]').forEach(b=>b.classList.toggle('active',b.dataset.dentistCalendarView===v));v==='week'?renderWeek():renderMonth();}
+    section.querySelectorAll('[data-dentist-calendar-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.dentistCalendarView)));
+    const arrows=section.querySelectorAll('.calendar-toolbar > .btn-secondary');
+    arrows[0]?.addEventListener('click',()=>{anchor.setDate(anchor.getDate()+(view==='week'?-7:-28));show(view);});
+    arrows[1]?.addEventListener('click',()=>{anchor.setDate(anchor.getDate()+(view==='week'?7:28));show(view);});
+    grid.addEventListener('click',(e)=>{
+     if(section.classList.contains('availability-pick-mode')) return;
+     const eventCell=e.target.closest('.calendar-slot.event');
+     const empty=e.target.closest('button.calendar-slot');
+     if(eventCell){
+      const modal=document.getElementById('dentistAppointmentDetailModal');
+      if(modal){
+       const text=eventCell.querySelector('strong')?.textContent.trim()||eventCell.childNodes[0]?.textContent.trim()||'Appointment';
+       modal.querySelector('[data-dentist-appt-title]').textContent=text+' · Calendar Appointment';
+       modal.querySelector('[data-da-patient]').textContent=text;
+       modal.querySelector('[data-da-procedure]').textContent=eventCell.querySelector('small')?.textContent.trim()||'Scheduled care';
+       modal.querySelector('[data-da-status]').textContent=eventCell.querySelector('small')?.textContent.trim()||'Scheduled';
+       modal.showModal();
+      }
+      return;
+     }
+     if(empty){grid.querySelectorAll('.selected-slot').forEach(x=>x.classList.remove('selected-slot'));empty.classList.add('selected-slot');}
+    });
+    month.addEventListener('click',(e)=>{const day=e.target.closest('[data-dentist-month-date]');if(!day)return;if(section.classList.contains('availability-pick-mode')&&typeof openAvailabilitySelection==='function'){openAvailabilitySelection({type:'date',date:day.dataset.dentistMonthDate,endDate:day.dataset.dentistMonthDate,display:day.dataset.dentistMonthDate+' · All day'});section.classList.remove('availability-pick-mode');return;}month.querySelectorAll('.selected-day').forEach(x=>x.classList.remove('selected-day'));day.classList.add('selected-day');});
+    show('week');
+   })();
+  </script>
+<script id="dentitionPixelLayoutFinal">
+   (function(){
+    function apply(){
+     document.querySelectorAll('.premium-dental-chart .odontogram-panel').forEach((panel)=>{
+      const visible=panel.querySelector('[data-dentition-grid]:not(.hidden)');
+      panel.dataset.dentitionView=visible?.dataset.dentitionGrid || 'permanent';
+     });
+     document.querySelectorAll('.premium-dental-chart [data-dentition-grid]').forEach((grid)=>{
+      const type=grid.dataset.dentitionGrid;
+      const teeth=Array.from(grid.querySelectorAll('.tooth-unit'));
+      teeth.forEach((tooth,index)=>{
+       const name=(tooth.dataset.toothName||'').toLowerCase();
+       tooth.classList.toggle('tooth-upper',name.includes('maxillary'));
+       tooth.classList.toggle('tooth-lower',name.includes('mandibular'));
+       tooth.classList.remove('tooth-molar','tooth-premolar','tooth-canine','tooth-incisor');
+       if(name.includes('molar')) tooth.classList.add('tooth-molar');
+       else if(name.includes('premolar')) tooth.classList.add('tooth-premolar');
+       else if(name.includes('canine')) tooth.classList.add('tooth-canine');
+       else tooth.classList.add('tooth-incisor');
+       if(type==='mixed'){
+        tooth.style.gridColumn=''; tooth.style.gridRow='';
+        const isUpper=name.includes('maxillary');
+        if(index<32){
+         tooth.style.gridRow=isUpper?'1':'4';
+         tooth.style.gridColumn=String((index%16)+1);
+        }else{
+         const j=index-32;
+         tooth.style.gridRow=isUpper?'2':'3';
+         tooth.style.gridColumn=String((j%10)+4);
+        }
+       }
+      });
+     });
+    }
+    document.addEventListener('DOMContentLoaded',apply);
+    document.addEventListener('click',(event)=>{if(event.target.closest('[data-dentition]')) requestAnimationFrame(apply);});
+    apply();
+   })();
+  </script>
+<script id="clinicalPanelHeightSyncFinal">
+   (function(){
+    function syncOne(workspace){
+     const left=workspace.querySelector('.odontogram-panel');
+     const right=workspace.querySelector('.tooth-detail-panel');
+     if(!left||!right) return;
+     const h=Math.ceil(left.getBoundingClientRect().height);
+     if(h>0){
+      workspace.style.setProperty('--clinical-panel-height',h+'px');
+      right.style.height=h+'px';
+      right.style.maxHeight=h+'px';
+     }
+    }
+    function syncAll(){
+     document.querySelectorAll('.premium-dental-chart .odontogram-workspace').forEach(syncOne);
+    }
+    document.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(syncAll));
+    document.addEventListener('click',(event)=>{
+     if(event.target.closest('[data-dentition], [data-record-tab="chart"]')){
+      requestAnimationFrame(()=>requestAnimationFrame(syncAll));
+     }
+    });
+    window.addEventListener('resize',()=>requestAnimationFrame(syncAll));
+    if('ResizeObserver' in window){
+     const ro=new ResizeObserver(()=>requestAnimationFrame(syncAll));
+     document.querySelectorAll('.premium-dental-chart .odontogram-panel').forEach(el=>ro.observe(el));
+    }
+    syncAll();
+   })();
+  </script>
+<script id="patientRecordSegmentationExportAndToothBilling">
+(function(){
+  function money(value){
+    return '₱' + Number(value || 0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  }
+
+  function getBilling(){
+    try { return JSON.parse(localStorage.getItem('cerilloPatientToothBilling') || '[]'); }
+    catch (_) { return []; }
+  }
+
+  function currentRecordDialogFromPage(){
+    return document.querySelector('dialog.clinical-record-modal[open]') || document.querySelector('dialog.clinical-record-modal');
+  }
+
+  function applyPatientFilters(table){
+    if(!table) return;
+    const id=table.id;
+    const segment=document.querySelector('[data-patient-segment-for="'+id+'"]')?.value || '';
+    const procedure=document.querySelector('[data-patient-procedure-for="'+id+'"]')?.value || '';
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      const matches=(!segment || row.dataset.segment===segment) && (!procedure || row.dataset.procedure===procedure);
+      row.dataset.segmentHidden=matches ? 'false' : 'true';
+      row.hidden=!matches || row.dataset.searchHidden==='true' || row.dataset.filterHidden==='true';
+    });
+  }
+
+  document.addEventListener('change',function(event){
+    const control=event.target.closest('[data-patient-segment-for],[data-patient-procedure-for]');
+    if(!control) return;
+    const id=control.dataset.patientSegmentFor || control.dataset.patientProcedureFor;
+    applyPatientFilters(document.getElementById(id));
+  });
+
+  function printablePanelMarkup(dialog){
+    const labels={
+      summary:'Overview',
+      visits:'Visit History',
+      medical:'Medical Record',
+      chart:'Dental Chart & Procedures',
+      pxray:'X-rays',
+      ledger:'Billing Ledger'
+    };
+    return Array.from(dialog.querySelectorAll('.record-tab-panel')).map(function(panel){
+      const clone=panel.cloneNode(true);
+      clone.querySelectorAll('button,.icon-btn,.btn,.tooth-local-popup,.consultation-summary-overlay,[data-tooth-quick-popover],[data-tooth-charge-popover]').forEach(function(el){el.remove();});
+      const key=panel.dataset.recordPanel || '';
+      return '<section><h2>'+((labels[key]) || key)+'</h2>'+clone.innerHTML+'</section>';
+    }).join('');
+  }
+
+  function printableProcedureRows(patientId){
+    const rows=[];
+    getBilling().filter(function(item){return item.patientId===patientId;}).forEach(function(item){
+      if(item.type==='consultation-invoice' && Array.isArray(item.items)){
+        item.items.forEach(function(entry){
+          rows.push('<tr><td>#'+entry.tooth+'</td><td>'+entry.finding+'</td><td>'+entry.procedure+'</td><td>'+money(entry.price)+'</td></tr>');
+        });
+      } else {
+        rows.push('<tr><td>#'+(item.tooth || '—')+'</td><td>'+(item.finding || '—')+'</td><td>'+(item.procedure || '—')+'</td><td>'+money(item.price)+'</td></tr>');
+      }
+    });
+    if(!rows.length) return '';
+    return '<section><h2>Dental Procedures</h2><table><thead><tr><th>Tooth</th><th>Finding</th><th>Procedure</th><th>Charge</th></tr></thead><tbody>'+rows.join('')+'</tbody></table></section>';
+  }
+
+  function buildPatientPrint(dialog){
+    if(!dialog) return;
+    const name=dialog.dataset.patientName || dialog.querySelector('.patient-file-header h3')?.textContent.trim() || 'Patient Record';
+    const patientId=dialog.dataset.patientId || '';
+    const panels=printablePanelMarkup(dialog);
+    const procedures=printableProcedureRows(patientId);
+    const styles='body{font-family:Arial,sans-serif;color:#172033;margin:32px;line-height:1.45}header{border-bottom:2px solid #3157e8;padding-bottom:14px;margin-bottom:22px}h1{margin:0;font-size:26px}h2{font-size:18px;margin:26px 0 12px;color:#1f3b75;border-bottom:1px solid #dbe3ef;padding-bottom:7px}.record-tab-panel,.panel,.info-card,.record-section{display:block!important}.record-tabs{display:none!important}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #dfe5ee;padding:7px;text-align:left}.tooth-grid{transform:scale(.82);transform-origin:left top;min-height:420px}.tooth-detail-panel{display:none!important}img{max-width:100%;height:auto}.ledger-summary,.info-matrix,.patient-overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.ledger-summary article,.info-field,.info-card{border:1px solid #dfe5ee;padding:10px;border-radius:8px}@page{size:A4;margin:15mm}';
+    const html='<!doctype html><html><head><meta charset="utf-8"><title>'+name+' · Patient Record</title><style>'+styles+'</style></head><body><header><small>CERILLO DENTAL CLINIC</small><h1>'+name+'</h1><div>'+patientId+'</div><p>Complete patient record including medical history, visit history, dental procedures, imaging and billing ledger.</p></header>'+panels+procedures+'</body></html>';
+
+    const oldFrame=document.getElementById('cerilloPatientPrintFrame');
+    if(oldFrame) oldFrame.remove();
+    const frame=document.createElement('iframe');
+    frame.id='cerilloPatientPrintFrame';
+    frame.setAttribute('aria-hidden','true');
+    frame.style.position='fixed';
+    frame.style.width='1px';
+    frame.style.height='1px';
+    frame.style.right='0';
+    frame.style.bottom='0';
+    frame.style.opacity='0';
+    frame.style.pointerEvents='none';
+    frame.onload=function(){
+      try {
+        frame.contentWindow.focus();
+        frame.contentWindow.print();
+      } finally {
+        setTimeout(function(){frame.remove();},1200);
+      }
+    };
+    document.body.appendChild(frame);
+    frame.srcdoc=html;
+  }
+
+  document.addEventListener('click',function(event){
+    if(event.target.closest('[data-export-patient-pdf]')){
+      const dialog=event.target.closest('dialog.clinical-record-modal');
+      if(dialog) buildPatientPrint(dialog);
+    }
+    if(event.target.closest('[data-export-current-patient-pdf]')){
+      const dialog=currentRecordDialogFromPage();
+      if(dialog) buildPatientPrint(dialog);
+    }
+  });
+
+  function ledgerDescription(item){
+    if(item.type==='consultation-invoice'){
+      const count=Array.isArray(item.items) ? item.items.length : 0;
+      return 'Dental consultation · '+count+' procedure'+(count===1?'':'s');
+    }
+    return 'Tooth #'+(item.tooth || '—')+' · '+(item.procedure || item.finding || 'Dental procedure');
+  }
+
+  function addLedgerRow(dialog,item){
+    const table=dialog.querySelector('[data-patient-ledger]');
+    if(!table?.tBodies?.[0]) return;
+    if(table.querySelector('[data-tooth-charge-id="'+item.id+'"]')) return;
+    const tr=document.createElement('tr');
+    tr.dataset.toothChargeId=item.id;
+    tr.innerHTML='<td>'+new Date(item.createdAt).toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'})+'</td><td>'+item.reference+'</td><td>'+ledgerDescription(item)+'</td><td>'+money(item.price)+'</td><td>—</td><td>'+money(item.price)+'</td>';
+    table.tBodies[0].appendChild(tr);
+  }
+
+  function hydrateLedger(dialog){
+    const patientId=dialog.dataset.patientId;
+    getBilling().filter(function(item){return item.patientId===patientId;}).forEach(function(item){addLedgerRow(dialog,item);});
+  }
+
+  document.querySelectorAll('dialog.clinical-record-modal').forEach(hydrateLedger);
+  window.addEventListener('cerillo-tooth-billing-updated',function(){
+    document.querySelectorAll('dialog.clinical-record-modal').forEach(hydrateLedger);
+  });
+})();
+</script>
+
+<script id="guaranteedToothFindingFlow">
+(function(){
+  const STATUS_CLASSES=['tooth-sound','tooth-decay','tooth-finding','tooth-planned','tooth-completed','tooth-missing','tooth-impacted'];
+  const DRAFT_KEY='cerilloConsultationDrafts', BILLING_KEY='cerilloPatientToothBilling';
+  let activeTooth=null, activeRecord=null, selectedFinding='';
+  function money(v){return new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',maximumFractionDigits:2}).format(Number(v||0));}
+  function read(k,f){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f));}catch(_){return f;}}
+  function write(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(_){}}
+  function pkey(r){return r?.dataset.patientId||r?.dataset.patientName||'unknown';}
+  function draft(r){const s=read(DRAFT_KEY,{}),k=pkey(r);return s[k]||{patientId:r?.dataset.patientId||'',patientName:r?.dataset.patientName||'',items:[]};}
+  function saveDraft(r,d){const s=read(DRAFT_KEY,{});s[pkey(r)]={...d,patientId:r?.dataset.patientId||'',patientName:r?.dataset.patientName||'',updatedAt:new Date().toISOString()};write(DRAFT_KEY,s);renderCart(r);}
+  function clearDraft(r){const s=read(DRAFT_KEY,{});delete s[pkey(r)];write(DRAFT_KEY,s);renderCart(r);}
+  function charges(){return read(BILLING_KEY,[]);}
+  function saveCharges(v){write(BILLING_KEY,v);window.dispatchEvent(new CustomEvent('cerillo-tooth-billing-updated'));}
+  function cls(f){if(/sound|healthy/i.test(f))return'tooth-sound';if(/caries|decay/i.test(f))return'tooth-decay';if(/impacted/i.test(f))return'tooth-impacted';if(/missing|extracted/i.test(f))return'tooth-missing';if(/restoration|crown|root canal treated/i.test(f))return'tooth-completed';return'tooth-finding';}
+  function proc(f){if(/caries|decay/i.test(f))return'Composite Restoration';if(/cracked|fractured/i.test(f))return'Restorative Treatment';if(/impacted/i.test(f))return'Surgical Extraction';if(/missing|extracted/i.test(f))return'Tooth Extraction';if(/crown/i.test(f))return'Dental Crown';if(/root canal/i.test(f))return'Root Canal Treatment';if(/restoration/i.test(f))return'Restorative Treatment';return'Other Dental Procedure';}
+  function apply(tooth,f){tooth.classList.remove(...STATUS_CLASSES);tooth.classList.add(cls(f));tooth.dataset.finding=f;}
+  function invoiceDesc(x){return x?.type==='consultation-invoice'?'Dental consultation · '+(x.items?.length||0)+' procedure'+((x.items?.length||0)===1?'':'s'):'Tooth #'+x.tooth+' · '+x.procedure+' — '+x.finding;}
+  function addLedger(r,x){const table=r?.querySelector('[data-patient-ledger]');if(!table?.tBodies?.[0]||table.querySelector('[data-tooth-charge-id="'+x.id+'"]'))return;const tr=document.createElement('tr');tr.dataset.toothChargeId=x.id;tr.innerHTML='<td>'+new Date(x.createdAt).toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'})+'</td><td>'+x.reference+'</td><td>'+invoiceDesc(x)+'</td><td>'+money(x.price)+'</td><td>—</td><td>'+money(x.price)+'</td>';table.tBodies[0].appendChild(tr);const amt=Number(x.price||0);r.querySelectorAll('.ledger-summary article').forEach(card=>{const label=(card.querySelector('span')?.textContent||'').trim().toLowerCase(),strong=card.querySelector('strong');if(!strong)return;if(label.includes('total charges')||label.includes('outstanding')){const current=Number((strong.textContent||'').replace(/[^0-9.-]/g,''))||0;strong.textContent=money(current+amt);}});}
+  function ensurePopups(r){let f=r.querySelector(':scope > [data-local-tooth-finding]');if(!f){f=document.createElement('div');f.className='tooth-local-popup tooth-local-finding';f.dataset.localToothFinding='';f.hidden=true;f.innerHTML=`<div class="tooth-flow-head"><div><small>Dental chart</small><strong data-local-tooth-title>Selected tooth</strong></div><button type="button" class="icon-btn" data-local-find-close>×</button></div><div class="tooth-flow-body"><label class="tooth-flow-label">Finding / condition<select data-local-finding-select><option value="">Select finding...</option><option value="Sound / Healthy">/</option><option value="Missing / Extracted">M</option><option value="Unerupted">Un</option><option value="Present">P</option><option value="Root Fragment">RF</option><option value="Amalgam Restoration">Am</option><option value="Composite Restoration">Co</option><option value="Extraction Indicated">X</option><option value="Observation">O</option><option value="Temporary Filling">TF</option><option value="Dentinal Caries">C</option><option value="Root Canal Treated">RCT</option><option value="Impacted">Im</option><option value="Jacket Crown">Jc</option><option value="Glass Ionomer">GI</option><option value="Sealant">S</option><option value="Erupted">ER</option><option value="3/Q">3/Q</option><option value="Metal Crown">MC</option><option value="Partially Erupted">PE</option><option value="Treatment Planned">TP</option><option value="QC">QC</option></select></label><p class="tooth-flow-help">Choose the clinical finding for this tooth. Billable findings continue to treatment and pricing.</p></div>`;r.appendChild(f);}let c=r.querySelector(':scope > [data-local-tooth-charge]');if(!c){c=document.createElement('div');c.className='tooth-local-popup tooth-local-charge';c.dataset.localToothCharge='';c.hidden=true;c.innerHTML=`<div class="tooth-flow-head"><div><small>Consultation item</small><strong data-local-charge-title>Selected tooth</strong></div><button type="button" class="icon-btn" data-local-charge-close>×</button></div><div class="tooth-flow-body"><div class="tooth-flow-summary"><span>Finding</span><strong data-local-charge-finding>—</strong></div><label class="tooth-flow-label">Treatment / procedure<select data-local-charge-procedure><option>Composite Restoration</option><option>Root Canal Treatment</option><option>Dental Crown</option><option>Tooth Extraction</option><option>Surgical Extraction</option><option>Restorative Treatment</option><option>Observation / Review</option><option>Other Dental Procedure</option></select></label><label class="tooth-flow-label">Price for this tooth (₱)<input data-local-charge-price type="number" min="0" step="0.01" placeholder="0.00"></label><label class="tooth-flow-label">Clinical / billing note <span class="optional-label">Optional</span><textarea data-local-charge-note rows="3"></textarea></label><div class="tooth-flow-message" data-local-charge-message></div><small class="tooth-billing-note">Adds this tooth to the current consultation. The patient balance is updated only after Finish Consultation.</small></div><div class="tooth-flow-actions"><button type="button" class="btn secondary" data-local-charge-cancel>Cancel</button><button type="button" class="btn" data-local-charge-save>Add to consultation</button></div>`;r.appendChild(c);}return{finding:f,charge:c};}
+  function hide(p){if(p){p.hidden=true;p.classList.remove('is-visible');}}
+  function pos(p,tooth,r){p.hidden=false;p.classList.add('is-visible');p.style.left='0';p.style.top='0';requestAnimationFrame(()=>{const rr=r.getBoundingClientRect(),tr=tooth.getBoundingClientRect(),pr=p.getBoundingClientRect(),pad=14,g=10;let l=tr.left-rr.left+tr.width/2-pr.width/2,t=tr.bottom-rr.top+g;if(t+pr.height>rr.height-pad)t=tr.top-rr.top-pr.height-g;l=Math.max(pad,Math.min(l,rr.width-pr.width-pad));t=Math.max(pad,Math.min(t,rr.height-pr.height-pad));p.style.left=Math.round(l)+'px';p.style.top=Math.round(t)+'px';});}
+  function openFinding(tooth){const r=tooth.closest('dialog.clinical-record-modal');if(!r)return;activeTooth=tooth;activeRecord=r;selectedFinding='';const p=ensurePopups(r);hide(p.charge);p.finding.querySelector('[data-local-tooth-title]').textContent='Tooth #'+tooth.dataset.tooth+' · '+(tooth.dataset.toothName||'');const s=p.finding.querySelector('[data-local-finding-select]');s.value='';pos(p.finding,tooth,r);setTimeout(()=>s.focus(),30);}
+  function openCharge(f){const p=ensurePopups(activeRecord);selectedFinding=f;hide(p.finding);p.charge.querySelector('[data-local-charge-title]').textContent='Tooth #'+activeTooth.dataset.tooth+' · '+(activeTooth.dataset.toothName||'');p.charge.querySelector('[data-local-charge-finding]').textContent=f;p.charge.querySelector('[data-local-charge-procedure]').value=proc(f);p.charge.querySelector('[data-local-charge-price]').value='';p.charge.querySelector('[data-local-charge-note]').value='';p.charge.querySelector('[data-local-charge-message]').textContent='';pos(p.charge,activeTooth,activeRecord);}
+  function ensureCart(r){const panel=r.querySelector('[data-record-panel="chart"]');if(!panel)return null;let c=panel.querySelector('[data-consultation-cart]');if(!c){c=document.createElement('section');c.className='consultation-cart-panel';c.dataset.consultationCart='';c.innerHTML=`<div class="consultation-cart-head"><div><span class="consultation-cart-kicker">Current consultation</span><h4>Treatment invoice draft</h4><p>Add multiple tooth procedures before posting one invoice.</p></div><div class="consultation-cart-total"><small>Running total</small><strong data-consultation-total>₱0.00</strong></div></div><div class="consultation-cart-items" data-consultation-items></div><div class="consultation-cart-footer"><span data-consultation-count>0 procedures</span><div><button class="btn secondary compact" type="button" data-consultation-clear>Clear draft</button><button class="btn compact" type="button" data-consultation-finish disabled>Finish Consultation</button></div></div>`;const w=panel.querySelector('.odontogram-workspace');w?w.insertAdjacentElement('afterend',c):panel.appendChild(c);}return c;}
+  function renderCart(r){const c=ensureCart(r);if(!c)return;const d=draft(r),items=d.items||[],total=items.reduce((s,x)=>s+Number(x.price||0),0),h=c.querySelector('[data-consultation-items]');h.innerHTML=items.length?items.map((x,i)=>`<article class="consultation-cart-item"><div><strong>Tooth #${x.tooth} · ${x.procedure}</strong><span>${x.finding}${x.notes?' · '+x.notes:''}</span></div><div class="consultation-cart-item-price"><strong>${money(x.price)}</strong><button class="icon-btn" type="button" data-consultation-remove="${i}">×</button></div></article>`).join(''):'<div class="consultation-cart-empty">No billable tooth procedures added yet.</div>';c.querySelector('[data-consultation-total]').textContent=money(total);c.querySelector('[data-consultation-count]').textContent=items.length+' procedure'+(items.length===1?'':'s');c.querySelector('[data-consultation-finish]').disabled=!items.length;c.querySelector('[data-consultation-clear]').disabled=!items.length;}
+  function summary(r){let o=r.querySelector(':scope > [data-consultation-summary]');if(!o){o=document.createElement('div');o.className='consultation-summary-overlay';o.dataset.consultationSummary='';o.hidden=true;o.innerHTML=`<section class="consultation-summary-card"><header><div><span class="consultation-cart-kicker">Consultation complete</span><h3>Review treatment summary</h3><p data-consultation-patient></p></div><button class="icon-btn" type="button" data-consultation-summary-close>×</button></header><div class="consultation-summary-body"><div class="consultation-summary-table-wrap"><table><thead><tr><th>Tooth</th><th>Finding</th><th>Procedure</th><th>Price</th></tr></thead><tbody data-consultation-summary-items></tbody></table></div><div class="consultation-summary-total"><span>Total consultation charges</span><strong data-consultation-summary-total>₱0.00</strong></div><p class="consultation-summary-note">Submitting creates one invoice and posts the total to the patient balance.</p></div><footer><button class="btn secondary" type="button" data-consultation-summary-back>Back to chart</button><button class="btn" type="button" data-consultation-submit>Submit to Patient Balance</button></footer></section>`;r.appendChild(o);}return o;}
+  function openSummary(r){const d=draft(r);if(!d.items?.length)return;const o=summary(r);o.querySelector('[data-consultation-patient]').textContent=(r.dataset.patientName||'Patient')+' · '+(r.dataset.patientId||'');o.querySelector('[data-consultation-summary-items]').innerHTML=d.items.map(x=>`<tr><td>#${x.tooth}</td><td>${x.finding}</td><td>${x.procedure}</td><td>${money(x.price)}</td></tr>`).join('');o.querySelector('[data-consultation-summary-total]').textContent=money(d.items.reduce((s,x)=>s+Number(x.price||0),0));o.hidden=false;o.classList.add('is-visible');}
+  function closeSummary(r){const o=r?.querySelector(':scope > [data-consultation-summary]');if(o){o.classList.remove('is-visible');o.hidden=true;}}
+  function finish(r){const d=draft(r),items=d.items||[];if(!items.length)return;const total=items.reduce((s,x)=>s+Number(x.price||0),0),now=new Date(),ref='INV-'+now.toISOString().slice(0,10).replace(/-/g,'')+'-'+String(Date.now()).slice(-4),x={id:'CI-'+Date.now(),reference:ref,type:'consultation-invoice',patientId:r.dataset.patientId||'',patientName:r.dataset.patientName||'',tooth:'Multiple',finding:'Consultation',procedure:'Dental Consultation',price:total,notes:items.length+' dental procedures',items:items.map(i=>({...i})),createdAt:now.toISOString(),status:'Unpaid'};const list=charges();list.push(x);saveCharges(list);addLedger(r,x);clearDraft(r);closeSummary(r);}
+  function addItem(r,item){const d=draft(r);d.items=d.items||[];const n=d.items.findIndex(x=>String(x.tooth)===String(item.tooth)&&x.procedure===item.procedure);n>=0?d.items[n]=item:d.items.push(item);saveDraft(r,d);}
+  function removeTooth(r,tooth){const d=draft(r);d.items=(d.items||[]).filter(x=>String(x.tooth)!==String(tooth));saveDraft(r,d);}
+  document.addEventListener('click',e=>{const t=e.target.closest('.clinical-record-modal .tooth-unit');if(!t)return;e.preventDefault();e.stopImmediatePropagation();openFinding(t);},true);
+  document.addEventListener('click',e=>{const r=e.target.closest('dialog.clinical-record-modal')||activeRecord;if(e.target.closest('[data-local-find-close]')){hide(r?.querySelector(':scope > [data-local-tooth-finding]'));return;}if(e.target.closest('[data-local-charge-close],[data-local-charge-cancel]')){hide(r?.querySelector(':scope > [data-local-tooth-charge]'));selectedFinding='';return;}if(e.target.closest('[data-local-charge-save]')){const c=r?.querySelector(':scope > [data-local-tooth-charge]');if(!c||!activeTooth||!selectedFinding)return;const procedure=c.querySelector('[data-local-charge-procedure]').value.trim(),price=Number(c.querySelector('[data-local-charge-price]').value||0),notes=c.querySelector('[data-local-charge-note]').value.trim(),m=c.querySelector('[data-local-charge-message]');if(!procedure){m.textContent='Choose a treatment or procedure.';return;}if(!(price>0)){m.textContent='Enter a valid price greater than ₱0.00.';return;}apply(activeTooth,selectedFinding);activeTooth.dataset.procedure=procedure;activeTooth.dataset.price=price;activeTooth.dataset.notes=notes;addItem(r,{id:'CD-'+Date.now(),tooth:activeTooth.dataset.tooth,toothName:activeTooth.dataset.toothName||'',finding:selectedFinding,procedure,price,notes,createdAt:new Date().toISOString()});hide(c);selectedFinding='';return;}const rem=e.target.closest('[data-consultation-remove]');if(rem&&r){const d=draft(r);d.items.splice(Number(rem.dataset.consultationRemove),1);saveDraft(r,d);return;}if(e.target.closest('[data-consultation-clear]')&&r){if(confirm('Clear the current consultation draft?'))clearDraft(r);return;}if(e.target.closest('[data-consultation-finish]')&&r){openSummary(r);return;}if(e.target.closest('[data-consultation-summary-close],[data-consultation-summary-back]')&&r){closeSummary(r);return;}if(e.target.closest('[data-consultation-submit]')&&r){finish(r);return;}});
+  document.addEventListener('change',e=>{const s=e.target.closest('[data-local-finding-select]');if(!s)return;const f=s.value;if(!f||!activeTooth||!activeRecord)return;if(/sound\s*\/\s*healthy/i.test(f)){apply(activeTooth,f);activeTooth.dataset.procedure='';activeTooth.dataset.price='0';activeTooth.dataset.notes='';removeTooth(activeRecord,activeTooth.dataset.tooth);hide(activeRecord.querySelector(':scope > [data-local-tooth-finding]'));selectedFinding='';return;}openCharge(f);});
+  document.addEventListener('close',e=>{if(!e.target.matches('dialog.clinical-record-modal'))return;hide(e.target.querySelector(':scope > [data-local-tooth-finding]'));hide(e.target.querySelector(':scope > [data-local-tooth-charge]'));closeSummary(e.target);activeTooth=null;activeRecord=null;selectedFinding='';},true);
+  document.querySelectorAll('dialog.clinical-record-modal').forEach(r=>renderCart(r));
+})();
+</script>
+
+
+<script src="../assets/js/cerillo-ui-hotfix.js"></script>
+</body>
+</html>

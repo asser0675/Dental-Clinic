@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="Cerillo Dental Clinic Patient workspace" name="description"/>
+  <title>
+   Patient &middot; Cerillo Dental Clinic
+  </title>
+  <link href="../assets/images/cerillo-logo.png" rel="icon"/>
+  <link href="../assets/css/app.css" rel="stylesheet"/>
+ </head>
+ <body class="workspace-body">
+  <aside class="workspace-sidebar">
+   <a class="workspace-brand" href="../index.html">
+    <img alt="Cerillo Dental Clinic logo" src="../assets/images/cerillo-logo.png"/>
+    <span>
+     Cerillo
+     <small>
+      Dental Clinic
+     </small>
+    </span>
+   </a>
+   <div class="role-label">
+    Patient Workspace
+   </div>
+   <nav aria-label="Patient navigation" class="side-nav">
+    <a class="side-link" href="#dashboard">
+     <span>
+      Dashboard
+     </span>
+    </a>
+    <a class="side-link" href="#appointments">
+     <span>
+      Appointments
+     </span>
+    </a>
+    <a class="side-link" href="#visit-history">
+     <span>
+      Visit History
+     </span>
+    </a>
+    <a class="side-link" href="#profile">
+     <span>
+      Profile
+     </span>
+    </a>
+    <a class="side-link" href="#settings">
+     <span>
+      Settings
+     </span>
+    </a>
+   </nav>
+   <div class="sidebar-profile">
+    <div class="avatar">
+     P
+    </div>
+    <div>
+     <strong>
+      Patient
+     </strong>
+     <small>
+      Patient
+     </small>
+    </div>
+    <button aria-label="Sign out" class="sidebar-logout" onclick="document.getElementById('logoutConfirmModal').showModal()" type="button">
+     &rarrhk;
+    </button>
+   </div>
+  </aside>
+  <main class="workspace-main">
+   <header class="workspace-topbar">
+    <div>
+     <p class="eyebrow">
+      Cerillo Dental Clinic
+     </p>
+     <h1>
+      Patient Workspace
+     </h1>
+    </div>
+    <div aria-label="Current date and time" class="topbar-clock">
+     <span data-live-date="">
+      October 5, 2026
+     </span>
+     <strong data-live-time="">
+      --:-- --
+     </strong>
+    </div>
+   </header>
+   <section class="workspace-section active-section" id="dashboard">
+    <div class="section-heading">
+     <div>
+      <p class="eyebrow">
+       My dental care
+      </p>
+      <h2>
+       Welcome, Maria Santos
+      </h2>
+      <p>
+       View your upcoming visit, recent treatment, care reminders, and account information.
+      </p>
+     </div>
+    </div>
+    <div class="stats-grid">
+     <article class="stat-card">
+      <p>
+       Upcoming visits
+      </p>
+      <strong>
+       1
+      </strong>
+      <span>
+       Next: Oct 12
+      </span>
+     </article>
+     <article class="stat-card">
+      <p>
+       Completed visits
+      </p>
+      <strong>
+       6
+      </strong>
+      <span>
+       Since 2025
+      </span>
+     </article>
+     <article class="stat-card">
+      <p>
+       Follow-up
+      </p>
+      <strong>
+       Jan 5
+      </strong>
+      <span>
+       Prophylaxis recall
+      </span>
+     </article>
+     <article class="stat-card">
+      <p>
+       Balance
+      </p>
+      <strong>
+       ₱0
+      </strong>
+      <span>
+       Account settled
+      </span>
+     </article>
+    </div>
+    <div class="grid2">
+     <article class="panel">
+      <p class="eyebrow">
+       Next appointment
+      </p>
+      <h3>
+       Oral Prophylaxis
+      </h3>
+      <p>
+       October 12, 2026 &middot; 9:00 AM
+      </p>
+      <p>
+       Dr. Luis Mendoza
+      </p>
+      <span class="status-pill">
+       Confirmed
+      </span>
+     </article>
+     <article class="panel">
+      <p class="eyebrow">
+       Latest care
+      </p>
+      <h3>
+       Routine Dental Examination
+      </h3>
+      <p>
+       September 28, 2026
+      </p>
+      <p>
+       No new caries detected. Continue twice-daily brushing and flossing.
+      </p>
+     </article>
+    </div>
+   </section>
+   <section class="workspace-section" id="appointments">
+    <div class="section-heading">
+     <div>
+      <p class="eyebrow">
+       My schedule
+      </p>
+      <h2>
+       Appointments
+      </h2>
+      <p>
+       Review upcoming appointments and previous appointment requests.
+      </p>
+     </div>
+    </div>
+    <div class="panel table-panel">
+     <div class="table-wrap">
+      <div class="table-filter-dock">
+       <input aria-label="Search this table" class="table-search table-search-inline" data-table-search="patient-table-1" placeholder="Search records..." type="search"/>
+       <select aria-label="Sort table" class="table-sort-control" data-table-sort="patient-table-1">
+        <option value="">
+         Sort: Default
+        </option>
+        <option value="asc">
+         A&ndash;Z / Oldest first
+        </option>
+        <option value="desc">
+         Z&ndash;A / Newest first
+        </option>
+       </select>
+       <details class="filter-popover" data-filter-for="patient-table-1">
+        <summary aria-label="Open table filters" class="filter-icon-trigger" title="Filter table">
+         <svg aria-hidden="true" viewbox="0 0 24 24">
+          <path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8">
+          </path>
+         </svg>
+        </summary>
+        <div class="filter-popover-panel">
+         <div class="filter-popover-heading">
+          <strong>
+           Filter &amp; refine
+          </strong>
+          <small>
+           Narrow the records in this table.
+          </small>
+         </div>
+         <label>
+          Search rows
+          <input data-filter-query="" placeholder="Type patient, dentist, status..." type="search"/>
+         </label>
+         <div class="filter-popover-actions">
+          <button class="btn secondary sm" data-filter-reset="" type="button">
+           Reset
+          </button>
+          <button class="btn sm" data-filter-apply="" type="button">
+           Apply
+          </button>
+         </div>
+        </div>
+       </details>
+      </div>
+      <table id="patient-table-1">
+       <thead>
+        <tr>
+         <th>
+          Date
+         </th>
+         <th>
+          Time
+         </th>
+         <th>
+          Service
+         </th>
+         <th>
+          Dentist
+         </th>
+         <th>
+          Status
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          Oct 12, 2026
+         </td>
+         <td>
+          9:00 AM
+         </td>
+         <td>
+          Oral Prophylaxis
+         </td>
+         <td>
+          Dr. Luis Mendoza
+         </td>
+         <td>
+          Confirmed
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Sep 28, 2026
+         </td>
+         <td>
+          10:30 AM
+         </td>
+         <td>
+          Dental Examination
+         </td>
+         <td>
+          Dr. Luis Mendoza
+         </td>
+         <td>
+          Completed
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Jun 20, 2026
+         </td>
+         <td>
+          1:00 PM
+         </td>
+         <td>
+          Composite Restoration
+         </td>
+         <td>
+          Dr. Ana Villanueva
+         </td>
+         <td>
+          Completed
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Mar 15, 2026
+         </td>
+         <td>
+          9:30 AM
+         </td>
+         <td>
+          Oral Prophylaxis
+         </td>
+         <td>
+          Dr. Luis Mendoza
+         </td>
+         <td>
+          Completed
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </section>
+   <section class="workspace-section" id="visit-history">
+    <div class="section-heading">
+     <div>
+      <p class="eyebrow">
+       Care record
+      </p>
+      <h2>
+       Visit History
+      </h2>
+      <p>
+       Review completed visits, treatments, and care instructions recorded by your dental team.
+      </p>
+     </div>
+    </div>
+    <div class="panel table-panel">
+     <div class="table-wrap">
+      <div class="table-filter-dock">
+       <input aria-label="Search this table" class="table-search table-search-inline" data-table-search="patient-table-2" placeholder="Search records..." type="search"/>
+       <select aria-label="Sort table" class="table-sort-control" data-table-sort="patient-table-2">
+        <option value="">
+         Sort: Default
+        </option>
+        <option value="asc">
+         A&ndash;Z / Oldest first
+        </option>
+        <option value="desc">
+         Z&ndash;A / Newest first
+        </option>
+       </select>
+       <details class="filter-popover" data-filter-for="patient-table-2">
+        <summary aria-label="Open table filters" class="filter-icon-trigger" title="Filter table">
+         <svg aria-hidden="true" viewbox="0 0 24 24">
+          <path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8">
+          </path>
+         </svg>
+        </summary>
+        <div class="filter-popover-panel">
+         <div class="filter-popover-heading">
+          <strong>
+           Filter &amp; refine
+          </strong>
+          <small>
+           Narrow the records in this table.
+          </small>
+         </div>
+         <label>
+          Search rows
+          <input data-filter-query="" placeholder="Type patient, dentist, status..." type="search"/>
+         </label>
+         <div class="filter-popover-actions">
+          <button class="btn secondary sm" data-filter-reset="" type="button">
+           Reset
+          </button>
+          <button class="btn sm" data-filter-apply="" type="button">
+           Apply
+          </button>
+         </div>
+        </div>
+       </details>
+      </div>
+      <table id="patient-table-2">
+       <thead>
+        <tr>
+         <th>
+          Date
+         </th>
+         <th>
+          Dentist
+         </th>
+         <th>
+          Visit / Treatment
+         </th>
+         <th>
+          Tooth
+         </th>
+         <th>
+          Care Instructions
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          Sep 28, 2026
+         </td>
+         <td>
+          Dr. Luis Mendoza
+         </td>
+         <td>
+          Dental Examination
+         </td>
+         <td>
+          Full mouth
+         </td>
+         <td>
+          Continue brushing twice daily and floss nightly
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Jun 20, 2026
+         </td>
+         <td>
+          Dr. Ana Villanueva
+         </td>
+         <td>
+          Composite Restoration
+         </td>
+         <td>
+          16
+         </td>
+         <td>
+          Avoid hard food on treated side for 24 hours
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Mar 15, 2026
+         </td>
+         <td>
+          Dr. Luis Mendoza
+         </td>
+         <td>
+          Oral Prophylaxis
+         </td>
+         <td>
+          Full mouth
+         </td>
+         <td>
+          Use soft-bristle toothbrush; return in 6 months
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Dec 8, 2025
+         </td>
+         <td>
+          Dr. Carla Navarro
+         </td>
+         <td>
+          Dental X-ray
+         </td>
+         <td>
+          36
+         </td>
+         <td>
+          Radiograph reviewed; monitor at next visit
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </section>
+   <section class="workspace-section" id="profile">
+    <div class="section-heading">
+     <div>
+      <p class="eyebrow">
+       Personal information
+      </p>
+      <h2>
+       My Profile
+      </h2>
+      <p>
+       Keep your contact and patient-reported health information current for safer dental care.
+      </p>
+     </div>
+    </div>
+    <div class="panel">
+     <form class="form-grid">
+      <label>
+       Full Name
+       <input value="Maria Santos"/>
+      </label>
+      <label>
+       Age
+       <input value="34"/>
+      </label>
+      <label>
+       Email
+       <input value="maria.santos@email.com"/>
+      </label>
+      <label>
+       Mobile Number
+       <input value="0917 842 1934"/>
+      </label>
+      <label>
+       Allergies
+       <textarea rows="3">Penicillin</textarea>
+      </label>
+      <label>
+       Current Medications
+       <textarea rows="3">Losartan 50 mg once daily</textarea>
+      </label>
+      <label class="span-2">
+       Medical History
+       <textarea rows="4">Controlled hypertension. No previous adverse reaction to local anesthetic.</textarea>
+      </label>
+      <label class="span-2">
+       Insurance / HMO
+       <input value="Maxicare Dental &middot; MXD-204871"/>
+      </label>
+      <div class="form-actions span-2">
+       <button class="btn" type="button">
+        Save Profile
+       </button>
+      </div>
+     </form>
+    </div>
+   </section>
+   <section class="workspace-section" id="settings">
+    <div class="section-heading">
+     <div>
+      <p class="eyebrow">
+       Accessibility
+      </p>
+      <h2>
+       Settings
+      </h2>
+      <p>
+       Personalize readability, contrast, motion and keyboard visibility for this workspace.
+      </p>
+     </div>
+    </div>
+    <article class="panel accessibility-settings-panel">
+     <div class="panel-heading">
+      <div>
+       <h3>
+        Accessibility preferences
+       </h3>
+       <p>
+        These preferences are saved on this browser and apply across Cerillo workspaces.
+       </p>
+      </div>
+     </div>
+     <div class="access-grid access-grid-vertical">
+      <label class="access-option">
+       <span>
+        <strong>
+         Dark mode
+        </strong>
+        <small>
+         Use a darker interface theme with reduced screen brightness.
+        </small>
+       </span>
+       <input id="darkModeToggle" type="checkbox"/>
+      </label>
+      <label class="access-option">
+       <span>
+        <strong>
+         Large text
+        </strong>
+        <small>
+         Increase interface text size while preserving responsive layout.
+        </small>
+       </span>
+       <input id="largeText" type="checkbox"/>
+      </label>
+      <label class="access-option">
+       <span>
+        <strong>
+         High contrast
+        </strong>
+        <small>
+         Increase foreground and background contrast.
+        </small>
+       </span>
+       <input id="highContrast" type="checkbox"/>
+      </label>
+      <label class="access-option">
+       <span>
+        <strong>
+         Reduced motion
+        </strong>
+        <small>
+         Limit non-essential animation and movement.
+        </small>
+       </span>
+       <input id="reducedMotion" type="checkbox"/>
+      </label>
+      <label class="access-option">
+       <span>
+        <strong>
+         Enhanced focus
+        </strong>
+        <small>
+         Show stronger keyboard focus indicators.
+        </small>
+       </span>
+       <input checked="" id="enhancedFocus" type="checkbox"/>
+      </label>
+     </div>
+    </article>
+   </section>
+  </main>
+  <dialog aria-label="Logout confirmation" class="modal modal-sm logout-modal" id="logoutConfirmModal">
+   <div class="modal-shell">
+    <div class="modal-head">
+     <div>
+      <p class="eyebrow">
+       Account session
+      </p>
+      <h3>
+       Sign out?
+      </h3>
+      <p>
+       You will need to sign in again to access your workspace.
+      </p>
+     </div>
+     <button aria-label="Close logout confirmation" class="icon-btn" onclick="this.closest('dialog').close()" type="button">
+      &times;
+     </button>
+    </div>
+    <div class="logout-dialog-body">
+     <div class="logout-icon">
+      &rarrhk;
+     </div>
+     <div>
+      <strong>
+       Are you sure you want to sign out?
+      </strong>
+      <p>
+       Any unsaved form changes on this page will be discarded.
+      </p>
+     </div>
+    </div>
+    <div class="dialog-footer">
+     <button class="btn secondary" onclick="this.closest('dialog').close()" type="button">
+      Stay signed in
+     </button>
+     <button class="btn danger" onclick="window.location.href='../auth/login.html'" type="button">
+      Sign out
+     </button>
+    </div>
+   </div>
+  </dialog>
+  <script>
+   document.addEventListener("DOMContentLoaded", function () {
+      const navigationLinks = document.querySelectorAll(".side-nav .side-link");
+      const workspaceSections = document.querySelectorAll(".workspace-main > .workspace-section");
+
+      function showSection(sectionId, updateHash = true) {
+        const targetSection = document.getElementById(sectionId);
+
+        if (!targetSection || !targetSection.classList.contains("workspace-section")) {
+          return;
+        }
+
+        workspaceSections.forEach(function (section) {
+          section.classList.remove("active-section");
+        });
+
+        navigationLinks.forEach(function (link) {
+          link.classList.remove("active");
+          link.removeAttribute("aria-current");
+        });
+
+        targetSection.classList.add("active-section");
+
+        const activeLink = document.querySelector(
+          '.side-nav .side-link[href="#' + sectionId + '"]'
+        );
+
+        if (activeLink) {
+          activeLink.classList.add("active");
+          activeLink.setAttribute("aria-current", "page");
+        }
+
+        if (updateHash) {
+          history.replaceState(null, "", "#" + sectionId);
+        }
+
+        window.scrollTo({
+          top: 0,
+          behavior: "auto"
+        });
+      }
+
+      navigationLinks.forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          const sectionId = link.getAttribute("href").substring(1);
+          const targetSection = document.getElementById(sectionId);
+
+          if (targetSection && targetSection.classList.contains("workspace-section")) {
+            event.preventDefault();
+            showSection(sectionId);
+          }
+        });
+      });
+
+      const requestedSection = window.location.hash.substring(1);
+      const requestedElement = document.getElementById(requestedSection);
+
+      if (requestedElement && requestedElement.classList.contains("workspace-section")) {
+        showSection(requestedSection, false);
+      } else {
+        const defaultSection = document.querySelector(
+          ".workspace-main > .workspace-section.active-section"
+        ) || workspaceSections[0];
+
+        if (defaultSection) {
+          showSection(defaultSection.id, false);
+        }
+      }
+    });
+  </script>
+  <script id="cerilloThemeBootstrap">
+   (function(){
+  const saved = localStorage.getItem('cerilloDarkMode') === 'true';
+  document.body.classList.toggle('dark-mode', saved);
+  const toggle = document.getElementById('darkModeToggle');
+  if (toggle) {
+    toggle.checked = saved;
+    toggle.addEventListener('change', function(){
+      document.body.classList.toggle('dark-mode', this.checked);
+      localStorage.setItem('cerilloDarkMode', String(this.checked));
+    });
+  }
+})();
+  </script>
+  <script>
+   (function () {
+  function updateWorkspaceClock() {
+    const now = new Date();
+    const dateText = now.toLocaleDateString(undefined, {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    });
+    const timeText = now.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+
+    document.querySelectorAll("[data-live-date]").forEach(function (node) {
+      node.textContent = dateText;
+    });
+    document.querySelectorAll("[data-live-time]").forEach(function (node) {
+      node.textContent = timeText;
+    });
+  }
+
+  function applyTableFilter(details) {
+    const tableId = details.dataset.filterFor;
+    const table = document.getElementById(tableId);
+    if (!table) return;
+
+    const query = (details.querySelector("[data-filter-query]")?.value || "")
+      .trim()
+      .toLowerCase();
+    const status = (details.querySelector("[data-filter-status]")?.value || "")
+      .trim()
+      .toLowerCase();
+
+    table.querySelectorAll("tbody tr").forEach(function (row) {
+      const text = (row.textContent + " " + (row.dataset.filterTags || "")).toLowerCase();
+      const matchesQuery = !query || text.includes(query);
+      const matchesStatus = !status || text.includes(status);
+      row.hidden = !(matchesQuery && matchesStatus);
+    });
+  }
+
+  updateWorkspaceClock();
+  window.setInterval(updateWorkspaceClock, 1000);
+
+  document.addEventListener("click", function (event) {
+    const applyButton = event.target.closest("[data-filter-apply]");
+    if (applyButton) {
+      const details = applyButton.closest(".filter-popover");
+      if (details) {
+        applyTableFilter(details);
+        details.open = false;
+      }
+      return;
+    }
+
+    const resetButton = event.target.closest("[data-filter-reset]");
+    if (resetButton) {
+      const details = resetButton.closest(".filter-popover");
+      if (!details) return;
+      const query = details.querySelector("[data-filter-query]");
+      const status = details.querySelector("[data-filter-status]");
+      if (query) query.value = "";
+      if (status) status.value = "";
+      applyTableFilter(details);
+      details.open = false;
+      return;
+    }
+
+    if (!event.target.closest(".filter-popover")) {
+      document.querySelectorAll(".filter-popover[open]").forEach(function (item) {
+        item.open = false;
+      });
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Enter") return;
+    const input = event.target.closest("[data-filter-query]");
+    if (!input) return;
+    event.preventDefault();
+    const details = input.closest(".filter-popover");
+    if (details) {
+      applyTableFilter(details);
+      details.open = false;
+    }
+  });
+})();
+  </script>
+  <script id="cerilloTableToolsV2">
+   (function bindCerilloTableTools() {
+  function rowsFor(tableId) {
+    const table = document.getElementById(tableId);
+    return table ? Array.from(table.querySelectorAll('tbody tr')) : [];
+  }
+
+  document.querySelectorAll('[data-table-search]').forEach((input) => {
+    if (input.dataset.boundTableSearch === 'true') return;
+    input.dataset.boundTableSearch = 'true';
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      rowsFor(input.dataset.tableSearch).forEach((row) => {
+        const matches = !query || row.textContent.toLowerCase().includes(query);
+        row.dataset.searchHidden = matches ? 'false' : 'true';
+        const filterHidden = row.dataset.filterHidden === 'true';
+        row.hidden = !matches || filterHidden;
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-table-sort]').forEach((select) => {
+    if (select.dataset.boundTableSort === 'true') return;
+    select.dataset.boundTableSort = 'true';
+    select.addEventListener('change', () => {
+      const table = document.getElementById(select.dataset.tableSort);
+      if (!table) return;
+      const body = table.querySelector('tbody');
+      const rows = Array.from(body.querySelectorAll('tr'));
+      const direction = select.value;
+      if (!direction) {
+        rows.sort((a, b) => Number(a.dataset.originalIndex) - Number(b.dataset.originalIndex));
+      } else {
+        rows.sort((a, b) => {
+          const aa = (a.cells[0]?.textContent || '').trim();
+          const bb = (b.cells[0]?.textContent || '').trim();
+          const ad = Date.parse(aa);
+          const bd = Date.parse(bb);
+          let result;
+          if (!Number.isNaN(ad) && !Number.isNaN(bd)) {
+            result = ad - bd;
+          } else {
+            const an = Number(aa.replace(/[^0-9.-]/g, ''));
+            const bn = Number(bb.replace(/[^0-9.-]/g, ''));
+            result = aa && bb && Number.isFinite(an) && Number.isFinite(bn) && /\d/.test(aa) && /\d/.test(bb)
+              ? an - bn
+              : aa.toLowerCase().localeCompare(bb.toLowerCase());
+          }
+          return direction === 'asc' ? result : -result;
+        });
+      }
+      rows.forEach((row) => body.appendChild(row));
+    });
+  });
+
+  document.querySelectorAll('table tbody tr').forEach((row, index) => {
+    if (!row.dataset.originalIndex) row.dataset.originalIndex = String(index);
+  });
+
+  document.querySelectorAll('.filter-popover').forEach((details) => {
+    const apply = details.querySelector('[data-filter-apply]');
+    const reset = details.querySelector('[data-filter-reset]');
+    const status = details.querySelector('[data-filter-status]');
+    const keyword = details.querySelector('[data-filter-query]');
+    const tableId = details.dataset.filterFor;
+
+    function applyAdvancedFilter() {
+      const statusValue = (status?.value || '').trim().toLowerCase();
+      const keywordValue = (keyword?.value || '').trim().toLowerCase();
+      rowsFor(tableId).forEach((row) => {
+        const text = (row.textContent + ' ' + (row.dataset.filterTags || '')).toLowerCase();
+        const matches = (!statusValue || text.includes(statusValue)) && (!keywordValue || text.includes(keywordValue));
+        row.dataset.filterHidden = matches ? 'false' : 'true';
+        const searchHidden = row.dataset.searchHidden === 'true';
+        row.hidden = !matches || searchHidden;
+      });
+    }
+
+    if (apply && apply.dataset.boundFilterV2 !== 'true') {
+      apply.dataset.boundFilterV2 = 'true';
+      apply.addEventListener('click', () => {
+        applyAdvancedFilter();
+        details.removeAttribute('open');
+      });
+    }
+    if (reset && reset.dataset.boundFilterV2 !== 'true') {
+      reset.dataset.boundFilterV2 = 'true';
+      reset.addEventListener('click', () => {
+        if (status) status.value = '';
+        if (keyword) keyword.value = '';
+        rowsFor(tableId).forEach((row) => {
+          row.dataset.filterHidden = 'false';
+          row.hidden = row.dataset.searchHidden === 'true';
+        });
+        details.removeAttribute('open');
+      });
+    }
+  });
+})();
+  </script>
+  <script id="sharedAccessibilitySettings">
+   (function bindSharedAccessibilitySettings() {
+  const settings = [
+    { id: 'largeText', key: 'cerilloLargeText', className: 'large-text' },
+    { id: 'highContrast', key: 'cerilloHighContrast', className: 'high-contrast' },
+    { id: 'reducedMotion', key: 'cerilloReducedMotion', className: 'reduced-motion' },
+    { id: 'enhancedFocus', key: 'cerilloEnhancedFocus', className: 'enhanced-focus' }
+  ];
+
+  settings.forEach((setting) => {
+    const input = document.getElementById(setting.id);
+    if (!input) return;
+
+    const savedValue = localStorage.getItem(setting.key);
+    const enabled = savedValue === null ? Boolean(input.checked) : savedValue === 'true';
+    input.checked = enabled;
+    document.body.classList.toggle(setting.className, enabled);
+
+    input.addEventListener('change', () => {
+      document.body.classList.toggle(setting.className, input.checked);
+      localStorage.setItem(setting.key, String(input.checked));
+    });
+  });
+})();
+  </script>
+ </body>
+</html>

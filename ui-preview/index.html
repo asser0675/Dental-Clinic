@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <meta content="Meet Cerillo Dental Clinic, explore our services, and request your next dental appointment." name="description"/>
+  <title>
+   Cerillo Dental Clinic &middot; A little care. A brighter smile.
+  </title>
+  <link href="assets/images/cerillo-logo.png" rel="icon"/>
+  <link href="assets/css/app.css" rel="stylesheet"/>
+ </head>
+ <body class="public">
+  <header class="public-nav">
+   <div class="container">
+    <a class="brand" href="#home">
+     <img alt="Cerillo tooth logo" src="assets/images/cerillo-logo.png"/>
+     <span>
+      Cerillo
+      <small>
+       Dental Clinic
+      </small>
+     </span>
+    </a>
+    <nav aria-label="Main navigation" class="public-links" id="public-links">
+     <a href="#home">
+      Home
+     </a>
+     <a href="#services">
+      Services
+     </a>
+     <a href="#about">
+      Our clinic
+     </a>
+     <a href="#dentists">
+      Our dentists
+     </a>
+     <a href="#contact">
+      Contact
+     </a>
+    </nav>
+    <div class="flex">
+     <a class="btn secondary" href="auth/login.html">
+      Staff sign in
+      <span aria-hidden="true">
+       &nearrow;
+      </span>
+     </a>
+     <button aria-controls="public-links" aria-expanded="false" aria-label="Toggle navigation" class="btn secondary mobile-toggle" id="nav-toggle">
+      ☰
+     </button>
+    </div>
+   </div>
+  </header>
+  <main>
+   <section class="hero" id="home">
+    <div class="container hero-grid">
+     <div>
+      <div class="eyebrow">
+       Welcome to Cerillo Dental Clinic
+      </div>
+      <h1>
+       A little care.
+       <br/>
+       A brighter
+       <br/>
+       <span>
+        kind of smile.
+       </span>
+      </h1>
+      <p>
+       Feel at home in your dental care. From your first checkup to your
+              next milestone, we&rsquo;re here to help you smile with confidence.
+      </p>
+      <div class="actions" style="margin-top: 27px">
+       <a class="btn" href="auth/register.html">
+        Request an appointment
+        <span aria-hidden="true">
+         &nearrow;
+        </span>
+       </a>
+       <a class="btn secondary" href="#services">
+        Explore our services
+       </a>
+      </div>
+      <div class="hero-checks">
+       <span>
+        Personalized care
+       </span>
+       <span>
+        Clear next steps
+       </span>
+       <span>
+        Easy booking
+       </span>
+      </div>
+     </div>
+     <div class="hero-visual">
+      <img alt="Bright dental treatment room, dental clinic photograph" fetchpriority="high" src="assets/images/clinic.jpg"/>
+      <div class="hero-note flex">
+       <span data-icon="tooth">
+       </span>
+       <div>
+        <strong>
+         Your comfort comes first.
+        </strong>
+        <small>
+         Thoughtful care, at every visit.
+        </small>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="public-section" id="services">
+    <div class="container">
+      <div class="section-heading public-service-heading">
+        <div>
+          <p class="eyebrow">Clinic services</p>
+          <h2>Care available at Cerillo Dental Clinic</h2>
+          <p>The service catalog below mirrors the clinic's active Admin service catalog. Final fees depend on examination, diagnosis and treatment planning.</p>
+        </div>
+      </div>
+      <div class="public-service-grid synced-service-grid" id="publicServiceGrid"></div>
+      <div class="public-services-more-row"><button class="btn secondary" id="publicViewMoreServices" type="button">View more services</button></div>
+    </div>
+  </section>
+  <dialog class="modal modal-xl public-service-dialog" id="publicServiceDialog" aria-label="Service details">
+    <div class="modal-shell">
+      <header class="modal-head">
+        <div><p class="eyebrow" data-public-service-category>Dental service</p><h3 data-public-service-title>Service details</h3><p data-public-service-description></p></div>
+        <button class="icon-btn" type="button" onclick="this.closest('dialog').close()">&times;</button>
+      </header>
+      <div class="modal-scroll">
+        <div class="public-service-detail-layout">
+          <img data-public-service-image class="public-service-detail-image" alt="Dental service" />
+          <div class="service-copy"><h4>About this service</h4><p data-public-service-long></p><div class="service-fee-note">Fees vary based on clinical assessment and the final treatment plan.</div></div>
+          <aside class="service-facts">
+            <div class="service-fact"><small>Typical duration</small><strong data-public-service-duration></strong></div>
+            <div class="service-fact"><small>Treatment notes</small><strong data-public-service-notes></strong></div>
+            <div class="service-fact"><small>Appointment</small><strong>Request online; Front Desk confirms the final dentist and schedule.</strong></div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </dialog>
+   <section class="public-section" id="about" style="background: var(--sky)">
+    <div class="container grid2">
+     <img alt="Dental clinic interior" class="about-image" loading="lazy" src="assets/images/clinic.jpg"/>
+     <div class="about-copy">
+      <div class="eyebrow">
+       A more personal approach
+      </div>
+      <h2>
+       Good care starts
+       <br/>
+       with listening.
+      </h2>
+      <p>
+       At Cerillo Dental Clinic, we want each visit to feel clear,
+              comfortable, and personal. Tell us what&rsquo;s on your mind, ask your
+              questions, and take the next step at your own pace.
+      </p>
+      <div class="value-row">
+       <span data-icon="heart">
+       </span>
+       <div>
+        <strong>
+         Comfort in the details
+        </strong>
+        <p>
+         A welcoming experience from check-in to follow-up.
+        </p>
+       </div>
+      </div>
+      <div class="value-row">
+       <span data-icon="file">
+       </span>
+       <div>
+        <strong>
+         Your care, connected
+        </strong>
+        <p>
+         Appointment coordination and treatment information kept together by the clinic team.
+        </p>
+       </div>
+      </div>
+      <div class="value-row">
+       <span data-icon="users">
+       </span>
+       <div>
+        <strong>
+         A team that works together
+        </strong>
+        <p>
+         Our front desk and dentists coordinate your visit.
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="public-section" id="dentists">
+    <div class="container">
+     <div class="section-title">
+      <div>
+       <div class="eyebrow">
+        People behind your care
+       </div>
+       <h2>
+        Meet your dental team.
+       </h2>
+      </div>
+      <p>
+       Three dentists. One shared focus: a thoughtful, personal
+              experience for every patient.
+      </p>
+     </div>
+     <div class="grid3">
+      <article class="team-card">
+       <img alt="Portrait of Dr. Ana Cerillo" loading="lazy" src="assets/images/dentist-1.jpg"/>
+       <div class="team-info">
+        <h3>
+         Dr. Ana Cerillo
+        </h3>
+        <p>
+         Dentist
+        </p>
+       </div>
+      </article>
+      <article class="team-card">
+       <img alt="Portrait of Dr. Marco Reyes" loading="lazy" src="assets/images/dentist-2.jpg"/>
+       <div class="team-info">
+        <h3>
+         Dr. Marco Reyes
+        </h3>
+        <p>
+         Dentist
+        </p>
+       </div>
+      </article>
+      <article class="team-card">
+       <img alt="Portrait of Dr. Lisa Santos" loading="lazy" src="assets/images/dentist-3.jpg"/>
+       <div class="team-info">
+        <h3>
+         Dr. Lisa Santos
+        </h3>
+        <p>
+         Dentist
+        </p>
+       </div>
+      </article>
+     </div>
+    </div>
+   </section>
+   <section class="public-section" style="background: #f7f9fc">
+    <div class="container">
+     <div class="section-title">
+      <div>
+       <div class="eyebrow">
+        Your next visit, made simple
+       </div>
+       <h2>
+        We&rsquo;ll take it from here.
+       </h2>
+      </div>
+      <a class="btn" href="auth/register.html">
+       Get started
+       <span aria-hidden="true">
+        &nearrow;
+       </span>
+      </a>
+     </div>
+     <div class="grid3 steps">
+      <article>
+       <div class="step-number">
+        01 /
+       </div>
+       <h3>
+        Choose your visit
+       </h3>
+       <p>
+        Complete the appointment request, choose a service, and select a
+                preferred time.
+       </p>
+      </article>
+      <article>
+       <div class="step-number">
+        02 /
+       </div>
+       <h3>
+        We confirm the details
+       </h3>
+       <p>
+        Our front desk reviews your request and confirms your
+                appointment.
+       </p>
+      </article>
+      <article>
+       <div class="step-number">
+        03 /
+       </div>
+       <h3>
+        Leave with a clear plan
+       </h3>
+       <p>
+        See your treatment summary and follow-up instructions in your
+                account.
+       </p>
+      </article>
+     </div>
+    </div>
+   </section>
+   <section class="public-section contact-section" id="contact">
+    <div class="container grid2">
+     <div>
+      <div class="eyebrow">
+       Let&rsquo;s make time for your smile
+      </div>
+      <h2>
+       Your next chapter
+       <br/>
+       starts with a visit.
+      </h2>
+      <p>
+       Request an appointment online or contact our front desk for help
+              with scheduling.
+      </p>
+      <a class="btn lime" href="auth/register.html" style="margin-top: 14px">
+       Request an appointment
+       <span aria-hidden="true">
+        &nearrow;
+       </span>
+      </a>
+     </div>
+     <div class="contact-info">
+      <strong>
+       Visit the clinic
+      </strong>
+      <p id="clinic-address">
+       Clinic address to be supplied
+      </p>
+      <strong>
+       Get in touch
+      </strong>
+      <p>
+       <span id="clinic-phone">
+        Clinic phone to be supplied
+       </span>
+       <br/>
+       <span id="clinic-email">
+        Clinic email to be supplied
+       </span>
+      </p>
+      <strong>
+       Clinic hours
+      </strong>
+      <p id="clinic-hours">
+       Monday&ndash;Saturday &middot; 9:00 AM&ndash;6:00 PM. Closed Sundays and holidays.
+      </p>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer class="public-footer">
+   <div class="container">
+    <a class="brand" href="#home">
+     <img alt="" src="assets/images/cerillo-logo.png"/>
+     <span>
+      Cerillo
+      <small>
+       Dental Clinic
+      </small>
+     </span>
+    </a>
+    <p>
+     &copy;
+     <span id="year">
+     </span>
+     Cerillo Dental Clinic. Care that feels
+          personal.
+    </p>
+    <a class="small" href="auth/login.html">
+     Staff portal &nearrow;
+    </a>
+   </div>
+  </footer>
+  <script id="cerilloPublicTheme">
+   if(localStorage.getItem('cerilloDarkMode')==='true'){document.body.classList.add('dark-mode');}
+  </script>
+ 
+  <script id="publicServiceCardInteraction">
+   document.querySelectorAll('.public-service-more').forEach(function (detail) {
+    detail.addEventListener('toggle', function () {
+     if (!detail.open) return;
+     document.querySelectorAll('.public-service-more[open]').forEach(function (other) {
+      if (other !== detail) other.open = false;
+     });
+     detail.closest('.public-service-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+   });
+  </script>
+ 
+<script id="publicServiceCatalogSync">
+const DEFAULT_SERVICE_CATALOG = [{"name": "Comprehensive Dental Examination", "category": "Preventive", "description": "A complete oral assessment covering teeth, gums, bite and treatment needs.", "image": "https://images.pexels.com/photos/6528858/pexels-photo-6528858.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/comprehensive-exam.svg", "duration": "30–45 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Oral Prophylaxis", "category": "Preventive", "description": "Professional plaque and calculus removal with polishing and preventive guidance.", "image": "https://images.pexels.com/photos/3779706/pexels-photo-3779706.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/oral-prophylaxis.svg", "duration": "45–60 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Fluoride Treatment", "category": "Preventive", "description": "Topical fluoride application to strengthen enamel and support caries prevention.", "image": "https://images.pexels.com/photos/6528868/pexels-photo-6528868.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/fluoride-treatment.svg", "duration": "15–30 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Dental Sealants", "category": "Preventive", "description": "Protective resin placed on deep grooves of posterior teeth to reduce decay risk.", "image": "https://images.pexels.com/photos/6528868/pexels-photo-6528868.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/dental-sealants.svg", "duration": "30–45 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Composite Restoration", "category": "Restorative", "description": "Tooth-colored restoration for teeth affected by decay, wear or minor fracture.", "image": "https://images.pexels.com/photos/3779713/pexels-photo-3779713.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/composite-restoration.svg", "duration": "45–75 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Dental Crown", "category": "Restorative", "description": "Full-coverage restoration used to protect and rebuild a weakened tooth.", "image": "https://images.pexels.com/photos/6502305/pexels-photo-6502305.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/dental-crown.svg", "duration": "2–3 visits", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Dental Bridge", "category": "Restorative", "description": "Fixed replacement for one or more missing teeth using adjacent support.", "image": "https://images.pexels.com/photos/6502343/pexels-photo-6502343.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/dental-bridge.svg", "duration": "2–4 visits", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Root Canal Treatment", "category": "Endodontics", "description": "Removal of infected pulp tissue followed by cleaning, shaping and sealing of canals.", "image": "https://images.pexels.com/photos/6529107/pexels-photo-6529107.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/root-canal.svg", "duration": "1–3 visits", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Tooth Extraction", "category": "Oral Surgery", "description": "Removal of a tooth when preservation is not clinically appropriate.", "image": "https://images.pexels.com/photos/6528868/pexels-photo-6528868.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/tooth-extraction.svg", "duration": "30–60 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Wisdom Tooth Assessment", "category": "Oral Surgery", "description": "Clinical and imaging assessment of third molars with treatment planning when indicated.", "image": "https://images.pexels.com/photos/6528858/pexels-photo-6528858.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/wisdom-tooth.svg", "duration": "30–45 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Complete & Partial Dentures", "category": "Prosthodontics", "description": "Removable tooth replacement planned around oral anatomy, function and comfort.", "image": "https://images.pexels.com/photos/5622025/pexels-photo-5622025.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/dentures.svg", "duration": "Multiple visits", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Dental Implant Restoration", "category": "Implant Dentistry", "description": "Implant-supported tooth replacement planned after clinical and imaging evaluation.", "image": "https://images.pexels.com/photos/6502305/pexels-photo-6502305.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/implant-restoration.svg", "duration": "30–90 minutes depending on treatment", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Teeth Whitening", "category": "Cosmetic", "description": "Supervised whitening intended to lighten tooth discoloration.", "image": "https://images.pexels.com/photos/5622271/pexels-photo-5622271.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/teeth-whitening.svg", "duration": "60–90 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Porcelain Veneers", "category": "Cosmetic", "description": "Thin restorations bonded to the front surfaces of selected teeth.", "image": "https://images.pexels.com/photos/5622271/pexels-photo-5622271.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/porcelain-veneers.svg", "duration": "2–3 visits", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Clear Aligners", "category": "Orthodontics", "description": "Removable aligner therapy for selected tooth-alignment and bite concerns.", "image": "https://images.pexels.com/photos/6528907/pexels-photo-6528907.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/clear-aligners.svg", "duration": "Ongoing treatment plan", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Orthodontic Braces", "category": "Orthodontics", "description": "Fixed orthodontic brackets and wires used to gradually align teeth and correct selected bite concerns.", "image": "https://images.pexels.com/photos/3764014/pexels-photo-3764014.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/clear-aligners.svg", "duration": "12–24 months with scheduled adjustment visits", "notes": "Orthodontic braces are the only service eligible for the clinic installment plan. Final fee and installment schedule are confirmed after orthodontic assessment.", "price": "", "status": "Active", "installmentEligible": true}, {"name": "Retainers", "category": "Orthodontics", "description": "Custom appliances used to help maintain tooth position after orthodontic treatment.", "image": "https://images.pexels.com/photos/6528907/pexels-photo-6528907.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/retainers.svg", "duration": "30–45 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Night Guard", "category": "Occlusion", "description": "Custom occlusal appliance for patients with grinding or clenching concerns.", "image": "https://images.pexels.com/photos/6502345/pexels-photo-6502345.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/night-guard.svg", "duration": "2 visits", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}, {"name": "Periodontal Therapy", "category": "Periodontics", "description": "Gum-focused assessment and non-surgical care based on periodontal findings.", "image": "https://images.pexels.com/photos/3779706/pexels-photo-3779706.jpeg?auto=compress&cs=tinysrgb&w=900", "fallback": "../assets/images/services/periodontal-therapy.svg", "duration": "60–90 minutes", "notes": "Final treatment plan, preparation, aftercare and fee are confirmed after clinical evaluation.", "price": "", "status": "Active", "installmentEligible": false}];
+function publicGetServiceCatalog(){try{return JSON.parse(localStorage.getItem('cerilloServiceCatalogV4')||'null')||DEFAULT_SERVICE_CATALOG;}catch(_){return DEFAULT_SERVICE_CATALOG;}}
+function renderPublicServices(){
+ const grid=document.getElementById('publicServiceGrid'); if(!grid)return;
+ const list=publicGetServiceCatalog().filter(s=>s.status!=='Inactive');
+ grid.innerHTML=list.map((s,i)=>`<article class="public-service-card ${i>=6?'public-service-extra':''}" data-public-service-index="${i}"><img class="public-service-image" src="${s.image||(s.fallback||'assets/images/clinic.jpg').replace('../','')}" alt="${s.name}" onerror="this.onerror=null;this.src='${(s.fallback||'assets/images/clinic.jpg').replace('../','')}'"><span class="service-category">${s.category}</span><h3>${s.name}</h3><p>${s.description}</p><div class="service-fee-note">Fees vary based on clinical assessment and treatment needs.</div><button class="public-service-detail-btn" type="button" data-open-public-service="${i}">View details</button></article>`).join('');
+ const btn=document.getElementById('publicViewMoreServices'); if(btn){btn.hidden=list.length<=6;btn.textContent='View more services';btn.dataset.expanded='false';}
+}
+function openPublicService(i){const s=publicGetServiceCatalog().filter(x=>x.status!=='Inactive')[i];if(!s)return;const d=document.getElementById('publicServiceDialog');d.querySelector('[data-public-service-category]').textContent=s.category;d.querySelector('[data-public-service-title]').textContent=s.name;d.querySelector('[data-public-service-description]').textContent=s.description;d.querySelector('[data-public-service-long]').textContent=s.description;d.querySelector('[data-public-service-duration]').textContent=s.duration||'Varies by treatment';d.querySelector('[data-public-service-notes]').textContent=s.notes||'The dentist will explain preparation and aftercare after evaluation.';const img=d.querySelector('[data-public-service-image]');img.src=s.image||(s.fallback||'assets/images/clinic.jpg').replace('../','');img.onerror=()=>{img.onerror=null;img.src=(s.fallback||'assets/images/clinic.jpg').replace('../','');};d.showModal();}
+document.addEventListener('click',e=>{const detail=e.target.closest('[data-open-public-service]');if(detail)openPublicService(Number(detail.dataset.openPublicService));const more=e.target.closest('#publicViewMoreServices');if(more){const expanded=more.dataset.expanded==='true';document.querySelectorAll('#publicServiceGrid .public-service-extra').forEach(c=>c.classList.toggle('show-extra',!expanded));more.dataset.expanded=expanded?'false':'true';more.textContent=expanded?'View more services':'Show fewer services';}});
+renderPublicServices();
+window.addEventListener('storage',e=>{if(e.key==='cerilloServiceCatalogV4')renderPublicServices();});
+</script>
+</body>
+</html>
