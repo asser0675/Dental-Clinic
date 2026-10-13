@@ -5934,7 +5934,7 @@
 <span>
              +63
             </span>
-<input id="createAccountPhone" name="phone" maxlength="10" pattern="9[0-9]{9}" placeholder="9175550142" required="" type="tel"/>
+<input id="createAccountPhone" name="phone" maxlength="10" pattern="9[0-9]{9}" placeholder="9175550142" type="tel"/>
 </div>
 </label>
 <label>

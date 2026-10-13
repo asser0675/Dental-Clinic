@@ -856,9 +856,9 @@
     ];
     if (role === 'admin' || role === 'front_desk') {
       queue.push(loadTransactions());
-      queue.push(loadAdminAccounts());
     }
     if (role === 'admin') {
+      queue.push(loadAdminAccounts());
       queue.push(loadAdminServices());
       queue.push(loadAdminActivity());
       queue.push(loadAdminReports());
