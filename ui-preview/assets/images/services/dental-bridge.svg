@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540">
-    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f80ed"/><stop offset="1" stop-color="#e8f2ff"/></linearGradient></defs>
-    <rect width="900" height="540" rx="42" fill="url(#g)"/>
-    <circle cx="690" cy="110" r="170" fill="#fff" opacity=".13"/><circle cx="155" cy="430" r="210" fill="#fff" opacity=".08"/>
-    <g transform="translate(350 110) scale(1.45)"><path d="M43 70 C65 45 87 45 106 70 C125 45 147 45 167 70" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/></g>
-    <rect x="48" y="396" width="804" height="96" rx="24" fill="#fff" opacity=".92"/>
-    <text x="82" y="452" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#17324d">Dental Bridge</text>
-    </svg>

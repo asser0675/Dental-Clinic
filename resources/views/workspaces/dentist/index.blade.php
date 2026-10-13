@@ -234,70 +234,7 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>
-          8:30 AM
-         </td>
-<td>
-          Maria Santos
-         </td>
-<td>
-          Oral Prophylaxis
-         </td>
-<td>
-<span class="status success">
-           Completed
-          </span>
-</td>
-</tr>
-<tr>
-<td>
-          9:30 AM
-         </td>
-<td>
-          Joshua Lim
-         </td>
-<td>
-          Composite Restoration
-         </td>
-<td>
-<span class="status info">
-           Checked In
-          </span>
-</td>
-</tr>
-<tr>
-<td>
-          10:30 AM
-         </td>
-<td>
-          Andrea Cruz
-         </td>
-<td>
-          Root Canal Therapy
-         </td>
-<td>
-<span class="status warning">
-           In Progress
-          </span>
-</td>
-</tr>
-<tr>
-<td>
-          1:30 PM
-         </td>
-<td>
-          Paolo Garcia
-         </td>
-<td>
-          Tooth Extraction
-         </td>
-<td>
-<span class="status danger">
-           Cancelled
-          </span>
-</td>
-</tr>
+<tr><td colspan="4" class="muted" style="text-align:center;padding:24px;">No appointments scheduled for today.</td></tr>
 </tbody>
 </table>
 </div>
@@ -549,102 +486,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
 </tr>
 </thead>
 <tbody>
-<tr data-appointment-id="1">
-<td>
-          Maria Santos
-         </td>
-<td>
-          Oral Prophylaxis
-         </td>
-<td>
-          05 Oct 2026
-         </td>
-<td>
-          8:30 AM
-         </td>
-<td>
-<span class="status success">
-           Completed
-          </span>
-</td>
-<td>
-<button class="table-action appointment-view" data-appointment-id="1" onclick="window.openDentistAppointment ? window.openDentistAppointment(this) : (document.getElementById('dentistAppointmentDetailModal') &amp;&amp; document.getElementById('dentistAppointmentDetailModal').showModal())" type="button">
-           View
-          </button>
-</td>
-</tr>
-<tr data-appointment-id="2">
-<td>
-          Joshua Lim
-         </td>
-<td>
-          Composite Restoration
-         </td>
-<td>
-          05 Oct 2026
-         </td>
-<td>
-          9:30 AM
-         </td>
-<td>
-<span class="status info">
-           Checked In
-          </span>
-</td>
-<td>
-<button class="table-action appointment-view" data-appointment-id="2" onclick="window.openDentistAppointment ? window.openDentistAppointment(this) : (document.getElementById('dentistAppointmentDetailModal') &amp;&amp; document.getElementById('dentistAppointmentDetailModal').showModal())" type="button">
-           View
-          </button>
-</td>
-</tr>
-<tr data-appointment-id="3">
-<td>
-          Andrea Cruz
-         </td>
-<td>
-          Root Canal Therapy
-         </td>
-<td>
-          05 Oct 2026
-         </td>
-<td>
-          10:30 AM
-         </td>
-<td>
-<span class="status warning">
-           In Progress
-          </span>
-</td>
-<td>
-<button class="table-action appointment-view" data-appointment-id="3" onclick="window.openDentistAppointment ? window.openDentistAppointment(this) : (document.getElementById('dentistAppointmentDetailModal') &amp;&amp; document.getElementById('dentistAppointmentDetailModal').showModal())" type="button">
-           View
-          </button>
-</td>
-</tr>
-<tr data-appointment-id="4">
-<td>
-          Paolo Garcia
-         </td>
-<td>
-          Tooth Extraction
-         </td>
-<td>
-          05 Oct 2026
-         </td>
-<td>
-          1:30 PM
-         </td>
-<td>
-<span class="status danger">
-           Cancelled
-          </span>
-</td>
-<td>
-<button class="table-action appointment-view" data-appointment-id="4" onclick="window.openDentistAppointment ? window.openDentistAppointment(this) : (document.getElementById('dentistAppointmentDetailModal') &amp;&amp; document.getElementById('dentistAppointmentDetailModal').showModal())" type="button">
-           View
-          </button>
-</td>
-</tr>
+<tr><td colspan="6" class="muted" style="text-align:center;padding:24px;">Loading appointments...</td></tr>
 </tbody>
 </table>
 </div>
@@ -783,56 +625,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
 </tr>
 </thead>
 <tbody>
-<tr data-procedure="Composite Restoration" data-segment="Restorative">
-<td>
-          Maria Santos
-         </td>
-<td>
-          34
-         </td>
-<td>
-          +63 917 842 1180
-         </td>
-<td>
-          Penicillin
-         </td>
-<td>
-          8:30 AM · Oral Prophylaxis
-         </td>
-<td>
-          Completed
-         </td>
-<td>
-<button class="table-action" onclick="document.getElementById('dentistPatientModal').showModal()" type="button">
-           View / Update
-          </button>
-</td>
-</tr>
-<tr data-procedure="Composite Restoration" data-segment="Restorative">
-<td>
-          Joshua Lim
-         </td>
-<td>
-          29
-         </td>
-<td>
-          +63 918 337 1401
-         </td>
-<td>
-          None
-         </td>
-<td>
-          9:30 AM · Composite Restoration
-         </td>
-<td>
-          Checked In
-         </td>
-<td>
-<button class="table-action" onclick="document.getElementById('dentistPatientModal').showModal()" type="button">
-           View / Update
-          </button>
-</td>
-</tr>
+<tr><td colspan="7" class="muted" style="text-align:center;padding:24px;">Loading patient records...</td></tr>
 </tbody>
 </table>
 </div>
@@ -1088,23 +881,23 @@ Select a day header for an all-day block, or choose an empty time box for a spec
       }
     });
   </script>
-<dialog aria-label="Patient Record — Maria Santos" class="modal modal-xl clinical-record-modal" data-patient-id="PT-2026-0018" data-patient-name="Maria Santos" id="dentistPatientModal">
+<dialog aria-label="Patient Record" class="modal modal-xl clinical-record-modal" data-patient-id="" data-patient-name="" id="dentistPatientModal">
 <div class="modal-shell patient-file-shell">
 <header class="modal-header patient-file-header">
 <div class="patient-identity-row">
 <div class="avatar avatar-lg" data-pr-avatar>
-       MS
+       --
       </div>
 <div>
 <p class="eyebrow">
         Patient Record
        </p>
 <h3 data-pr-name>
-        Maria Santos
+        —
        </h3>
 <div class="patient-inline-data">
 <span data-pr-code>
-         ID: PT-2026-0018
+         ID: —
         </span>
 </div>
 </div>
@@ -1151,7 +944,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
 </div>
 </div>
 <span class="record-meta" data-pr-meta>
-          Verified 05 Oct 2026
+          —
          </span>
 </div>
 <dl class="patient-detail-grid">
@@ -1160,7 +953,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Date of birth
           </dt>
 <dd data-pr-dob>
-           14 March 1992
+           —
           </dd>
 </div>
 <div>
@@ -1168,7 +961,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Age
           </dt>
 <dd data-pr-age>
-           34 years
+           —
           </dd>
 </div>
 <div>
@@ -1176,7 +969,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Sex
           </dt>
 <dd data-pr-gender>
-           Female
+           —
           </dd>
 </div>
 <div>
@@ -1184,7 +977,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Mobile
           </dt>
 <dd data-pr-phone>
-           +63 917 842 1180
+           —
           </dd>
 </div>
 <div>
@@ -1192,7 +985,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Email
           </dt>
 <dd data-pr-email>
-           maria.santos@gmail.com
+           —
           </dd>
 </div>
 <div class="wide">
@@ -1200,7 +993,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Address
           </dt>
 <dd data-pr-address>
-           J.P. Laurel Ave., Davao City
+           —
           </dd>
 </div>
 <div>
@@ -1208,7 +1001,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Insurance / HMO
           </dt>
 <dd data-pr-insurance>
-           Maxicare Dental
+           —
           </dd>
 </div>
 <div>
@@ -1216,7 +1009,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Preferred contact
           </dt>
 <dd data-pr-contact>
-           SMS
+           —
           </dd>
 </div>
 </dl>
@@ -1243,7 +1036,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Chief concern
           </dt>
 <dd data-pr-concern>
-           Sensitivity on lower-right posterior teeth
+           —
           </dd>
 </div>
 <div>
@@ -1251,7 +1044,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Preferred dentist
           </dt>
 <dd data-pr-dentist>
-           Dr. Ana Cerillo
+           —
           </dd>
 </div>
 <div>
@@ -1259,7 +1052,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Last visit
           </dt>
 <dd data-pr-last-visit>
-           03 Oct 2026
+           —
           </dd>
 </div>
 <div>
@@ -1267,7 +1060,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Next appointment
           </dt>
 <dd data-pr-next-appt>
-           18 Oct 2026 · 10:00 AM
+           —
           </dd>
 </div>
 <div>
@@ -1275,7 +1068,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Last radiograph
           </dt>
 <dd data-pr-last-xray>
-           04 Oct 2026
+           —
           </dd>
 </div>
 <div>
@@ -1283,7 +1076,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Recall interval
           </dt>
 <dd data-pr-recall>
-           6 months
+           —
           </dd>
 </div>
 <div>
@@ -1291,7 +1084,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
            Dental anxiety
           </dt>
 <dd data-pr-anxiety>
-           Low
+           —
           </dd>
 </div>
 </dl>
@@ -1306,7 +1099,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
           Drug allergy
          </small>
 <strong data-pr-alert-allergy>
-          Penicillin
+          None
          </strong>
 </span>
 </div>
@@ -1318,7 +1111,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
           Current medication
          </small>
 <strong data-pr-alert-medication>
-          Losartan 50 mg daily
+          None
          </strong>
 </span>
 </div>
@@ -1330,7 +1123,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
           Medical history
          </small>
 <strong data-pr-alert-med-history>
-          Controlled hypertension
+          No known systemic conditions
          </strong>
 </span>
 </div>
@@ -1342,7 +1135,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
           Health history review
          </small>
 <strong data-pr-alert-review>
-          05 Oct 2026
+          —
          </strong>
 </span>
 </div>
@@ -3752,7 +3545,7 @@ renderDentistAppointmentAvailability();
        Patient X-ray
       </p>
 <h3>
-       Add X-ray to Maria Santos
+       Add Patient Radiograph
       </h3>
 </div>
 <button class="icon-btn" onclick="this.closest('dialog').close()" type="button">
@@ -3763,7 +3556,7 @@ renderDentistAppointmentAvailability();
 <form class="form-grid">
 <label>
        Patient
-       <input readonly="" value="Maria Santos · PT-2026-0018"/>
+       <input readonly="" value="" placeholder="Patient name & ID"/>
 </label>
 <label>
        X-ray type
@@ -3986,7 +3779,7 @@ renderDentistAppointmentAvailability();
 <form class="form-grid">
 <label>
        Patient
-       <input readonly="" value="Maria Santos · PT-2026-0018"/>
+       <input readonly="" value="" placeholder="Patient name & ID"/>
 </label>
 <label>
        Appointment
@@ -4410,7 +4203,7 @@ renderDentistAppointmentAvailability();
 <div>
 <p class="eyebrow">Patient Radiograph</p>
 <h3 data-xray-detail-title="">Radiograph Details</h3>
-<p data-xray-detail-subtitle="">Maria Santos · PT-2026-0018</p>
+<p data-xray-detail-subtitle="">—</p>
 </div>
 <button aria-label="Close X-ray details" class="icon-btn" onclick="this.closest('dialog').close()" type="button">×</button>
 </header>
@@ -4420,7 +4213,7 @@ renderDentistAppointmentAvailability();
 </div>
 <div class="patient-xray-detail-info">
 <div class="xray-detail-summary">
-<div><small>Patient</small><strong>Maria Santos</strong></div>
+<div><small>Patient</small><strong data-xray-detail-patient="">—</strong></div>
 <div><small>Date taken</small><strong data-xray-detail-date="">03 Oct 2026</strong></div>
 <div><small>Imaging type</small><strong data-xray-detail-type="">Panoramic</strong></div>
 <div><small>Dentist</small><strong data-xray-detail-dentist="">Dr. Ana Cerillo</strong></div>

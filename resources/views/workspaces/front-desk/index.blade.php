@@ -226,63 +226,50 @@ body[data-workspace-role="front_desk"] .front-appointment-dental-chart {
 </tr>
 </thead>
 <tbody>
-<tr>
+@php
+  $dashboardAppts = $appointments->filter(fn($a) => $a->starts_at && $a->starts_at->isToday());
+  if ($dashboardAppts->isEmpty()) {
+    $dashboardAppts = $appointments->take(10);
+  }
+@endphp
+@forelse($dashboardAppts as $appt)
+@php
+  $patientName = $appt->patient?->name ?? $appt->guest_name;
+  $dentistName = $appt->dentist?->name ?? 'Unassigned';
+  $serviceName = $appt->service?->name ?? 'Dental Examination';
+  $timeFormatted = $appt->starts_at ? $appt->starts_at->format('g:i A') : '—';
+  $statusClass = match($appt->status) {
+    'Checked In' => 'info',
+    'Completed' => 'success',
+    'In Progress' => 'primary',
+    'Cancelled' => 'danger',
+    default => 'warning',
+  };
+@endphp
+<tr data-filter-tags="{{ $appt->status }}">
 <td>
-          8:30 AM
-         </td>
+{{ $timeFormatted }}
+</td>
 <td>
-          Maria Santos
-         </td>
+{{ $patientName }}
+</td>
 <td>
-          Oral Prophylaxis
-         </td>
+{{ $serviceName }}
+</td>
 <td>
-          Dr. Ana Cerillo
-         </td>
+{{ $dentistName }}
+</td>
 <td>
-<span class="status success">
-           Completed
-          </span>
+<span class="status {{ $statusClass }}">
+{{ $appt->status }}
+</span>
 </td>
 </tr>
+@empty
 <tr>
-<td>
-          9:30 AM
-         </td>
-<td>
-          Joshua Lim
-         </td>
-<td>
-          Composite Restoration
-         </td>
-<td>
-          Dr. Ana Cerillo
-         </td>
-<td>
-<span class="status info">
-           Checked In
-          </span>
-</td>
+<td colspan="5" class="muted" style="text-align:center;padding:24px;">No appointments found.</td>
 </tr>
-<tr>
-<td>
-          10:30 AM
-         </td>
-<td>
-          Andrea Cruz
-         </td>
-<td>
-          Root Canal Therapy
-         </td>
-<td>
-          Dr. Paolo Reyes
-         </td>
-<td>
-<span class="status warning">
-           Pending
-          </span>
-</td>
-</tr>
+@endforelse
 </tbody>
 </table>
 </div>
@@ -3294,23 +3281,23 @@ View
 </div>
 </div>
 </dialog>
-<dialog aria-label="Patient Record — Maria Santos" class="modal modal-xl clinical-record-modal" data-patient-id="PT-2026-0018" data-patient-name="Maria Santos" id="frontPatientModal">
+<dialog aria-label="Patient Record" class="modal modal-xl clinical-record-modal" data-patient-id="" data-patient-name="" id="frontPatientModal">
 <div class="modal-shell patient-file-shell">
 <header class="modal-header patient-file-header">
 <div class="patient-identity-row">
 <div class="avatar avatar-lg" data-pr-avatar>
-       MS
+       --
       </div>
 <div>
 <p class="eyebrow">
         Patient Record
        </p>
 <h3 data-pr-name>
-        Maria Santos
+        —
        </h3>
 <div class="patient-inline-data">
 <span data-pr-code>
-         ID: PT-2026-0018
+         ID: —
         </span>
 </div>
 </div>
@@ -3351,7 +3338,7 @@ View
 </div>
 </div>
 <span class="record-meta" data-pr-meta>
-          Verified 05 Oct 2026
+          —
          </span>
 </div>
 <dl class="patient-detail-grid">
@@ -3360,7 +3347,7 @@ View
            Date of birth
           </dt>
 <dd data-pr-dob>
-           14 March 1992
+           —
           </dd>
 </div>
 <div>
@@ -3368,7 +3355,7 @@ View
            Age
           </dt>
 <dd data-pr-age>
-           34 years
+           —
           </dd>
 </div>
 <div>
@@ -3376,7 +3363,7 @@ View
            Sex
           </dt>
 <dd data-pr-gender>
-           Female
+           —
           </dd>
 </div>
 <div>
@@ -3384,7 +3371,7 @@ View
            Mobile
           </dt>
 <dd data-pr-phone>
-           +63 917 842 1180
+           —
           </dd>
 </div>
 <div>
@@ -3392,7 +3379,7 @@ View
            Email
           </dt>
 <dd data-pr-email>
-           maria.santos@gmail.com
+           —
           </dd>
 </div>
 <div class="wide">
@@ -3400,7 +3387,7 @@ View
            Address
           </dt>
 <dd data-pr-address>
-           J.P. Laurel Ave., Davao City
+           —
           </dd>
 </div>
 <div>
@@ -3408,7 +3395,7 @@ View
            Insurance / HMO
           </dt>
 <dd data-pr-insurance>
-           Maxicare Dental
+           —
           </dd>
 </div>
 <div>
@@ -3416,7 +3403,7 @@ View
            Preferred contact
           </dt>
 <dd data-pr-contact>
-           SMS
+           —
           </dd>
 </div>
 </dl>
@@ -3443,7 +3430,7 @@ View
            Chief concern
           </dt>
 <dd data-pr-concern>
-           Sensitivity on lower-right posterior teeth
+           —
           </dd>
 </div>
 <div>
@@ -3451,7 +3438,7 @@ View
            Preferred dentist
           </dt>
 <dd data-pr-dentist>
-           Dr. Ana Cerillo
+           —
           </dd>
 </div>
 <div>
@@ -3459,7 +3446,7 @@ View
            Last visit
           </dt>
 <dd data-pr-last-visit>
-           03 Oct 2026
+           —
           </dd>
 </div>
 <div>
@@ -3467,7 +3454,7 @@ View
            Next appointment
           </dt>
 <dd data-pr-next-appt>
-           18 Oct 2026 · 10:00 AM
+           —
           </dd>
 </div>
 <div>
@@ -3475,7 +3462,7 @@ View
            Last radiograph
           </dt>
 <dd data-pr-last-xray>
-           04 Oct 2026
+           —
           </dd>
 </div>
 <div>
@@ -3483,7 +3470,7 @@ View
            Recall interval
           </dt>
 <dd data-pr-recall>
-           6 months
+           —
           </dd>
 </div>
 <div>
@@ -3491,7 +3478,7 @@ View
            Dental anxiety
           </dt>
 <dd data-pr-anxiety>
-           Low
+           —
           </dd>
 </div>
 </dl>
@@ -3506,7 +3493,7 @@ View
           Drug allergy
          </small>
 <strong data-pr-alert-allergy>
-          Penicillin
+          None
          </strong>
 </span>
 </div>
@@ -3518,7 +3505,7 @@ View
           Current medication
          </small>
 <strong data-pr-alert-medication>
-          Losartan 50 mg daily
+          None
          </strong>
 </span>
 </div>
@@ -3530,7 +3517,7 @@ View
           Medical history
          </small>
 <strong data-pr-alert-med-history>
-          Controlled hypertension
+          No known systemic conditions
          </strong>
 </span>
 </div>
@@ -3542,7 +3529,7 @@ View
           Health history review
          </small>
 <strong data-pr-alert-review>
-          05 Oct 2026
+          —
          </strong>
 </span>
 </div>
@@ -3560,54 +3547,7 @@ View
 </div>
 </div>
 <div class="visit-timeline" data-pr-visit-timeline="">
-<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
-<span class="timeline-dot complete">
-</span>
-<strong>
-         Dr. Ana Cerillo
-        </strong>
-<span>
-         03 Oct 2026 · 10:15 AM
-        </span>
-<span class="status success">
-         Completed
-        </span>
-<span aria-hidden="true" class="visit-chevron">
-         ›
-        </span>
-</button>
-<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
-<span class="timeline-dot complete">
-</span>
-<strong>
-         Dr. Paolo Reyes
-        </strong>
-<span>
-         12 Aug 2026 · 2:30 PM
-        </span>
-<span class="status success">
-         Completed
-        </span>
-<span aria-hidden="true" class="visit-chevron">
-         ›
-        </span>
-</button>
-<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
-<span class="timeline-dot complete">
-</span>
-<strong>
-         Dr. Ana Cerillo
-        </strong>
-<span>
-         10 Feb 2026 · 9:00 AM
-        </span>
-<span class="status success">
-         Completed
-        </span>
-<span aria-hidden="true" class="visit-chevron">
-         ›
-        </span>
-</button>
+<div class="muted" style="padding: 1.5rem; text-align: center;">No completed visits recorded for this patient.</div>
 </div>
 </section>
 
@@ -4181,7 +4121,7 @@ window.addEventListener('storage', renderSharedAvailability);
        Patient X-ray
       </p>
 <h3>
-       Add X-ray to Maria Santos
+       Add Patient Radiograph
       </h3>
 </div>
 <button class="icon-btn" onclick="this.closest('dialog').close()" type="button">
@@ -4192,7 +4132,7 @@ window.addEventListener('storage', renderSharedAvailability);
 <form class="form-grid">
 <label>
        Patient
-       <input readonly="" value="Maria Santos · PT-2026-0018"/>
+       <input readonly="" value="" placeholder="Patient name & ID"/>
 </label>
 <label>
        X-ray type
@@ -5218,7 +5158,7 @@ window.addEventListener('storage', renderSharedAvailability);
 <div>
 <p class="eyebrow">Patient Radiograph</p>
 <h3 data-xray-detail-title="">Radiograph Details</h3>
-<p data-xray-detail-subtitle="">Maria Santos · PT-2026-0018</p>
+<p data-xray-detail-subtitle="">—</p>
 </div>
 <button aria-label="Close X-ray details" class="icon-btn" onclick="this.closest('dialog').close()" type="button">×</button>
 </header>
@@ -5228,10 +5168,10 @@ window.addEventListener('storage', renderSharedAvailability);
 </div>
 <div class="patient-xray-detail-info">
 <div class="xray-detail-summary">
-<div><small>Patient</small><strong>Maria Santos</strong></div>
-<div><small>Date taken</small><strong data-xray-detail-date="">03 Oct 2026</strong></div>
-<div><small>Imaging type</small><strong data-xray-detail-type="">Panoramic</strong></div>
-<div><small>Dentist</small><strong data-xray-detail-dentist="">Dr. Ana Cerillo</strong></div>
+<div><small>Patient</small><strong data-xray-detail-patient="">—</strong></div>
+<div><small>Date taken</small><strong data-xray-detail-date="">—</strong></div>
+<div><small>Imaging type</small><strong data-xray-detail-type="">—</strong></div>
+<div><small>Dentist</small><strong data-xray-detail-dentist="">—</strong></div>
 </div>
 <article class="xray-detail-note">
 <small>Clinical findings</small>

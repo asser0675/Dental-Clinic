@@ -667,60 +667,35 @@
 </tr>
 </thead>
 <tbody>
-<tr data-procedure="Composite Restoration" data-segment="Restorative">
+@forelse($patients as $patient)
+@php
+  $lastAppt = $patient->appointments->first();
+  $age = $patient->date_of_birth ? \Carbon\Carbon::parse($patient->date_of_birth)->age : '—';
+  $intake = $lastAppt?->intake_details ?? [];
+  $rawAllergy = trim((string) ($intake['allergies'] ?? ''));
+  $alert = ($rawAllergy === '' || preg_match('/^(none|none reported|no allergies|no known allergies|n\/?a)$/i', $rawAllergy)) ? 'None' : $rawAllergy;
+  $lastVisit = $lastAppt?->starts_at ? $lastAppt->starts_at->format('M d, Y') : 'New';
+  $procedure = $lastAppt?->service?->name ?? 'General';
+@endphp
+<tr data-patient-id="{{ $patient->id }}" data-procedure="{{ $procedure }}" data-segment="Restorative">
 <td>
-         Maria Santos
-        </td>
-<td>
-         34
-        </td>
-<td>
-         +63 917 842 1180
-        </td>
-<td>
-         Penicillin
-        </td>
-<td>
-         Sep 28, 2026
-        </td>
-<td>
-<span class="badge success">
-          Active
-         </span>
+<strong>{{ $patient->name }}</strong>
+<small class="table-subtext">{{ $patient->formatted_patient_code }}</small>
 </td>
+<td>{{ $age }}</td>
+<td>{{ $patient->formatted_phone ?: ($patient->email ?: '—') }}</td>
+<td>{{ $alert }}</td>
+<td>{{ $lastVisit }}</td>
+<td><span class="badge success">Active</span></td>
 <td>
-<button class="action-btn" onclick="document.getElementById('patientViewModal').showModal()" type="button">
-          View
-         </button>
+<button class="action-btn patient-view-btn" data-live-patient-id="{{ $patient->id }}" data-patient-id="{{ $patient->id }}" type="button">View</button>
 </td>
 </tr>
-<tr data-procedure="Oral Prophylaxis" data-segment="Preventive">
-<td>
-         John Reyes
-        </td>
-<td>
-         34
-        </td>
-<td>
-         +63 918 302 7781
-        </td>
-<td>
-         None reported
-        </td>
-<td>
-         Oct 03, 2026
-        </td>
-<td>
-<span class="badge success">
-          Active
-         </span>
-</td>
-<td>
-<button class="action-btn" onclick="document.getElementById('patientViewModal').showModal()" type="button">
-          View
-         </button>
-</td>
+@empty
+<tr>
+<td colspan="7" class="muted" style="text-align:center;padding:24px;">No patients found in directory.</td>
 </tr>
+@endforelse
 </tbody>
 </table>
 </div>
@@ -1162,102 +1137,62 @@
 </tr>
 </thead>
 <tbody>
-<tr data-filter-tags="Pending">
+@forelse($appointments as $appt)
+@php
+  $patientName = $appt->patient?->name ?? $appt->guest_name;
+  $patientCode = $appt->patient?->formatted_patient_code ?? 'Pending registration';
+  $dentistName = $appt->dentist?->name ?? 'Unassigned';
+  $serviceName = $appt->service?->name ?? 'Dental Examination';
+  $dateFormatted = $appt->starts_at ? $appt->starts_at->format('M d, Y') : '—';
+  $timeFormatted = $appt->starts_at ? $appt->starts_at->format('g:i A') : '—';
+  $isoDate = $appt->starts_at ? $appt->starts_at->format('Y-m-d') : '';
+  $arrivalFormatted = $appt->checked_in_at ? \Illuminate\Support\Carbon::parse($appt->checked_in_at)->format('g:i A') : 'Not arrived';
+@endphp
+<tr data-filter-tags="{{ $appt->status }}" data-status="{{ $appt->status }}" data-date="{{ $isoDate }}" data-appointment-id="{{ $appt->id }}">
 <td>
 <strong>
-          Ana Cruz
-         </strong>
+{{ $patientName }}
+</strong>
 <small class="table-subtext">
-          PT-2026-0041
-         </small>
+{{ $patientCode }}
+</small>
+</td>
+<td>{{ $dentistName }}</td>
+<td>
+{{ $serviceName }}
 </td>
 <td>
-         Dr. Angela Cerillo
-        </td>
+{{ $dateFormatted }}
+</td>
 <td>
-         Dental Checkup
-        </td>
+{{ $timeFormatted }}
+</td>
 <td>
-         Oct 03, 2026
-        </td>
-<td>
-         10:00 AM
-        </td>
-<td>
+@if($appt->status === 'Checked In' && $appt->checked_in_at)
+<span class="arrival-state arrived">
+{{ $arrivalFormatted }}
+</span>
+@elseif($appt->status === 'Completed')
+<span class="arrival-state arrived">
+Completed
+</span>
+@else
 <span class="arrival-state waiting">
-          Not arrived
-         </span>
+Not arrived
+</span>
+@endif
 </td>
 <td>
-<button class="table-action" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          View
-         </button>
-</td>
-</tr>
-<tr data-filter-tags="Checked In">
-<td>
-<strong>
-          John Reyes
-         </strong>
-<small class="table-subtext">
-          PT-2026-0035
-         </small>
-</td>
-<td>
-         Dr. Paolo Reyes
-        </td>
-<td>
-         Oral Prophylaxis
-        </td>
-<td>
-         Oct 03, 2026
-        </td>
-<td>
-         9:00 AM
-        </td>
-<td>
-<span class="arrival-state arrived">
-          8:48 AM
-         </span>
-</td>
-<td>
-<button class="table-action" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          View
-         </button>
+<button class="table-action appointment-view" data-appointment-id="{{ $appt->id }}" type="button">
+View
+</button>
 </td>
 </tr>
-<tr data-filter-tags="Completed">
-<td>
-<strong>
-          Maria Santos
-         </strong>
-<small class="table-subtext">
-          PT-2026-0018
-         </small>
-</td>
-<td>
-         Dr. Ana Cerillo
-        </td>
-<td>
-         Composite Restoration
-        </td>
-<td>
-         Oct 03, 2026
-        </td>
-<td>
-         1:30 PM
-        </td>
-<td>
-<span class="arrival-state arrived">
-          1:18 PM
-         </span>
-</td>
-<td>
-<button class="table-action" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          View
-         </button>
-</td>
+@empty
+<tr>
+<td colspan="7" class="muted" style="text-align:center;padding:24px;">No appointments found.</td>
 </tr>
+@endforelse
 </tbody>
 </table>
 </div>
@@ -1759,78 +1694,7 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>
-          04 Oct 2026 · 4:42 PM
-         </td>
-<td>
-          Maria Santos
-         </td>
-<td>
-          ₱4,500
-         </td>
-<td>
-<span class="status success">
-           Paid
-          </span>
-</td>
-<td>
-          GCash
-         </td>
-<td>
-<button class="table-action" onclick="document.getElementById('adminPaymentModal').showModal()" type="button">
-           View
-          </button>
-</td>
-</tr>
-<tr>
-<td>
-          04 Oct 2026 · 3:18 PM
-         </td>
-<td>
-          Joshua Lim
-         </td>
-<td>
-          ₱2,800
-         </td>
-<td>
-<span class="status warning">
-           Partial
-          </span>
-</td>
-<td>
-          Cash
-         </td>
-<td>
-<button class="table-action" onclick="document.getElementById('adminPaymentModal').showModal()" type="button">
-           View
-          </button>
-</td>
-</tr>
-<tr>
-<td>
-          04 Oct 2026 · 1:05 PM
-         </td>
-<td>
-          Andrea Cruz
-         </td>
-<td>
-          ₱6,500
-         </td>
-<td>
-<span class="status success">
-           Paid
-          </span>
-</td>
-<td>
-          Card
-         </td>
-<td>
-<button class="table-action" onclick="document.getElementById('adminPaymentModal').showModal()" type="button">
-           View
-          </button>
-</td>
-</tr>
+<tr><td colspan="6" class="muted" style="text-align:center;padding:24px;">Loading billing records...</td></tr>
 </tbody>
 </table>
 </div>
@@ -1936,81 +1800,7 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>
-          04 Oct 2026
-         </td>
-<td>
-          INV-2026-1048
-         </td>
-<td>
-          Maria Santos
-         </td>
-<td>
-          Dr. Ana Cerillo
-         </td>
-<td>
-          GCash
-         </td>
-<td>
-          ₱10,000
-         </td>
-<td>
-<button class="table-action" onclick="document.getElementById('saleViewModal').showModal()" type="button">
-           View
-          </button>
-</td>
-</tr>
-<tr>
-<td>
-          04 Oct 2026
-         </td>
-<td>
-          INV-2026-1047
-         </td>
-<td>
-          Joshua Lim
-         </td>
-<td>
-          Dr. Paolo Reyes
-         </td>
-<td>
-          Cash
-         </td>
-<td>
-          ₱3,500
-         </td>
-<td>
-<button class="table-action" onclick="document.getElementById('saleViewModal').showModal()" type="button">
-           View
-          </button>
-</td>
-</tr>
-<tr class="negative-entry">
-<td>
-          04 Oct 2026
-         </td>
-<td>
-          REF-2026-1047
-         </td>
-<td>
-          Joshua Lim
-         </td>
-<td>
-          Dr. Paolo Reyes
-         </td>
-<td>
-          Refund
-         </td>
-<td>
-          -₱3,500
-         </td>
-<td>
-<button class="table-action" onclick="document.getElementById('saleViewModal').showModal()" type="button">
-           View
-          </button>
-</td>
-</tr>
+<tr><td colspan="7" class="muted" style="text-align:center;padding:24px;">Loading sales records...</td></tr>
 </tbody>
 </table>
 </div>
@@ -2227,50 +2017,7 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>
-          Oral Prophylaxis
-         </td>
-<td>
-          142
-         </td>
-<td>
-          32%
-         </td>
-</tr>
-<tr>
-<td>
-          Restorations
-         </td>
-<td>
-          96
-         </td>
-<td>
-          22%
-         </td>
-</tr>
-<tr>
-<td>
-          Extractions
-         </td>
-<td>
-          61
-         </td>
-<td>
-          14%
-         </td>
-</tr>
-<tr>
-<td>
-          Orthodontic Reviews
-         </td>
-<td>
-          54
-         </td>
-<td>
-          12%
-         </td>
-</tr>
+<tr><td colspan="3" class="muted" style="text-align:center;padding:24px;">Loading service utilization...</td></tr>
 </tbody>
 </table>
 </article>
@@ -2899,23 +2646,23 @@
       }
     });
   </script>
-<dialog aria-label="Patient Record — Maria Santos" class="modal modal-xl clinical-record-modal" data-patient-id="PT-2026-0018" data-patient-name="Maria Santos" id="patientViewModal">
+<dialog aria-label="Patient Record" class="modal modal-xl clinical-record-modal" data-patient-id="" data-patient-name="" id="patientViewModal">
 <div class="modal-shell patient-file-shell">
 <header class="modal-header patient-file-header">
 <div class="patient-identity-row">
 <div class="avatar avatar-lg" data-pr-avatar>
-       MS
+       --
       </div>
 <div>
 <p class="eyebrow">
         Patient Record
        </p>
 <h3 data-pr-name>
-        Maria Santos
+        —
        </h3>
 <div class="patient-inline-data">
 <span data-pr-code>
-         ID: PT-2026-0018
+         ID: —
         </span>
 </div>
 </div>
@@ -2965,7 +2712,7 @@
 </div>
 </div>
 <span class="record-meta" data-pr-meta>
-          Verified 05 Oct 2026
+          —
          </span>
 </div>
 <dl class="patient-detail-grid">
@@ -2974,7 +2721,7 @@
            Date of birth
           </dt>
 <dd data-pr-dob>
-           14 March 1992
+           —
           </dd>
 </div>
 <div>
@@ -2982,7 +2729,7 @@
            Age
           </dt>
 <dd data-pr-age>
-           34 years
+           —
           </dd>
 </div>
 <div>
@@ -2990,7 +2737,7 @@
            Sex
           </dt>
 <dd data-pr-gender>
-           Female
+           —
           </dd>
 </div>
 <div>
@@ -2998,7 +2745,7 @@
            Mobile
           </dt>
 <dd data-pr-phone>
-           +63 917 842 1180
+           —
           </dd>
 </div>
 <div>
@@ -3006,7 +2753,7 @@
            Email
           </dt>
 <dd data-pr-email>
-           maria.santos@gmail.com
+           —
           </dd>
 </div>
 <div class="wide">
@@ -3014,7 +2761,7 @@
            Address
           </dt>
 <dd data-pr-address>
-           J.P. Laurel Ave., Davao City
+           —
           </dd>
 </div>
 <div>
@@ -3022,7 +2769,7 @@
            Insurance / HMO
           </dt>
 <dd data-pr-insurance>
-           Maxicare Dental
+           —
           </dd>
 </div>
 <div>
@@ -3030,7 +2777,7 @@
            Preferred contact
           </dt>
 <dd data-pr-contact>
-           SMS
+           —
           </dd>
 </div>
 </dl>
@@ -3057,7 +2804,7 @@
            Chief concern
           </dt>
 <dd data-pr-concern>
-           Sensitivity on lower-right posterior teeth
+           —
           </dd>
 </div>
 <div>
@@ -3065,7 +2812,7 @@
            Preferred dentist
           </dt>
 <dd data-pr-dentist>
-           Dr. Ana Cerillo
+           —
           </dd>
 </div>
 <div>
@@ -3073,7 +2820,7 @@
            Last visit
           </dt>
 <dd data-pr-last-visit>
-           03 Oct 2026
+           —
           </dd>
 </div>
 <div>
@@ -3081,7 +2828,7 @@
            Next appointment
           </dt>
 <dd data-pr-next-appt>
-           18 Oct 2026 · 10:00 AM
+           —
           </dd>
 </div>
 <div>
@@ -3089,7 +2836,7 @@
            Last radiograph
           </dt>
 <dd data-pr-last-xray>
-           04 Oct 2026
+           —
           </dd>
 </div>
 <div>
@@ -3097,7 +2844,7 @@
            Recall interval
           </dt>
 <dd data-pr-recall>
-           6 months
+           —
           </dd>
 </div>
 <div>
@@ -3105,7 +2852,7 @@
            Dental anxiety
           </dt>
 <dd data-pr-anxiety>
-           Low
+           —
           </dd>
 </div>
 </dl>
@@ -3120,7 +2867,7 @@
           Drug allergy
          </small>
 <strong data-pr-alert-allergy>
-          Penicillin
+          None
          </strong>
 </span>
 </div>
@@ -3132,7 +2879,7 @@
           Current medication
          </small>
 <strong data-pr-alert-medication>
-          Losartan 50 mg daily
+          None
          </strong>
 </span>
 </div>
@@ -3144,7 +2891,7 @@
           Medical history
          </small>
 <strong data-pr-alert-med-history>
-          Controlled hypertension
+          No known systemic conditions
          </strong>
 </span>
 </div>
@@ -3156,7 +2903,7 @@
           Health history review
          </small>
 <strong data-pr-alert-review>
-          05 Oct 2026
+          —
          </strong>
 </span>
 </div>
@@ -3174,54 +2921,7 @@
 </div>
 </div>
 <div class="visit-timeline" data-pr-visit-timeline="">
-<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
-<span class="timeline-dot complete">
-</span>
-<strong>
-         Dr. Ana Cerillo
-        </strong>
-<span>
-         03 Oct 2026 · 10:15 AM
-        </span>
-<span class="status success">
-         Completed
-        </span>
-<span aria-hidden="true" class="visit-chevron">
-         ›
-        </span>
-</button>
-<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
-<span class="timeline-dot complete">
-</span>
-<strong>
-         Dr. Paolo Reyes
-        </strong>
-<span>
-         12 Aug 2026 · 2:30 PM
-        </span>
-<span class="status success">
-         Completed
-        </span>
-<span aria-hidden="true" class="visit-chevron">
-         ›
-        </span>
-</button>
-<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
-<span class="timeline-dot complete">
-</span>
-<strong>
-         Dr. Ana Cerillo
-        </strong>
-<span>
-         10 Feb 2026 · 9:00 AM
-        </span>
-<span class="status success">
-         Completed
-        </span>
-<span aria-hidden="true" class="visit-chevron">
-         ›
-        </span>
-</button>
+<div class="muted" style="padding: 1.5rem; text-align: center;">No completed visits recorded for this patient.</div>
 </div>
 </section>
 <section class="record-tab-panel" data-record-panel="medical">
@@ -5305,7 +5005,7 @@
 </footer>
 </div>
 </dialog>
-<dialog aria-label="Appointment Record — Ana Cruz" class="modal modal-lg" id="appointmentModal">
+<dialog aria-label="Appointment Record" class="modal modal-lg" id="appointmentModal">
 <div class="modal-shell">
 <div class="modal-head">
 <div>
@@ -5313,10 +5013,10 @@
        Appointment workspace
       </p>
 <h3>
-       Ana Cruz · Dental Checkup
+       Appointment Record
       </h3>
 <p>
-       APT-10482 · Friday, Oct 03, 2026
+       APT-— · —
       </p>
 </div>
 <button aria-label="Close appointment record" class="icon-btn" onclick="this.closest('dialog').close()" type="button">
@@ -5329,14 +5029,14 @@
 <div class="appointment-banner">
 <div>
 <h4>
-          10:00 AM – 10:45 AM
+          — – —
          </h4>
 <p>
-          Operatory 2 · Dr. Angela Cerillo · Comprehensive dental checkup
+          Comprehensive dental checkup
          </p>
 </div>
 <span class="status-pill warning">
-         Pending confirmation
+         Pending
         </span>
 </div>
 <div class="appointment-meta-row">
@@ -5345,7 +5045,7 @@
           Patient
          </small>
 <strong>
-          Ana Cruz
+          —
          </strong>
 </div>
 <div class="appointment-meta-card">
@@ -5353,7 +5053,7 @@
           Arrival
          </small>
 <strong>
-          Not yet arrived
+          —
          </strong>
 </div>
 <div class="appointment-meta-card">
@@ -5361,7 +5061,7 @@
           Duration
          </small>
 <strong>
-          45 minutes
+          —
          </strong>
 </div>
 <div class="appointment-meta-card">
@@ -5369,7 +5069,7 @@
           Contact
          </small>
 <strong>
-          +63 917 290 5521
+          —
          </strong>
 </div>
 <div class="appointment-meta-card">
@@ -5377,7 +5077,7 @@
           Reminder
          </small>
 <strong>
-          SMS sent Oct 02
+          —
          </strong>
 </div>
 <div class="appointment-meta-card">
@@ -5501,7 +5201,7 @@
        Composite Restoration · Tooth 16
       </h3>
 <p>
-       Maria Santos · OP-2026-0316 · Dr. Angela Cerillo
+       —
       </p>
 </div>
 <button aria-label="Close operation record" class="icon-btn" onclick="this.closest('dialog').close()" type="button">
@@ -5511,15 +5211,15 @@
 <div class="patient-hero">
 <div class="patient-identity">
 <div class="patient-avatar">
-       MS
+       --
       </div>
 <div>
 <h4>
-        Maria Santos
+        —
        </h4>
 <div class="patient-meta">
 <span>
-         PT-2026-0148
+         —
         </span>
 <span>
          Penicillin allergy
@@ -5752,7 +5452,7 @@
 </div>
 </div>
 </dialog>
-<dialog aria-label="Maria Santos — Radiographic Series" class="modal modal-xl" id="xrayModal">
+<dialog aria-label="Radiographic Series" class="modal modal-xl" id="xrayModal">
 <div class="modal-shell">
 <div class="modal-head">
 <div>
@@ -5760,7 +5460,7 @@
        Diagnostic imaging
       </p>
 <h3>
-       Maria Santos · Radiographic Series
+       Radiographic Series
       </h3>
 <p>
        Sep 28, 2026 · Panoramic + selected intraoral views
@@ -6347,7 +6047,7 @@ window.addEventListener('storage', renderAdminAvailability);
        Patient X-ray
       </p>
 <h3>
-       Add X-ray to Maria Santos
+       Add Patient Radiograph
       </h3>
 </div>
 <button class="icon-btn" onclick="this.closest('dialog').close()" type="button">
@@ -6358,7 +6058,7 @@ window.addEventListener('storage', renderAdminAvailability);
 <form class="form-grid">
 <label>
        Patient
-       <input readonly="" value="Maria Santos · PT-2026-0018"/>
+       <input readonly="" value="" placeholder="Patient name & ID"/>
 </label>
 <label>
        X-ray type
@@ -6501,7 +6201,7 @@ window.addEventListener('storage', renderAdminAvailability);
 </div>
 </div>
 </dialog>
-<dialog aria-label="Payment Oversight — OR-2026-1048" class="modal modal-xl financial-record-modal financial-font-up" id="adminPaymentModal">
+<dialog aria-label="Payment Oversight" class="modal modal-xl financial-record-modal financial-font-up" id="adminPaymentModal">
 <div class="modal-shell financial-shell">
 <header class="modal-head financial-modal-head">
 <div>
@@ -6509,7 +6209,7 @@ window.addEventListener('storage', renderAdminAvailability);
        Payment Oversight
       </p>
 <h3>
-       OR-2026-1048
+       —
       </h3>
 <p>
        Administrative payment review with processing and clinical attribution.
@@ -6523,17 +6223,17 @@ window.addEventListener('storage', renderAdminAvailability);
 <section class="financial-hero">
 <div class="financial-identity">
 <div class="financial-avatar">
-        MS
+        --
        </div>
 <div>
 <small>
          Patient
         </small>
 <h4>
-         Maria Santos
+         —
         </h4>
 <span>
-         PT-2026-0018 · Root Canal Therapy
+         —
         </span>
 </div>
 </div>
@@ -6828,7 +6528,7 @@ window.addEventListener('storage', renderAdminAvailability);
 </footer>
 </div>
 </dialog>
-<dialog aria-label="Transaction Detail — INV-2026-1048" class="modal modal-xl transaction-detail-modal financial-font-up" id="saleViewModal">
+<dialog aria-label="Transaction Detail" class="modal modal-xl transaction-detail-modal financial-font-up" id="saleViewModal">
 <div class="modal-shell transaction-shell">
 <header class="modal-head transaction-modal-head">
 <div>
@@ -6836,10 +6536,10 @@ window.addEventListener('storage', renderAdminAvailability);
        Transaction Detail
       </p>
 <h3>
-       INV-2026-1048
+       —
       </h3>
 <p>
-       Completed sale · 04 Oct 2026 · 4:42 PM
+       Transaction details
       </p>
 </div>
 <button aria-label="Close transaction detail" class="icon-btn" onclick="this.closest('dialog').close()" type="button">
@@ -6853,10 +6553,10 @@ window.addEventListener('storage', renderAdminAvailability);
         Completed
        </span>
 <h4>
-        Maria Santos
+        —
        </h4>
 <p>
-        PT-2026-0018 · Treating dentist: Dr. Ana Cerillo
+        —
        </p>
 </div>
 <div class="transaction-total">
@@ -7471,7 +7171,7 @@ window.addEventListener('storage', renderAdminAvailability);
 <div>
 <p class="eyebrow">Patient Radiograph</p>
 <h3 data-xray-detail-title="">Radiograph Details</h3>
-<p data-xray-detail-subtitle="">Maria Santos · PT-2026-0018</p>
+<p data-xray-detail-subtitle="">—</p>
 </div>
 <button aria-label="Close X-ray details" class="icon-btn" onclick="this.closest('dialog').close()" type="button">×</button>
 </header>
@@ -7481,7 +7181,7 @@ window.addEventListener('storage', renderAdminAvailability);
 </div>
 <div class="patient-xray-detail-info">
 <div class="xray-detail-summary">
-<div><small>Patient</small><strong>Maria Santos</strong></div>
+<div><small>Patient</small><strong data-xray-detail-patient="">—</strong></div>
 <div><small>Date taken</small><strong data-xray-detail-date="">03 Oct 2026</strong></div>
 <div><small>Imaging type</small><strong data-xray-detail-type="">Panoramic</strong></div>
 <div><small>Dentist</small><strong data-xray-detail-dentist="">Dr. Ana Cerillo</strong></div>
