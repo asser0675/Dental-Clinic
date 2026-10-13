@@ -60,7 +60,7 @@
     </div>
 <div>
 <strong id="dentistAccountName">
-      Dr. Angela Cerillo
+      {{ auth()->user()?->name ?? 'Dentist' }}
      </strong>
 <small>
       Dentist
@@ -309,18 +309,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
 </div>
 </div>
 <div class="availability-records" id="dentistAvailabilityTable">
-<article class="availability-record">
-<div><small>Dentist</small><strong>Dr. Angela Cerillo</strong></div>
-<div><small>Date</small><strong>08 Oct 2026</strong></div>
-<div><small>Time</small><strong>1:00 PM–5:00 PM</strong></div>
-<div><small>Reason</small><strong>Personal leave</strong></div>
-</article>
-<article class="availability-record">
-<div><small>Dentist</small><strong>Dr. Angela Cerillo</strong></div>
-<div><small>Date</small><strong>12–16 Oct 2026</strong></div>
-<div><small>Time</small><strong><span class="badge info">Full Week</span></strong></div>
-<div><small>Reason</small><strong>Continuing education conference</strong></div>
-</article>
+<div class="availability-empty-state"><strong>No unavailable schedules</strong><span>Marked dates and time blocks will appear here.</span></div>
 </div>
 </div>
 </section>
@@ -772,11 +761,11 @@ Select a day header for an all-day block, or choose an empty time box for a spec
 </div>
 <form class="modal-body" id="availabilityForm">
 <div class="availability-selected-slot">
-<div><small>Dentist</small><strong id="availabilityDentistDisplay">Dr. Angela Cerillo</strong></div>
+<div><small>Dentist</small><strong id="availabilityDentistDisplay">{{ auth()->user()?->name ?? 'Dentist' }}</strong></div>
 <div><small>Selected schedule</small><strong id="availabilitySelectedDisplay">Choose a day or time box from the calendar</strong></div>
 </div>
 <input id="availabilityType" type="hidden" value="date"/>
-<input id="availabilityDentist" type="hidden" value="Dr. Angela Cerillo"/>
+<input id="availabilityDentist" type="hidden" value="{{ auth()->user()?->name ?? 'Dentist' }}"/>
 <input id="availabilityDate" type="hidden"/>
 <input id="availabilityEndDate" type="hidden"/>
 <input id="availabilityStartTime" type="hidden"/>
@@ -1153,22 +1142,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
 </div>
 </div>
 <div class="visit-timeline" data-pr-visit-timeline="">
-<button aria-label="Open completed visit details" class="visit-history-row" onclick="document.getElementById('visitHistoryModal').showModal()" type="button">
-<span class="timeline-dot complete">
-</span>
-<strong>
-         Dr. Ana Cerillo
-        </strong>
-<span>
-         03 Oct 2026 · 10:15 AM
-        </span>
-<span class="status success">
-         Completed
-        </span>
-<span aria-hidden="true" class="visit-chevron">
-         ›
-        </span>
-</button>
+<div class="muted" style="padding: 1.5rem; text-align: center;">No completed visits recorded for this patient.</div>
 </div>
 </section>
 <section class="record-tab-panel" data-record-panel="medical">
@@ -3051,7 +3025,7 @@ Select a day header for an all-day block, or choose an empty time box for a spec
          12 Aug 2026 · Composite restoration
         </strong>
 <span>
-         Material: Nanohybrid composite · Dr. Paolo Reyes
+         Material: Nanohybrid composite · Restorative procedure
         </span>
 </div>
 <div class="history-card">
@@ -3471,7 +3445,7 @@ renderDentistAppointmentAvailability();
           Dentist
          </dt>
 <dd data-vh-dentist="">
-          Dr. Ana Cerillo
+          —
          </dd>
 </div>
 <div>
@@ -3479,7 +3453,7 @@ renderDentistAppointmentAvailability();
           Service
          </dt>
 <dd data-vh-service="">
-          Composite Restoration
+          —
          </dd>
 </div>
 <div>
@@ -4216,7 +4190,7 @@ renderDentistAppointmentAvailability();
 <div><small>Patient</small><strong data-xray-detail-patient="">—</strong></div>
 <div><small>Date taken</small><strong data-xray-detail-date="">03 Oct 2026</strong></div>
 <div><small>Imaging type</small><strong data-xray-detail-type="">Panoramic</strong></div>
-<div><small>Dentist</small><strong data-xray-detail-dentist="">Dr. Ana Cerillo</strong></div>
+<div><small>Dentist</small><strong data-xray-detail-dentist="">—</strong></div>
 </div>
 <article class="xray-detail-note">
 <small>Clinical findings</small>
@@ -4270,7 +4244,7 @@ renderDentistAppointmentAvailability();
        const parts = strong.split('·').map((part) => part.trim());
        const type = parts[0] || 'Radiograph';
        const date = parts[parts.length - 1] || '—';
-       const dentist = card.querySelector('span')?.textContent.trim() || 'Dr. Ana Cerillo';
+       const dentist = card.querySelector('span')?.textContent.trim() || '—';
        const findings = card.querySelector('p')?.textContent.trim() || 'No additional findings recorded.';
        const src = card.querySelector('img')?.getAttribute('src') || '../assets/images/xray-panoramic.png';
        detail.querySelector('[data-xray-detail-title]').textContent = type + ' Radiograph';
@@ -4365,7 +4339,7 @@ Are you sure you want to save this dental assessment? All recorded tooth finding
 <div><small>Date</small><strong data-da-date="">—</strong></div>
 <div><small>Time</small><strong data-da-time="">—</strong></div>
 <div><small>Status</small><strong data-da-status="">—</strong></div>
-<div><small>Dentist</small><strong data-da-dentist="">Dr. Angela Cerillo</strong></div>
+<div><small>Dentist</small><strong data-da-dentist="">—</strong></div>
 <div><small>Booking type</small><strong data-da-source="">—</strong></div>
 <div><small>Date of birth / age</small><strong data-da-dob="">—</strong></div>
 <div><small>Contact</small><strong data-da-contact="">—</strong></div>
@@ -5994,7 +5968,7 @@ Instructions
          12 Aug 2026 · Composite restoration
         </strong>
 <span>
-         Material: Nanohybrid composite · Dr. Paolo Reyes
+         Material: Nanohybrid composite · Restorative procedure
         </span>
 </div>
 <div class="history-card">

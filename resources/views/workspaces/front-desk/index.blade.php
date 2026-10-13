@@ -329,7 +329,7 @@ body[data-workspace-role="front_desk"] .front-appointment-dental-chart {
         Thu 8
        </strong>
 <span>
-        Dr. Ana unavailable PM
+        12 bookings
        </span>
 </article>
 <article>
@@ -508,7 +508,7 @@ body[data-workspace-role="front_desk"] .front-appointment-dental-chart {
 @endif
 </td>
 <td>
-<button class="table-action appointment-view" data-appointment-id="{{ $appt->id }}" data-patient-id="{{ $appt->patient_id ?? '' }}" data-arrival="{{ $arrivalFormatted }}" data-datetime="{{ $dateFormatted }} · {{ $timeFormatted }}" data-dentist="{{ $dentistName }}" data-patient="{{ $patientName }}" data-service="{{ $serviceName }}" data-status="{{ $appt->status }}" type="button">
+<button class="table-action appointment-view" data-appointment-id="{{ $appt->id }}" data-patient-id="{{ $appt->patient_id ?? '' }}" data-dentist-id="{{ $appt->dentist_id }}" data-arrival="{{ $arrivalFormatted }}" data-datetime="{{ $dateFormatted }} · {{ $timeFormatted }}" data-dentist="{{ $dentistName }}" data-patient="{{ $patientName }}" data-service="{{ $serviceName }}" data-status="{{ $appt->status }}" type="button">
 View
 </button>
 </td>
@@ -1241,9 +1241,10 @@ View
 <label class="front-reassign-control">
 <span>Assigned dentist</span>
 <select id="frontReassignDentist">
-<option>Dr. Ana Cerillo</option>
-<option>Dr. Paolo Reyes</option>
-<option>Dr. Angela Cerillo</option>
+<option value="">Select dentist</option>
+@foreach($dentists as $dentist)
+<option value="{{ $dentist->id }}" data-name="{{ $dentist->name }}">{{ $dentist->name }}</option>
+@endforeach
 </select>
 </label>
 <div class="ortho-lock-note" hidden="" id="frontOrthoAssignmentNote">Orthodontic cases cannot be reassigned by Front Desk. The orthodontic dentist remains fixed.</div>
@@ -2885,7 +2886,7 @@ View
          12 Aug 2026 · Composite restoration
         </strong>
 <span>
-         Material: Nanohybrid composite · Dr. Paolo Reyes
+         Material: Nanohybrid composite · Restorative procedure
         </span>
 </div>
 <div class="history-card">
@@ -3787,12 +3788,14 @@ async function openFrontAppointment(button) {
         service: appointment.service?.name || 'Appointment',
         datetime: `${starts.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })} · ${timeFormatted}`,
         dentist: appointment.dentist?.name || 'Unassigned',
+        dentistId: appointment.dentist_id || appointment.dentist?.id || button.dataset.dentistId || '',
         arrival: arrivalFormatted,
         dob: dobAgeStr,
         status: ['Pending', 'Checked In', 'Cancelled'].includes(appointment.status) ? appointment.status : 'Pending'
       };
       button.dataset.status = data.status;
       button.dataset.arrival = data.arrival;
+      if (data.dentistId) button.dataset.dentistId = data.dentistId;
       document.getElementById('frontAppointmentSub').textContent = `Appointment #${appointment.id} · ${appointment.source === 'walk_in' ? 'Front Desk registration' : 'Online request'}`;
     } catch (error) {
       alert(error.message);
@@ -3808,6 +3811,42 @@ async function openFrontAppointment(button) {
   document.getElementById('frontAppointmentArrival').textContent = data.arrival || '—';
   const frontApptDobEl = document.getElementById('frontAppointmentDob');
   if (frontApptDobEl) frontApptDobEl.textContent = data.dob || '—';
+
+  const frontReassign = document.getElementById('frontReassignDentist');
+  const frontOrthoNote = document.getElementById('frontOrthoAssignmentNote');
+  if (frontReassign) {
+    const isOrtho = /orthodont|braces|aligner|retainer/i.test(data.service || '');
+    frontReassign.disabled = isOrtho;
+    if (frontOrthoNote) frontOrthoNote.hidden = !isOrtho;
+    let matched = false;
+    const targetId = String(data.dentistId || button.dataset.dentistId || '');
+    const targetName = (data.dentist || button.dataset.dentist || '').trim().toLowerCase();
+    for (const opt of frontReassign.options) {
+      if (targetId && opt.value === targetId) {
+        frontReassign.value = opt.value;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched && targetName) {
+      for (const opt of frontReassign.options) {
+        if (opt.textContent.trim().toLowerCase() === targetName || (opt.dataset.name && opt.dataset.name.toLowerCase() === targetName)) {
+          frontReassign.value = opt.value;
+          matched = true;
+          break;
+        }
+      }
+    }
+    if (isOrtho && !matched) {
+      for (const opt of frontReassign.options) {
+        if (/angela|ortho/i.test(opt.textContent)) {
+          frontReassign.value = opt.value;
+          break;
+        }
+      }
+    }
+  }
+
   document.getElementById('frontAppointmentStatus').value = data.status || 'Pending';
   document.getElementById('frontAppointmentPill').textContent = data.status || 'Pending';
   document.getElementById('cancellationReason').value = '';
@@ -3855,6 +3894,37 @@ document.getElementById('saveFrontAppointmentStatus')?.addEventListener('click',
       if (!verification.ok) { alert(verified.message || 'Unable to verify appointment'); return; }
       activeFrontAppointmentRow.dataset.status = verified.status;
     }
+
+    // Confirm or update assigned dentist in database
+    const reassignSel = document.getElementById('frontReassignDentist');
+    if (reassignSel && !reassignSel.disabled && reassignSel.value) {
+      const currentDentistId = activeFrontAppointmentRow?.dataset.dentistId || activeFrontAppointmentRow?.querySelector('.appointment-view')?.dataset.dentistId;
+      if (!currentDentistId || String(currentDentistId) !== String(reassignSel.value)) {
+        const reassignRes = await fetch('/api/appointments/' + encodeURIComponent(appointmentId) + '/dentist', {
+          method: 'PUT',
+          headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '' },
+          body: JSON.stringify({ dentist_id: reassignSel.value })
+        });
+        const reassignPayload = await reassignRes.json().catch(() => ({}));
+        if (!reassignRes.ok) {
+          alert(reassignPayload.message || 'Assigned dentist could not be updated.');
+          return;
+        }
+        const selectedOpt = reassignSel.options[reassignSel.selectedIndex];
+        const newDentistName = selectedOpt ? selectedOpt.textContent.trim() : '';
+        if (activeFrontAppointmentRow) {
+          activeFrontAppointmentRow.dataset.dentistId = reassignSel.value;
+          const cells = activeFrontAppointmentRow.querySelectorAll('td');
+          if (cells[1]) cells[1].textContent = newDentistName;
+          const viewBtn = activeFrontAppointmentRow.querySelector('.appointment-view');
+          if (viewBtn) {
+            viewBtn.dataset.dentist = newDentistName;
+            viewBtn.dataset.dentistId = reassignSel.value;
+          }
+        }
+      }
+    }
+
     const response = await fetch('/api/appointments/' + encodeURIComponent(appointmentId) + '/status', {
       method: 'PATCH',
       headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '' },
@@ -4047,7 +4117,7 @@ window.addEventListener('storage', renderSharedAvailability);
           Dentist
          </dt>
 <dd data-vh-dentist="">
-          Dr. Ana Cerillo
+          —
          </dd>
 </div>
 <div>
@@ -4055,7 +4125,7 @@ window.addEventListener('storage', renderSharedAvailability);
           Service
          </dt>
 <dd data-vh-service="">
-          Composite Restoration
+          —
          </dd>
 </div>
 <div>
@@ -4314,7 +4384,12 @@ window.addEventListener('storage', renderSharedAvailability);
 <section class="request-assignment-card">
 <div class="form-section-title"><div><h4>Appointment assignment</h4><p>Front Desk confirms the assigned dentist and final reception status.</p></div></div>
 <div class="form-grid two-col">
-<label>Assign dentist<select id="publicRequestDentist"><option>Dr. Ana Cerillo</option><option>Dr. Paolo Reyes</option><option>Dr. Angela Cerillo</option></select></label>
+<label>Assign dentist<select id="publicRequestDentist">
+<option value="">Select dentist</option>
+@foreach($dentists as $dentist)
+<option value="{{ $dentist->id }}">{{ $dentist->name }}</option>
+@endforeach
+</select></label>
 <label>Final appointment status<select id="publicRequestFinalStatus"><option>Pending</option><option>Checked In</option></select></label>
 </div>
 <div class="ortho-lock-note" hidden id="publicRequestOrthoNote">Orthodontic requests are locked to the orthodontic dentist and cannot be reassigned by Front Desk.</div>
@@ -4369,7 +4444,13 @@ window.addEventListener('storage', renderSharedAvailability);
 <span>Existing patient</span>
 <small>Choose a patient record to reuse verified contact and medical information.</small>
 <select id="existingPatientSelect">
-<option value="">Loading patient records from database...</option>
+<option value="">Choose a patient</option>
+@foreach($patients as $p)
+@php
+$pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '0', STR_PAD_LEFT));
+@endphp
+<option value="{{ $p->id }}" data-code="{{ $pCode }}" data-name="{{ $p->name }}" data-email="{{ $p->email }}" data-phone="{{ $p->phone }}">{{ $p->name }} · {{ $pCode }}</option>
+@endforeach
 </select>
 </label>
 </div>
@@ -4493,41 +4574,19 @@ window.addEventListener('storage', renderSharedAvailability);
 <label>
          Service
          <select id="regService" required="">
-<option>
-           Dental Examination
-          </option>
-<option>
-           Oral Prophylaxis
-          </option>
-<option>
-           Composite Restoration
-          </option>
-<option>
-           Root Canal Therapy
-          </option>
-<option>
-           Tooth Extraction
-          </option>
-<option>
-           Dental Crown
-          </option>
-<option>
-           Teeth Whitening
-          </option>
+<option value="">Select service</option>
+@foreach($services as $service)
+<option value="{{ $service->id }}" data-duration="{{ $service->duration_minutes }}">{{ $service->name }}</option>
+@endforeach
 </select>
 </label>
 <label>
          Requested dentist
          <select id="regDentist" required="">
-<option>
-           Dr. Ana Cerillo
-          </option>
-<option>
-           Dr. Paolo Reyes
-          </option>
-<option>
-           Dr. Mia Tan
-          </option>
+<option value="">Select dentist</option>
+@foreach($dentists as $dentist)
+<option value="{{ $dentist->id }}">{{ $dentist->name }}</option>
+@endforeach
 </select>
 </label>
 <label>
@@ -5225,7 +5284,7 @@ window.addEventListener('storage', renderSharedAvailability);
        const parts = strong.split('·').map((part) => part.trim());
        const type = parts[0] || 'Radiograph';
        const date = parts[parts.length - 1] || '—';
-       const dentist = card.querySelector('span')?.textContent.trim() || 'Dr. Ana Cerillo';
+       const dentist = card.querySelector('span')?.textContent.trim() || '—';
        const findings = card.querySelector('p')?.textContent.trim() || 'No additional findings recorded.';
        const src = card.querySelector('img')?.getAttribute('src') || '../assets/images/xray-panoramic.png';
        detail.querySelector('[data-xray-detail-title]').textContent = type + ' Radiograph';
@@ -5441,24 +5500,7 @@ window.addEventListener('storage', renderSharedAvailability);
   serviceSel?.addEventListener('change',toggleInstallment); toggleInstallment();
 })();
 </script>
-<script id="frontDeskDentistReassignment">
-(function(){
- const ORTHO=/orthodont|braces|aligner|retainer/i;
- const originalOpen=window.openFrontAppointment;
- if(typeof originalOpen==='function'){
-   window.openFrontAppointment=function(button){
-     originalOpen(button);
-     const service=button.dataset.service||'', sel=document.getElementById('frontReassignDentist'), note=document.getElementById('frontOrthoAssignmentNote');
-     if(sel){sel.value=button.dataset.dentist||sel.value;const locked=ORTHO.test(service);sel.disabled=locked;if(locked)sel.value='Dr. Angela Cerillo';if(note)note.hidden=!locked;}
-   };
- }
- document.getElementById('saveFrontAppointmentStatus')?.addEventListener('click',function(){
-   const row=window.cerilloActiveAppointmentRow;if(!row)return; const sel=document.getElementById('frontReassignDentist'); if(!sel||sel.disabled)return;
-   const cells=row.querySelectorAll('td'); if(cells[1])cells[1].textContent=sel.value;
-   const btn=row.querySelector('.appointment-view'); if(btn)btn.dataset.dentist=sel.value;
- });
-})();
-</script>
+
 
 
 <script id="toothChargesBillingModule">

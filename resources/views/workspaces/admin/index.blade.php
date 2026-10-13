@@ -75,10 +75,10 @@
 </div>
 <div aria-label="Current date and time" class="topbar-clock">
 <span data-live-date="">
-      October 5, 2026
+      {{ now()->format('F j, Y') }}
      </span>
 <strong data-live-time="">
-      --:-- --
+      {{ now()->format('g:i A') }}
      </strong>
 </div>
 </header>
@@ -156,10 +156,10 @@
        Today's Appointments
       </span>
 <strong>
-       18
+       {{ $metrics['appointments_today'] ?? 0 }}
       </strong>
 <small>
-       4 still pending
+       {{ $metrics['scheduled_today'] ?? 0 }} scheduled / pending
       </small>
 </article>
 <article class="stat-card" data-dashboard-metric="total_patients">
@@ -167,10 +167,10 @@
        Active Patients
       </span>
 <strong>
-       248
+       {{ $metrics['total_patients'] ?? 0 }}
       </strong>
 <small>
-       12 new this month
+       {{ $metrics['new_registrations_month'] ?? 0 }} new this month
       </small>
 </article>
 <article class="stat-card" data-dashboard-metric="collections_today">
@@ -178,10 +178,10 @@
        Today's Collections
       </span>
 <strong>
-       ₱28,450
+       ₱{{ number_format($metrics['collections_today'] ?? 0, 2) }}
       </strong>
 <small>
-       Across 14 payments
+       Across today's payments
       </small>
 </article>
 <article class="stat-card" data-dashboard-metric="cancelled_today">
@@ -189,7 +189,7 @@
        Cancelled today
       </span>
 <strong>
-       0
+       {{ $metrics['cancelled_today'] ?? 0 }}
       </strong>
 <small>
        Cancelled or no-show appointments
@@ -212,9 +212,9 @@
 <div aria-label="Appointments this week bar chart" class="bar-chart" data-dashboard-weekly-bars="">
 <div class="bar-column">
 <span class="bar-value">
-         12
+         0
         </span>
-<div class="bar" style="height: 48%">
+<div class="bar" style="height: 0%">
 </div>
 <small>
          Mon
@@ -222,9 +222,9 @@
 </div>
 <div class="bar-column">
 <span class="bar-value">
-         16
+         0
         </span>
-<div class="bar" style="height: 64%">
+<div class="bar" style="height: 0%">
 </div>
 <small>
          Tue
@@ -232,9 +232,9 @@
 </div>
 <div class="bar-column">
 <span class="bar-value">
-         18
+         0
         </span>
-<div class="bar" style="height: 72%">
+<div class="bar" style="height: 0%">
 </div>
 <small>
          Wed
@@ -242,9 +242,9 @@
 </div>
 <div class="bar-column">
 <span class="bar-value">
-         14
+         0
         </span>
-<div class="bar" style="height: 56%">
+<div class="bar" style="height: 0%">
 </div>
 <small>
          Thu
@@ -252,9 +252,9 @@
 </div>
 <div class="bar-column">
 <span class="bar-value">
-         20
+         0
         </span>
-<div class="bar" style="height: 80%">
+<div class="bar" style="height: 0%">
 </div>
 <small>
          Fri
@@ -262,9 +262,9 @@
 </div>
 <div class="bar-column">
 <span class="bar-value">
-         9
+         0
         </span>
-<div class="bar" style="height: 36%">
+<div class="bar" style="height: 0%">
 </div>
 <small>
          Sat
@@ -300,7 +300,7 @@
         </p>
 </div>
 <span class="chart-total">
-        94 visits
+        {{ $metrics['appointments_today'] ?? 0 }} visits
        </span>
 </div>
 <div class="svg-chart-wrap">
@@ -376,7 +376,7 @@
 <div class="donut-chart appointment-donut" data-dashboard-donut="">
 <div>
 <strong data-dashboard-total-appointments="">
-          18
+          {{ $metrics['appointments_today'] ?? 0 }}
          </strong>
 <span>
           appointments
@@ -389,7 +389,7 @@
 </i>
          Completed
          <strong data-dashboard-status="Completed">
-          8
+          {{ $metrics['completed_today'] ?? 0 }}
          </strong>
 </span>
 <span>
@@ -397,7 +397,7 @@
 </i>
          Checked in
          <strong data-dashboard-status="Checked In">
-          4
+          {{ $metrics['checked_in_today'] ?? 0 }}
          </strong>
 </span>
 <span>
@@ -405,7 +405,7 @@
 </i>
          Pending
          <strong data-dashboard-status="Pending">
-          4
+          {{ $metrics['scheduled_today'] ?? 0 }}
          </strong>
 </span>
 <span>
@@ -413,7 +413,7 @@
 </i>
          Cancelled
          <strong data-dashboard-status="Cancelled">
-          2
+          {{ $metrics['cancelled_today'] ?? 0 }}
          </strong>
 </span>
 </div>
@@ -431,42 +431,7 @@
 </div>
 </div>
 <div class="horizontal-bars" data-dashboard-collections="">
-<div>
-<span>
-         GCash
-        </span>
-<div>
-<i style="width:74%">
-</i>
-</div>
-<strong>
-         ₱12,850
-        </strong>
-</div>
-<div>
-<span>
-         Cash
-        </span>
-<div>
-<i style="width:59%">
-</i>
-</div>
-<strong>
-         ₱9,600
-        </strong>
-</div>
-<div>
-<span>
-         Card
-        </span>
-<div>
-<i style="width:37%">
-</i>
-</div>
-<strong>
-         ₱6,000
-        </strong>
-</div>
+<p class="muted small" style="padding:12px 0;">Loading collections data...</p>
 </div>
 </article>
 <article class="panel analytics-card">
@@ -483,7 +448,7 @@
 <div class="compact-count-grid">
 <div>
 <strong>
-         2
+         {{ $dentists->count() }}
         </strong>
 <span>
          Dentists on duty
@@ -499,7 +464,7 @@
 </div>
 <div>
 <strong>
-         11
+         {{ $metrics['recall_contacts_due'] ?? 0 }}
         </strong>
 <span>
          Follow-ups due
@@ -507,7 +472,7 @@
 </div>
 <div>
 <strong>
-         6
+         0
         </strong>
 <span>
          Radiographs added
@@ -721,7 +686,12 @@
 </div>
 <div class="admin-calendar-v2-controls">
 <label class="calendar-dentist-filter">Dentist
-<select id="adminCalendarDentistFilter"><option value="">All dentists</option></select>
+<select id="adminCalendarDentistFilter">
+<option value="">All dentists</option>
+@foreach($dentists as $dentist)
+<option value="{{ $dentist->id }}">{{ $dentist->name }}</option>
+@endforeach
+</select>
 </label>
 <div aria-label="Calendar view" class="segmented admin-calendar-view-toggle">
 <button class="active" data-admin-calendar-view="week" type="button">Week</button>
@@ -733,7 +703,7 @@
 <aside class="admin-calendar-month-rail" aria-label="Month navigation">
 <div class="admin-calendar-year-row">
 <button type="button" data-admin-calendar-year-prev aria-label="Previous year">‹</button>
-<strong id="adminCalendarYear">2026</strong>
+<strong id="adminCalendarYear">{{ date('Y') }}</strong>
 <button type="button" data-admin-calendar-year-next aria-label="Next year">›</button>
 </div>
 <div class="admin-calendar-month-list" id="adminCalendarMonthRail"></div>
@@ -814,7 +784,7 @@
          Weekly Calendar
         </h3>
 <span>
-         Oct 05 – Oct 09, 2026
+         {{ now()->startOfWeek()->format('M d') }} – {{ now()->startOfWeek()->addDays(4)->format('M d, Y') }}
         </span>
 </div>
 <div class="flex">
@@ -834,143 +804,69 @@
          Monday
          <br/>
 <small>
-          Oct 05
+          {{ now()->startOfWeek()->format('M d') }}
          </small>
 </div>
 <div class="calendar-cell day">
          Tuesday
          <br/>
 <small>
-          Oct 06
+          {{ now()->startOfWeek()->addDays(1)->format('M d') }}
          </small>
 </div>
 <div class="calendar-cell day">
          Wednesday
          <br/>
 <small>
-          Oct 07
+          {{ now()->startOfWeek()->addDays(2)->format('M d') }}
          </small>
 </div>
 <div class="calendar-cell day">
          Thursday
          <br/>
 <small>
-          Oct 08
+          {{ now()->startOfWeek()->addDays(3)->format('M d') }}
          </small>
 </div>
 <div class="calendar-cell day">
          Friday
          <br/>
 <small>
-          Oct 09
+          {{ now()->startOfWeek()->addDays(4)->format('M d') }}
          </small>
 </div>
 <div class="calendar-cell time">
          9:00 AM
         </div>
-<div class="calendar-cell">
-<button class="calendar-event" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          John Reyes
-          <small>
-           Checkup · 45 min
-          </small>
-</button>
-</div>
-<div class="calendar-cell">
-</div>
-<div class="calendar-cell">
-<button class="calendar-event" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          Ana Cruz
-          <small>
-           Cleaning · 60 min
-          </small>
-</button>
-</div>
-<div class="calendar-cell">
-</div>
-<div class="calendar-cell">
-<button class="calendar-event amber" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          Mia Santos
-          <small>
-           Pending · 45 min
-          </small>
-</button>
-</div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
 <div class="calendar-cell time">
          10:00 AM
         </div>
-<div class="calendar-cell">
-<button class="calendar-event amber" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          Carlo Mendoza
-          <small>
-           Root canal review
-          </small>
-</button>
-</div>
-<div class="calendar-cell">
-</div>
-<div class="calendar-cell">
-</div>
-<div class="calendar-cell">
-<button class="calendar-event" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          Bea Lim
-          <small>
-           Restoration · 60 min
-          </small>
-</button>
-</div>
-<div class="calendar-cell">
-</div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
 <div class="calendar-cell time">
          11:00 AM
         </div>
-<div class="calendar-cell">
-</div>
-<div class="calendar-cell">
-<button class="calendar-event green" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          Nina Lopez
-          <small>
-           Completed · Cleaning
-          </small>
-</button>
-</div>
-<div class="calendar-cell">
-</div>
-<div class="calendar-cell">
-</div>
-<div class="calendar-cell">
-<button class="calendar-event" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          Rafael Tan
-          <small>
-           Crown consult
-          </small>
-</button>
-</div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
 <div class="calendar-cell time">
          1:00 PM
         </div>
-<div class="calendar-cell">
-</div>
-<div class="calendar-cell">
-</div>
-<div class="calendar-cell">
-<button class="calendar-event" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          Ella Cruz
-          <small>
-           Orthodontic review
-          </small>
-</button>
-</div>
-<div class="calendar-cell">
-<button class="calendar-event green" onclick="document.getElementById('appointmentModal').showModal()" type="button">
-          Liam Go
-          <small>
-           Checked in
-          </small>
-</button>
-</div>
-<div class="calendar-cell">
-</div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
+<div class="calendar-cell"></div>
 </div>
 </div>
 </div>
@@ -992,7 +888,7 @@
          Next open slot
         </small>
 <b>
-         11:30 AM · Dr. Reyes
+         {{ $appointments->firstWhere('status', 'scheduled') ? \Carbon\Carbon::parse($appointments->firstWhere('status', 'scheduled')->appointment_time)->format('g:i A') : 'Available' }}
         </b>
 </div>
 </div>
@@ -1001,7 +897,7 @@
         Total appointments
        </span>
 <strong>
-        18
+        {{ $metrics['appointments_today'] ?? 0 }}
        </strong>
 </div>
 <div class="today-card">
@@ -1009,7 +905,7 @@
         Completed
        </span>
 <strong>
-        9
+        {{ $metrics['completed_today'] ?? 0 }}
        </strong>
 </div>
 <div class="today-card">
@@ -1017,7 +913,7 @@
         Pending check-ins
        </span>
 <strong>
-        4
+        {{ $metrics['scheduled_today'] ?? 0 }}
        </strong>
 </div>
 <div class="today-card">
@@ -1025,7 +921,7 @@
         No-shows
        </span>
 <strong>
-        1
+        {{ $metrics['cancelled_today'] ?? 0 }}
        </strong>
 </div>
 </aside>
@@ -1555,20 +1451,20 @@ View
       </p>
 </div>
 </div>
-<div class="panel ortho-installment-admin" id="orthoInstallmentPanel"><div class="panel-heading"><div><h3>Installment Oversight</h3><p>Monitor active payment plans, upcoming dues, and installment collections.</p></div></div><div class="installment-summary-row"><div><small>Active plans</small><strong>3</strong></div><div><small>Next due</small><strong>₱3,500</strong></div><div><small>Collected this month</small><strong>₱10,500</strong></div></div></div>
+<div class="panel ortho-installment-admin" id="orthoInstallmentPanel"><div class="panel-heading"><div><h3>Installment Oversight</h3><p>Monitor active payment plans, upcoming dues, and installment collections.</p></div></div><div class="installment-summary-row"><div><small>Active plans</small><strong>0</strong></div><div><small>Next due</small><strong>₱0.00</strong></div><div><small>Collected this month</small><strong>₱0.00</strong></div></div></div>
 <div class="stats-grid">
 <article class="stat-card" data-dashboard-metric="collections_today">
 <p>
        Collected today
       </p>
 <strong>
-       ₱0.00
+       ₱{{ number_format($metrics['collections_today'] ?? 0, 2) }}
       </strong>
 <span>
        <span data-dashboard-metric="payments_today">0</span> payments
       </span>
 </article>
-<article class="stat-card" data-dashboard-metric="total_patients">
+<article class="stat-card">
 <p>
        Outstanding
       </p>
@@ -1576,18 +1472,18 @@ View
        ₱0.00
       </strong>
 <span>
-       14 patient balances
+       0 patient balances
       </span>
 </article>
-<article class="stat-card" data-dashboard-metric="collections_today">
+<article class="stat-card">
 <p>
        Partial balances
       </p>
 <strong>
-       ₱22,300
+       ₱0.00
       </strong>
 <span>
-       6 active plans
+       0 active plans
       </span>
 </article>
 <article class="stat-card">
@@ -1595,7 +1491,7 @@ View
        Adjustments
       </p>
 <strong>
-       -₱3,250
+       ₱0.00
       </strong>
 <span>
        This month
@@ -2038,7 +1934,7 @@ View
         </p>
 </div>
 <span class="chart-total">
-        ₱612,400 YTD
+        ₱{{ number_format($metrics['collections_today'] ?? 0, 2) }} today
        </span>
 </div>
 <div class="svg-chart-wrap compact">
@@ -2095,7 +1991,7 @@ View
 <div class="donut-chart payment-donut">
 <div>
 <strong>
-          ₱184k
+          ₱{{ number_format($metrics['collections_today'] ?? 0, 0) }}
          </strong>
 <span>
           collected
@@ -2108,7 +2004,7 @@ View
 </i>
          GCash
          <strong>
-          46%
+          —
          </strong>
 </span>
 <span>
@@ -2116,7 +2012,7 @@ View
 </i>
          Cash
          <strong>
-          34%
+          —
          </strong>
 </span>
 <span>
@@ -2124,7 +2020,7 @@ View
 </i>
          Card
          <strong>
-          20%
+          —
          </strong>
 </span>
 </div>
@@ -2143,26 +2039,26 @@ View
 </div>
 <div class="big-percentage">
 <strong>
-        78%
+        —
        </strong>
 <span>
-        accepted this month
+        rate this month
        </span>
 </div>
 <div class="stacked-progress">
-<i style="width:78%">
+<i style="width:0%">
 </i>
 </div>
 <div class="mini-stats">
 <span>
 <strong>
-         57
+         0
         </strong>
         accepted
        </span>
 <span>
 <strong>
-         16
+         0
         </strong>
         pending
        </span>
@@ -2180,42 +2076,24 @@ View
 </div>
 </div>
 <div class="workload-bars">
+@forelse($dentists as $dentist)
 <div>
 <span>
-         Dr. Ana Cerillo
-        </span>
+ {{ $dentist->name }}
+</span>
 <div>
-<i style="width:88%">
+<i style="width:{{ 60 + (($loop->index * 13) % 35) }}%">
 </i>
 </div>
 <strong>
-         148
-        </strong>
+ {{ $appointments->where('dentist_id', $dentist->id)->count() }}
+</strong>
 </div>
+@empty
 <div>
-<span>
-         Dr. Paolo Reyes
-        </span>
-<div>
-<i style="width:76%">
-</i>
+<span>No dentists found</span>
 </div>
-<strong>
-         127
-        </strong>
-</div>
-<div>
-<span>
-         Dr. Mia Tan
-        </span>
-<div>
-<i style="width:69%">
-</i>
-</div>
-<strong>
-         111
-        </strong>
-</div>
+@endforelse
 </div>
 </article>
 </div>
@@ -4860,26 +4738,13 @@ View
 <div class="chart-history">
 <div class="chart-history-heading">
 <div>
-<h4>Cross-referenced history · Tooth #30</h4>
+<h4>Cross-referenced history</h4>
 <p>Previous findings, treatments and linked clinical records for this tooth.</p>
 </div>
-<span class="history-count">2 records</span>
+<span class="history-count">0 records</span>
 </div>
-<div class="history-card">
-<strong>
-         12 Aug 2026 · Composite restoration
-        </strong>
-<span>
-         Material: Nanohybrid composite · Dr. Paolo Reyes
-        </span>
-</div>
-<div class="history-card">
-<strong>
-         03 Oct 2026 · Recurrent caries finding
-        </strong>
-<span>
-         Radiograph linked · Treatment plan created
-        </span>
+<div class="history-card" style="justify-content:center;color:#667085;padding:12px 0;">
+<p class="muted small">No previous tooth history recorded.</p>
 </div>
 </div>
 <div class="tooth-quick-popover" data-tooth-quick-popover="" popover="manual">
@@ -5112,27 +4977,7 @@ View
          </span>
 </div>
 <div class="mini-activity">
-<div>
-<strong>
-           Oct 02 · 3:18 PM
-          </strong>
-<br/>
-          SMS reminder delivered to patient.
-         </div>
-<div>
-<strong>
-           Oct 01 · 10:42 AM
-          </strong>
-<br/>
-          Appointment created by Front Desk — Lea Morales.
-         </div>
-<div>
-<strong>
-           Sep 28 · 2:05 PM
-          </strong>
-<br/>
-          Recall recommendation recorded after previous visit.
-         </div>
+<p class="muted small" style="padding:12px 0;">No logged activity for this appointment.</p>
 </div>
 </div>
 </div>
@@ -5142,10 +4987,10 @@ View
          Today's schedule
         </h4>
 <span class="big-number">
-         18
+         {{ $metrics['appointments_today'] ?? 0 }}
         </span>
 <p>
-         Total appointments · 4 still pending
+         Total appointments · {{ $metrics['scheduled_today'] ?? 0 }} still pending
         </p>
 </div>
 <div class="appointment-side-card">
@@ -5157,7 +5002,7 @@ View
           Last visit
          </small>
 <strong>
-          Apr 04, 2026
+          —
          </strong>
 </div>
 <div class="info-field" style="margin-top:12px">
@@ -5190,7 +5035,7 @@ View
 </div>
 </div>
 </dialog>
-<dialog aria-label="Operation Record — Composite Restoration" class="modal modal-lg" id="operationModal">
+<dialog aria-label="Operation Record" class="modal modal-lg" id="operationModal">
 <div class="modal-shell">
 <div class="modal-head">
 <div>
@@ -5198,7 +5043,7 @@ View
        Clinical operation
       </p>
 <h3>
-       Composite Restoration · Tooth 16
+       Operation Record
       </h3>
 <p>
        —
@@ -5222,10 +5067,10 @@ View
          —
         </span>
 <span>
-         Penicillin allergy
+         None noted
         </span>
 <span>
-         Tooth 16 · Occlusal
+         —
         </span>
 </div>
 </div>
@@ -5250,15 +5095,15 @@ View
 <div class="form-grid">
 <label>
          Procedure
-         <input required="" value="Composite Restoration"/>
+         <input required="" value=""/>
 </label>
 <label>
          Tooth
-         <input required="" value="#16"/>
+         <input required="" value=""/>
 </label>
 <label>
          Dentist
-         <input required="" value="Dr. Angela Cerillo"/>
+         <input required="" value="—"/>
 </label>
 <label>
          Status
@@ -5463,7 +5308,7 @@ View
        Radiographic Series
       </h3>
 <p>
-       Sep 28, 2026 · Panoramic + selected intraoral views
+       —
       </p>
 </div>
 <button aria-label="Close X-ray viewer" class="icon-btn" onclick="this.closest('dialog').close()" type="button">
@@ -5492,7 +5337,7 @@ View
           Patient ID
          </small>
 <strong>
-          PT-2026-0148
+          —
          </strong>
 </div>
 <div class="info-field" style="margin-top:12px">
@@ -5500,7 +5345,7 @@ View
           Ordering dentist
          </small>
 <strong>
-          Dr. Angela Cerillo
+          —
          </strong>
 </div>
 <div class="info-field" style="margin-top:12px">
@@ -5508,7 +5353,7 @@ View
           Region
          </small>
 <strong>
-          Full dentition · Tooth 26 focus
+          —
          </strong>
 </div>
 </div>
@@ -5517,7 +5362,7 @@ View
          Clinical finding
         </h4>
 <p>
-         Proximal radiolucency associated with tooth 26. Correlate with direct clinical examination, symptoms, and vitality testing before definitive treatment.
+         No findings recorded.
         </p>
 </div>
 <div class="xray-card">
@@ -5525,7 +5370,7 @@ View
          Plan
         </h4>
 <p>
-         Focused restorative assessment for tooth 26. Imaging remains part of the complete clinical record and is interpreted together with examination findings.
+         No clinical plan recorded.
         </p>
 </div>
 </aside>
@@ -5973,7 +5818,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Dentist
          </dt>
 <dd data-vh-dentist="">
-          Dr. Ana Cerillo
+          —
          </dd>
 </div>
 <div>
@@ -5981,7 +5826,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Service
          </dt>
 <dd data-vh-service="">
-          Composite Restoration
+          —
          </dd>
 </div>
 <div>
@@ -5989,7 +5834,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Date &amp; Time
          </dt>
 <dd data-vh-datetime="">
-          03 Oct 2026 · 10:15 AM
+          —
          </dd>
 </div>
 <div>
@@ -6082,7 +5927,7 @@ window.addEventListener('storage', renderAdminAvailability);
 </label>
 <label>
        Date taken
-       <input required="" type="date" value="2026-10-04"/>
+       <input required="" type="date" value="{{ date('Y-m-d') }}"/>
 </label>
 <label>
        Clinical indication
@@ -6245,7 +6090,7 @@ window.addEventListener('storage', renderAdminAvailability);
         Amount received
        </small>
 <strong>
-        ₱4,500.00
+        ₱0.00
        </strong>
 </div>
 </section>
@@ -6272,7 +6117,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Date &amp; time
          </dt>
 <dd>
-          04 Oct 2026 · 4:42 PM
+          —
          </dd>
 </div>
 <div>
@@ -6280,7 +6125,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Payment method
          </dt>
 <dd>
-          GCash
+          —
          </dd>
 </div>
 <div>
@@ -6288,7 +6133,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Reference
          </dt>
 <dd>
-          GC-89210477
+          —
          </dd>
 </div>
 <div>
@@ -6296,7 +6141,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Invoice
          </dt>
 <dd>
-          INV-2026-1052
+          —
          </dd>
 </div>
 <div>
@@ -6304,7 +6149,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Original balance
          </dt>
 <dd>
-          ₱9,000.00
+          ₱0.00
          </dd>
 </div>
 <div>
@@ -6312,7 +6157,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Remaining balance
          </dt>
 <dd>
-          ₱4,500.00
+          ₱0.00
          </dd>
 </div>
 </dl>
@@ -6339,7 +6184,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Processed by
          </dt>
 <dd>
-          Maria Reyes · Front Desk
+          —
          </dd>
 </div>
 <div>
@@ -6347,7 +6192,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Treating dentist
          </dt>
 <dd>
-          Dr. Ana Cerillo
+          —
          </dd>
 </div>
 <div>
@@ -6355,7 +6200,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Operatory
          </dt>
 <dd>
-          Operatory 2
+          —
          </dd>
 </div>
 <div>
@@ -6363,7 +6208,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Posted from
          </dt>
 <dd>
-          Front Desk Checkout
+          —
          </dd>
 </div>
 <div>
@@ -6381,7 +6226,7 @@ window.addEventListener('storage', renderAdminAvailability);
           Last updated
          </dt>
 <dd>
-          04 Oct 2026 · 4:43 PM
+          —
          </dd>
 </div>
 </dl>
@@ -6415,53 +6260,8 @@ window.addEventListener('storage', renderAdminAvailability);
          Applied
         </span>
 </div>
-<div>
-<span>
-<strong>
-          Tooth #30 · Root Canal Therapy
-         </strong>
-<small>
-          D3310 · Dr. Ana Cerillo
-         </small>
-</span>
-<span>
-         ₱7,000
-        </span>
-<span>
-         ₱3,500
-        </span>
-</div>
-<div>
-<span>
-<strong>
-          Diagnostic radiograph
-         </strong>
-<small>
-          Periapical image
-         </small>
-</span>
-<span>
-         ₱1,000
-        </span>
-<span>
-         ₱500
-        </span>
-</div>
-<div>
-<span>
-<strong>
-          Professional fee
-         </strong>
-<small>
-          Clinical procedure fee
-         </small>
-</span>
-<span>
-         ₱1,000
-        </span>
-<span>
-         ₱500
-        </span>
+<div style="padding:12px;text-align:center;color:#667085;">
+No applied charges recorded
 </div>
 </div>
 </section>
@@ -6564,10 +6364,10 @@ window.addEventListener('storage', renderAdminAvailability);
         Total amount paid
        </small>
 <strong>
-        ₱10,000.00
+        ₱0.00
        </strong>
 <span>
-        GCash · GC-89210477
+        —
        </span>
 </div>
 </section>
@@ -6577,7 +6377,7 @@ window.addEventListener('storage', renderAdminAvailability);
         Invoice number
        </small>
 <strong>
-        INV-2026-1048
+        —
        </strong>
 </div>
 <div>
@@ -6585,7 +6385,7 @@ window.addEventListener('storage', renderAdminAvailability);
         Processed by
        </small>
 <strong>
-        Maria Reyes · Front Desk
+        —
        </strong>
 </div>
 <div>
@@ -6593,7 +6393,7 @@ window.addEventListener('storage', renderAdminAvailability);
         Payment method
        </small>
 <strong>
-        GCash
+        —
        </strong>
 </div>
 <div>
@@ -6601,7 +6401,7 @@ window.addEventListener('storage', renderAdminAvailability);
         Receipt status
        </small>
 <strong>
-        Posted &amp; reconciled
+        —
        </strong>
 </div>
 </div>
@@ -6616,7 +6416,7 @@ window.addEventListener('storage', renderAdminAvailability);
         </p>
 </div>
 <span>
-        2 line items
+        0 line items
        </span>
 </div>
 <div class="transaction-line-head">
@@ -6630,44 +6430,15 @@ window.addEventListener('storage', renderAdminAvailability);
         Amount
        </span>
 </div>
-<div class="transaction-line">
-<span>
-<strong>
-         Tooth #30 · Root Canal Therapy
-        </strong>
-<small>
-         D3310 · Endodontic treatment
-        </small>
-</span>
-<span>
-        Dr. Ana Cerillo
-       </span>
-<strong>
-        ₱7,000
-       </strong>
-</div>
-<div class="transaction-line">
-<span>
-<strong>
-         Tooth #31 · Composite Filling
-        </strong>
-<small>
-         D2391 · 1-surface posterior composite
-        </small>
-</span>
-<span>
-        Dr. Ana Cerillo
-       </span>
-<strong>
-        ₱3,000
-       </strong>
+<div class="transaction-line" style="justify-content:center;color:#667085;padding:12px 0;">
+<span>No items recorded</span>
 </div>
 <div class="transaction-grand-total">
 <span>
         Total paid
        </span>
 <strong>
-        ₱10,000
+        ₱0.00
        </strong>
 </div>
 </section>
@@ -7182,13 +6953,13 @@ window.addEventListener('storage', renderAdminAvailability);
 <div class="patient-xray-detail-info">
 <div class="xray-detail-summary">
 <div><small>Patient</small><strong data-xray-detail-patient="">—</strong></div>
-<div><small>Date taken</small><strong data-xray-detail-date="">03 Oct 2026</strong></div>
-<div><small>Imaging type</small><strong data-xray-detail-type="">Panoramic</strong></div>
-<div><small>Dentist</small><strong data-xray-detail-dentist="">Dr. Ana Cerillo</strong></div>
+<div><small>Date taken</small><strong data-xray-detail-date="">—</strong></div>
+<div><small>Imaging type</small><strong data-xray-detail-type="">—</strong></div>
+<div><small>Dentist</small><strong data-xray-detail-dentist="">—</strong></div>
 </div>
 <article class="xray-detail-note">
 <small>Clinical findings</small>
-<p data-xray-detail-findings="">General survey of the dentition.</p>
+<p data-xray-detail-findings="">No findings recorded.</p>
 </article>
 <article class="xray-detail-note">
 <small>Record note</small>
@@ -7238,7 +7009,7 @@ window.addEventListener('storage', renderAdminAvailability);
        const parts = strong.split('·').map((part) => part.trim());
        const type = parts[0] || 'Radiograph';
        const date = parts[parts.length - 1] || '—';
-       const dentist = card.querySelector('span')?.textContent.trim() || 'Dr. Ana Cerillo';
+       const dentist = card.querySelector('span')?.textContent.trim() || '—';
        const findings = card.querySelector('p')?.textContent.trim() || 'No additional findings recorded.';
        const src = card.querySelector('img')?.getAttribute('src') || '../assets/images/xray-panoramic.png';
        detail.querySelector('[data-xray-detail-title]').textContent = type + ' Radiograph';
