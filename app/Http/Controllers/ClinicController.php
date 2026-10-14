@@ -33,6 +33,7 @@ class ClinicController extends Controller
 
     public function workspace(Request $r)
     {
+        Appointment::autoMarkNoShows();
         $role = $r->user()->role;
         $today = Appointment::query()->whereDate('starts_at', now()->toDateString());
         $scopedToDentist = $role === 'dentist' || ($role === 'admin' && $r->query('view') === 'dentist');
@@ -72,7 +73,11 @@ class ClinicController extends Controller
             'recall_contacts_due' => PatientRecord::whereHas('appointments', fn ($q) => $q->where('status', 'Completed')->when($scopedToDentist, fn ($q2) => $q2->where('dentist_id', $r->user()->id)))->whereDoesntHave('appointments', fn ($q) => $q->where('starts_at', '>=', now()->subMonths(6)))->count(),
             'profiles_needing_update' => PatientRecord::whereHas('appointments', fn ($q) => $q->where('status', 'Completed')->when($scopedToDentist, fn ($q2) => $q2->where('dentist_id', $r->user()->id)))->where(fn ($q) => $q->whereNull('phone')->orWhere('phone', '')->orWhereNull('email')->orWhere('email', '')->orWhereNull('date_of_birth'))->count(),
         ];
-        $appointments = Appointment::with(['patient', 'service', 'dentist'])->latest('starts_at')->get();
+        $apptQuery = Appointment::with(['patient', 'service', 'dentist'])->latest('starts_at');
+        if ($role === 'front_desk') {
+            $apptQuery->where('starts_at', '>=', now()->subHours(24));
+        }
+        $appointments = $apptQuery->get();
         $patients = PatientRecord::whereHas('appointments', fn ($q) => $q->where('status', 'Completed')->when($scopedToDentist, fn ($q2) => $q2->where('dentist_id', $r->user()->id)))
             ->with(['appointments' => fn ($q) => $q->where('status', 'Completed')->with(['service', 'dentist'])->latest('starts_at')])
             ->latest()->get();

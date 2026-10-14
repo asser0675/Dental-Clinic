@@ -8,10 +8,10 @@ use App\Models\PatientRecord;
 use App\Models\Service;
 use App\Models\User;
 use App\Services\AppointmentService;
+use App\Support\ClinicFormatter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Support\ClinicFormatter;
 use Illuminate\Validation\ValidationException;
 
 class AppointmentController extends Controller
@@ -97,11 +97,20 @@ class AppointmentController extends Controller
 
     public function index(Request $r)
     {
+        Appointment::autoMarkNoShows();
         $v = $r->validate(['dentist_id' => 'nullable|exists:users,id', 'status' => 'nullable|string', 'date' => 'nullable|date', 'from' => 'nullable|date', 'to' => 'nullable|date|after_or_equal:from', 'per_page' => 'nullable|integer|min:1|max:100']);
         $q = Appointment::with(['service', 'dentist', 'patient']);
-        if ($r->user()->role === 'dentist' || $r->user()->role === 'admin' && $r->query('view') === 'dentist') {
+        if ($r->user()->role === 'dentist' || ($r->user()->role === 'admin' && $r->query('view') === 'dentist')) {
             $q->where('dentist_id', $r->user()->id);
-        }$q->when($r->filled('dentist_id'), fn ($query) => $query->where('dentist_id', $v['dentist_id']))->when($r->filled('status'), fn ($query) => $query->where('status', $v['status']))->when($r->filled('date'), fn ($query) => $query->whereDate('starts_at', $v['date']))->when($r->filled('from'), fn ($query) => $query->whereDate('starts_at', '>=', $v['from']))->when($r->filled('to'), fn ($query) => $query->whereDate('starts_at', '<=', $v['to']));
+        }
+        if ($r->user()->role === 'front_desk' && ! $r->filled('date') && ! $r->filled('from')) {
+            $q->where('starts_at', '>=', now()->subHours(24));
+        }
+        $q->when($r->filled('dentist_id'), fn ($query) => $query->where('dentist_id', $v['dentist_id']))
+            ->when($r->filled('status'), fn ($query) => $query->where('status', $v['status']))
+            ->when($r->filled('date'), fn ($query) => $query->whereDate('starts_at', $v['date']))
+            ->when($r->filled('from'), fn ($query) => $query->whereDate('starts_at', '>=', $v['from']))
+            ->when($r->filled('to'), fn ($query) => $query->whereDate('starts_at', '<=', $v['to']));
 
         return response()->json($q->latest('starts_at')->paginate($v['per_page'] ?? 25));
     }
@@ -153,7 +162,8 @@ class AppointmentController extends Controller
             abort_unless($appointment->dentist_id === $r->user()->id, 403);
         }
 
-        $appointment->load(['service', 'dentist', 'patient', 'clinicalSession.prescriptionRecords']);
+        Appointment::autoMarkNoShows();
+        $appointment->refresh()->load(['service', 'dentist', 'patient', 'clinicalSession.prescriptionRecords']);
 
         if ($appointment->clinicalSession
             && trim((string) ($appointment->clinicalSession->prescriptions ?? '')) === ''

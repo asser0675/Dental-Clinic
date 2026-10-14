@@ -881,3 +881,242 @@ body.dark-mode #frontAppointmentModal .front-reassign-control select {
 
 /* DentalCerilloV6 scoped refinements */
 .request-consent{display:flex!important;flex-direction:row!important;align-items:flex-start!important;gap:12px!important;justify-content:flex-start!important}.request-consent input{flex:0 0 18px!important;width:18px!important;height:18px!important;margin:3px 0 0!important}.request-consent span{flex:1;min-width:0;line-height:1.55}.request-date-picker{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:16px 0}.request-date-picker input{max-width:290px;padding:12px 16px;border:1px solid #cbd6d1;border-radius:12px;font:inherit}.appointment-request-page .public-availability-calendar{display:block!important}.appointment-request-page .availability-day{width:100%;max-width:none}.appointment-request-page .availability-times{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:10px}.availability-slot:disabled,.availability-slot.unavailable{opacity:.38!important;filter:grayscale(1)!important;cursor:not-allowed!important}.patient-activity-card .v6-patient-trend{display:flex;gap:14px;align-items:end;min-height:190px;padding:18px 8px 0}.v6-trend-bar{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;gap:6px}.v6-trend-bar i{display:block;width:65%;min-height:4px;background:linear-gradient(#3a9b8d,#7ed5b3);border-radius:8px 8px 0 0}.v6-trend-bar small{font-size:11px}.dentist-calendar-v2{width:100%!important;max-width:none!important}.dentist-calendar-v2 .admin-calendar-v2-layout{grid-template-columns:minmax(150px,190px) minmax(0,1fr) minmax(210px,260px)}@media(max-width:1050px){.dentist-calendar-v2 .admin-calendar-v2-layout{grid-template-columns:1fr}}
+
+/* ==========================================================================
+   Payment Receipt / View Payment Modal
+   ========================================================================== */
+dialog.payment-receipt-modal:not([open]) {
+  display: none !important;
+}
+
+dialog.payment-receipt-modal[open] {
+  display: flex !important;
+  flex-direction: column !important;
+  position: fixed !important;
+  inset: 0 !important;
+  margin: auto !important;
+  z-index: 99999 !important;
+  width: min(640px, calc(100vw - 32px)) !important;
+  max-width: calc(100vw - 32px) !important;
+  max-height: 90vh !important;
+  border: 0 !important;
+  border-radius: 18px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.35) !important;
+}
+
+dialog.payment-receipt-modal::backdrop {
+  background: rgba(15, 23, 42, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.payment-receipt-shell {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  max-height: 90vh !important;
+  background: #ffffff !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.payment-receipt-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  padding: 20px 24px 16px !important;
+  border-bottom: 1px solid #e5ebf3 !important;
+  background: #ffffff !important;
+  flex-shrink: 0 !important;
+}
+
+.payment-receipt-header .eyebrow {
+  margin: 0 0 4px !important;
+  color: #3157e8 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+}
+
+.payment-receipt-header h3 {
+  margin: 0 !important;
+  color: #0f172a !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}
+
+.payment-receipt-header p:not(.eyebrow) {
+  margin: 4px 0 0 !important;
+  color: #64748b !important;
+  font-size: 13px !important;
+}
+
+.payment-receipt-body {
+  padding: 20px 24px !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  box-sizing: border-box !important;
+}
+
+.payment-receipt-hero {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 16px 20px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+}
+
+.payment-receipt-hero span {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: .05em !important;
+  display: block !important;
+}
+
+.payment-receipt-hero strong {
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  display: block !important;
+  margin-top: 2px !important;
+}
+
+.payment-receipt-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+@media (max-width: 540px) {
+  .payment-receipt-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.payment-receipt-grid article {
+  padding: 12px 14px !important;
+  background: #ffffff !important;
+  border: 1px solid #e5ebf3 !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.payment-receipt-grid article small {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+}
+
+.payment-receipt-grid article strong {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+}
+
+.payment-receipt-grid article span {
+  font-size: 12px !important;
+  color: #94a3b8 !important;
+}
+
+.payment-receipt-contact {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  padding: 12px 16px !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 10px !important;
+}
+
+@media (max-width: 540px) {
+  .payment-receipt-contact {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.payment-receipt-contact div small {
+  display: block !important;
+  font-size: 11px !important;
+  color: #64748b !important;
+  margin-bottom: 2px !important;
+}
+
+.payment-receipt-contact div strong {
+  font-size: 13px !important;
+  color: #1e293b !important;
+}
+
+.payment-receipt-footer {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  padding: 16px 24px !important;
+  border-top: 1px solid #e5ebf3 !important;
+  background: #ffffff !important;
+  flex-shrink: 0 !important;
+}
+
+.payment-receipt-actions {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+/* ==========================================================================
+   Universal Success Modal
+   ========================================================================== */
+dialog.cerillo-success-modal:not([open]) {
+  display: none !important;
+}
+
+dialog.cerillo-success-modal[open] {
+  display: flex !important;
+  flex-direction: column !important;
+  position: fixed !important;
+  inset: 0 !important;
+  margin: auto !important;
+  z-index: 100060 !important;
+  width: min(420px, calc(100vw - 32px)) !important;
+  max-width: calc(100vw - 32px) !important;
+  border: 0 !important;
+  border-radius: 18px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+  box-shadow: 0 25px 65px rgba(15, 23, 42, 0.4) !important;
+  animation: cerilloSuccessIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+dialog.cerillo-success-modal::backdrop {
+  background: rgba(15, 23, 42, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+@keyframes cerilloSuccessIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+

@@ -45,7 +45,7 @@
           <label>Last name<input id="reqLastName" required maxlength="60" autocomplete="family-name" /></label>
           <label>Date of birth<input id="reqDob" required type="date" /></label>
           <label>Sex<select id="reqSex" required><option>Female</option><option>Male</option><option>Prefer not to say</option></select></label>
-          <label>Email<input id="reqEmail" required type="email" autocomplete="email" /></label>
+          <label>Email (optional)<input id="reqEmail" type="email" autocomplete="email" /></label>
           <label>Mobile number<div class="phone-input"><span>+63</span><input id="reqPhone" required pattern="9[0-9]{9}" placeholder="9171234567" /></div></label>
           <label class="span-2">Home address<input id="reqAddress" required autocomplete="street-address" /></label>
         </div>
@@ -54,10 +54,10 @@
       <section class="request-form-section">
         <div class="request-section-heading"><span>02</span><div><h2>Medical and dental information</h2><p>These details help the clinic prepare safely before your visit.</p></div></div>
         <div class="form-grid">
-          <label>Allergies<textarea id="reqAllergies" required rows="3" placeholder="Type None if none"></textarea></label>
-          <label>Current medications<textarea id="reqMedications" required rows="3" placeholder="Type None if none"></textarea></label>
-          <label class="span-2">Medical history<textarea id="reqMedicalHistory" rows="4" placeholder="Conditions, previous surgeries, heart disease, hypertension, diabetes, bleeding disorders, pregnancy, or other information the dentist should know"></textarea></label>
-          <label>Previous dental visit<input id="reqLastVisit" type="date" /></label>
+          <label>Allergies (optional)<textarea id="reqAllergies" rows="3" placeholder="Type None if none"></textarea></label>
+          <label>Current medications (optional)<textarea id="reqMedications" rows="3" placeholder="Type None if none"></textarea></label>
+          <label class="span-2">Medical history (optional)<textarea id="reqMedicalHistory" rows="4" placeholder="Conditions, previous surgeries, heart disease, hypertension, diabetes, bleeding disorders, pregnancy, or other information the dentist should know"></textarea></label>
+          <label>Previous dental visit (optional)<input id="reqLastVisit" type="date" /></label>
           <label>Dental anxiety<select id="reqAnxiety"><option>Low</option><option>Moderate</option><option>High</option></select></label>
           <label>Bleeding tendency<select id="reqBleeding"><option>No known issue</option><option>Yes / under medical care</option><option>Unsure</option></select></label>
           <label>Pregnancy status<select id="reqPregnancy"><option>Not applicable / No</option><option>Pregnant</option><option>Possibly pregnant</option><option>Prefer not to say</option></select></label>

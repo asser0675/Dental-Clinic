@@ -722,7 +722,7 @@ View
 </div>
 </div>
 <div class="table-wrap">
-<div class="table-filter-dock"><select aria-label="Patient segment" class="patient-segment-control" data-patient-segment-for="front-patient-table"><option value="">All segments</option><option value="Orthodontics">Orthodontics</option><option value="Preventive">Preventive</option><option value="Restorative">Restorative</option><option value="Endodontics">Endodontics</option><option value="Oral Surgery">Oral Surgery</option><option value="General">General</option></select><select aria-label="Procedure filter" class="patient-procedure-control" data-patient-procedure-for="front-patient-table"><option value="">All procedures</option><option value="Oral Prophylaxis">Oral Prophylaxis</option><option value="Composite Restoration">Composite Restoration</option><option value="Root Canal Therapy">Root Canal Therapy</option><option value="Orthodontic Braces">Orthodontic Braces</option><option value="Dental Checkup">Dental Checkup</option></select>
+<div class="table-filter-dock"><select aria-label="Filter patients by date" class="table-sort-control" id="frontPatientDateFilter" data-patient-date-filter="front-patient-table" style="max-width:145px;padding:7px 10px;"><option value="">All Dates</option><option value="today">Today</option><option value="this_week">This Week</option><option value="this_month">This Month</option><option value="custom">Custom Date</option></select><input type="date" id="frontPatientCustomDate" style="display:none;max-width:145px;padding:7px 10px;" class="table-search table-search-inline" aria-label="Custom date filter" title="Filter by custom date" /><select aria-label="Procedure filter" class="patient-procedure-control" data-patient-procedure-for="front-patient-table"><option value="">All procedures</option><option value="Oral Prophylaxis">Oral Prophylaxis</option><option value="Composite Restoration">Composite Restoration</option><option value="Root Canal Therapy">Root Canal Therapy</option><option value="Orthodontic Braces">Orthodontic Braces</option><option value="Dental Checkup">Dental Checkup</option></select>
 <input aria-label="Search this table" class="table-search table-search-inline" data-table-search="front-patient-table" placeholder="Search patient, phone, allergy..." type="search"/>
 <select aria-label="Sort table" class="table-sort-control" data-table-sort="front-patient-table">
 <option value="">
@@ -798,9 +798,10 @@ View
   $rawAllergy = trim((string) ($intake['allergies'] ?? ''));
   $alert = ($rawAllergy === '' || preg_match('/^(none|none reported|no allergies|no known allergies|n\/?a)$/i', $rawAllergy)) ? 'None' : $rawAllergy;
   $lastVisit = $lastAppt?->starts_at ? $lastAppt->starts_at->format('M d') : 'New';
+  $lastVisitIso = $lastAppt?->starts_at ? $lastAppt->starts_at->format('Y-m-d') : ($patient->created_at ? $patient->created_at->format('Y-m-d') : '');
   $procedure = $lastAppt?->service?->name ?? 'General';
 @endphp
-<tr data-patient-id="{{ $patient->id }}" data-procedure="{{ $procedure }}">
+<tr data-patient-id="{{ $patient->id }}" data-procedure="{{ $procedure }}" data-date="{{ $lastVisitIso }}">
 <td>
 <strong>{{ $patient->name }}</strong>
 <small class="table-subtext">{{ $patient->formatted_patient_code }}</small>
@@ -939,9 +940,6 @@ View
           Patient
          </th>
 <th>
-          Service
-         </th>
-<th>
           Amount
          </th>
 <th>
@@ -956,7 +954,7 @@ View
 </tr>
 </thead>
 <tbody>
-<tr><td colspan="7" class="muted" style="text-align:center;padding:24px;">Loading payment records...</td></tr>
+<tr><td colspan="6" class="muted" style="text-align:center;padding:24px;">Loading payment records...</td></tr>
 </tbody>
 </table>
 </div>
@@ -1169,25 +1167,33 @@ View
          </p>
 </div>
 </div>
-<div class="form-grid two-col">
-<label>
+<div class="form-grid two-col" id="frontAppointmentStatusGrid">
+<label id="frontStatusDropdownLabel">
          Status
          <select id="frontAppointmentStatus" required="">
-<option>
+<option value="Checked In">
            Checked In
           </option>
-<option>
+<option value="Pending">
            Pending
           </option>
-<option>
+<option value="Cancelled">
            Cancelled
           </option>
 </select>
 </label>
+<div id="frontStatusStaticLabel" hidden style="display:flex;flex-direction:column;gap:6px;">
+<span>Status</span>
+<span class="status" id="frontStatusStaticText" style="align-self:flex-start;padding:6px 14px;font-size:13px;border-radius:20px;">—</span>
+</div>
 <label id="arrivalField">
          Arrival time
          <input id="frontArrivalTime" type="time"/>
 </label>
+</div>
+<div id="frontCancelledStaticReasonWrap" hidden style="margin-top:14px;padding:14px;background:#fef3f2;border:1px solid #fee4e2;border-radius:10px;">
+<small style="color:#b42318;font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase;font-size:11px;letter-spacing:.04em;">Reason for cancellation</small>
+<p id="frontCancelledStaticReason" style="margin:0;color:#344054;font-size:14px;line-height:1.4;">—</p>
 </div>
 <div class="cancellation-panel" hidden="" id="cancellationPanel">
 <label>
@@ -3734,6 +3740,84 @@ function renderSharedAvailability() {
     : '<span class="availability-empty">No additional blocked schedules.</span>';
 }
 
+let currentFrontLoadedAppointment = null;
+
+function triggerReschedulePrefill() {
+  const registerModal = document.getElementById('registerAppointmentModal');
+  if (!registerModal) return;
+
+  const appt = window.currentFrontLoadedAppointment;
+  let intake = {};
+  if (appt && typeof appt.intake_details === 'object' && appt.intake_details) {
+    intake = appt.intake_details;
+  } else if (appt && typeof appt.intake_details === 'string') {
+    try { intake = JSON.parse(appt.intake_details); } catch (_) {}
+  }
+
+  const patientObj = appt?.patient || null;
+
+  if (patientObj && patientObj.id) {
+    const existingBtn = registerModal.querySelector('[data-registration-mode="existing"]');
+    if (existingBtn) existingBtn.click();
+    const patientSelect = document.getElementById('existingPatientSelect');
+    if (patientSelect) {
+      patientSelect.value = String(patientObj.id);
+      patientSelect.dispatchEvent(new Event('change'));
+    }
+  } else {
+    const newBtn = registerModal.querySelector('[data-registration-mode="new"]');
+    if (newBtn) newBtn.click();
+
+    let firstName = intake.first_name || '';
+    let lastName = intake.last_name || '';
+    if (!firstName && !lastName) {
+      const full = (appt?.guest_name || document.getElementById('frontAppointmentPatient')?.textContent || '').trim().split(/\s+/);
+      firstName = full.shift() || '';
+      lastName = full.join(' ');
+    }
+
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && val !== undefined && val !== null) el.value = val;
+    };
+
+    setVal('regFirstName', firstName);
+    setVal('regLastName', lastName);
+    setVal('regDob', intake.date_of_birth || (appt?.patient?.date_of_birth ? String(appt.patient.date_of_birth).slice(0, 10) : ''));
+    setVal('regSex', intake.sex || intake.gender || appt?.patient?.gender || 'Female');
+    setVal('regEmail', appt?.guest_email || intake.email || appt?.patient?.email || '');
+    setVal('regPhone', window.CerilloFormat?.normalizePhone(appt?.guest_phone || intake.phone || appt?.patient?.phone) || '');
+    setVal('regPhone2', window.CerilloFormat?.normalizePhone(intake.phone2 || intake.secondary_phone || appt?.patient?.phone2) || '');
+    setVal('regLastDentalVisit', intake.last_visit || intake.last_dental_visit || '');
+    setVal('regAddress', intake.address || appt?.patient?.address || '');
+    setVal('regAllergies', intake.allergies || appt?.patient?.allergies || '');
+    setVal('regMeds', intake.medications || appt?.patient?.medications || '');
+    setVal('regMedicalHistory', intake.medical_history || appt?.patient?.medical_history || '');
+    setVal('regAnxiety', intake.anxiety || appt?.patient?.dental_anxiety || 'Low');
+    setVal('regBleeding', intake.bleeding || appt?.patient?.bleeding_tendency || 'No known issue');
+    setVal('regPregnancy', intake.pregnancy || appt?.patient?.pregnancy_status || 'Not applicable / No');
+    setVal('regReason', intake.concern || intake.reason || appt?.reason || '');
+    setVal('regNotes', intake.notes || appt?.notes || '');
+  }
+
+  if (appt?.service_id) {
+    const regService = document.getElementById('regService');
+    if (regService) {
+      regService.value = String(appt.service_id);
+      regService.dispatchEvent(new Event('change'));
+    }
+  }
+  if (appt?.dentist_id) {
+    const regDentist = document.getElementById('regDentist');
+    if (regDentist) {
+      regDentist.value = String(appt.dentist_id);
+      regDentist.dispatchEvent(new Event('change'));
+    }
+  }
+
+  registerModal.showModal();
+}
+
 async function openFrontAppointment(button) {
   activeFrontAppointmentRow = button.closest('tr');
   let data = button.dataset;
@@ -3741,11 +3825,14 @@ async function openFrontAppointment(button) {
     alert('This appointment is not linked to a database record. Refresh the appointments list and try again.');
     return;
   }
+  let appointment = null;
   if (data.appointmentId) {
     try {
       const response = await fetch('/api/appointments/' + encodeURIComponent(data.appointmentId), { headers: { Accept: 'application/json' } });
       if (!response.ok) throw new Error('Appointment details could not be loaded.');
-      const appointment = await response.json();
+      appointment = await response.json();
+      currentFrontLoadedAppointment = appointment;
+      window.currentFrontLoadedAppointment = appointment;
       const starts = new Date(appointment.starts_at);
       const eventTime = appointment.status === 'Checked In'
         ? appointment.checked_in_at
@@ -3791,7 +3878,8 @@ async function openFrontAppointment(button) {
         dentistId: appointment.dentist_id || appointment.dentist?.id || button.dataset.dentistId || '',
         arrival: arrivalFormatted,
         dob: dobAgeStr,
-        status: ['Pending', 'Checked In', 'Cancelled'].includes(appointment.status) ? appointment.status : 'Pending'
+        status: appointment.status || 'Pending',
+        cancellationReason: appointment.cancellation_reason || ''
       };
       button.dataset.status = data.status;
       button.dataset.arrival = data.arrival;
@@ -3815,9 +3903,6 @@ async function openFrontAppointment(button) {
   const frontReassign = document.getElementById('frontReassignDentist');
   const frontOrthoNote = document.getElementById('frontOrthoAssignmentNote');
   if (frontReassign) {
-    const isOrtho = /orthodont|braces|aligner|retainer/i.test(data.service || '');
-    frontReassign.disabled = isOrtho;
-    if (frontOrthoNote) frontOrthoNote.hidden = !isOrtho;
     let matched = false;
     const targetId = String(data.dentistId || button.dataset.dentistId || '');
     const targetName = (data.dentist || button.dataset.dentist || '').trim().toLowerCase();
@@ -3837,6 +3922,7 @@ async function openFrontAppointment(button) {
         }
       }
     }
+    const isOrtho = /orthodont|braces|aligner|retainer/i.test(data.service || '');
     if (isOrtho && !matched) {
       for (const opt of frontReassign.options) {
         if (/angela|ortho/i.test(opt.textContent)) {
@@ -3845,14 +3931,91 @@ async function openFrontAppointment(button) {
         }
       }
     }
+    if (frontOrthoNote) frontOrthoNote.hidden = !isOrtho;
   }
 
-  document.getElementById('frontAppointmentStatus').value = data.status || 'Pending';
-  document.getElementById('frontAppointmentPill').textContent = data.status || 'Pending';
-  document.getElementById('cancellationReason').value = '';
-  document.getElementById('cancellationNotes').value = '';
+  const currentStatus = data.status || 'Pending';
+  const statusPill = document.getElementById('frontAppointmentPill');
+  const dropdownLabel = document.getElementById('frontStatusDropdownLabel');
+  const staticLabel = document.getElementById('frontStatusStaticLabel');
+  const staticText = document.getElementById('frontStatusStaticText');
+  const cancelReasonWrap = document.getElementById('frontCancelledStaticReasonWrap');
+  const cancelReasonText = document.getElementById('frontCancelledStaticReason');
+  const saveBtn = document.getElementById('saveFrontAppointmentStatus');
+  const arrivalField = document.getElementById('arrivalField');
+  const cancellationPanel = document.getElementById('cancellationPanel');
 
-  toggleCancellation();
+  if (statusPill) {
+    statusPill.textContent = currentStatus;
+    statusPill.className = `status-pill ${currentStatus === 'Completed' ? 'success' : ['Cancelled', 'No-Show'].includes(currentStatus) ? 'danger' : currentStatus === 'Checked In' ? 'info' : 'warning'}`;
+  }
+
+  // Completed, Cancelled, and No-Show are locked: no dropdowns, non-modifiable assigning dentist, save button hidden.
+  if (currentStatus === 'Completed') {
+    if (dropdownLabel) dropdownLabel.hidden = true;
+    if (staticLabel) {
+      staticLabel.hidden = false;
+      staticLabel.style.display = 'flex';
+      if (staticText) { staticText.textContent = 'Completed'; staticText.className = 'status success'; }
+    }
+    if (cancelReasonWrap) cancelReasonWrap.hidden = true;
+    if (arrivalField) arrivalField.hidden = true;
+    if (cancellationPanel) cancellationPanel.hidden = true;
+    if (frontReassign) frontReassign.disabled = true;
+    if (saveBtn) saveBtn.style.display = 'none';
+  } else if (currentStatus === 'Cancelled') {
+    if (dropdownLabel) dropdownLabel.hidden = true;
+    if (staticLabel) {
+      staticLabel.hidden = false;
+      staticLabel.style.display = 'flex';
+      if (staticText) { staticText.textContent = 'Cancelled'; staticText.className = 'status danger'; }
+    }
+    if (cancelReasonWrap) {
+      cancelReasonWrap.hidden = false;
+      if (cancelReasonText) cancelReasonText.textContent = data.cancellationReason || appointment?.cancellation_reason || 'No cancellation reason recorded.';
+    }
+    if (arrivalField) arrivalField.hidden = true;
+    if (cancellationPanel) cancellationPanel.hidden = true;
+    if (frontReassign) frontReassign.disabled = true;
+    if (saveBtn) saveBtn.style.display = 'none';
+  } else if (currentStatus === 'No-Show') {
+    if (dropdownLabel) dropdownLabel.hidden = true;
+    if (staticLabel) {
+      staticLabel.hidden = false;
+      staticLabel.style.display = 'flex';
+      if (staticText) { staticText.textContent = 'No-Show'; staticText.className = 'status danger'; }
+    }
+    if (cancelReasonWrap) cancelReasonWrap.hidden = true;
+    if (arrivalField) arrivalField.hidden = true;
+    if (cancellationPanel) cancellationPanel.hidden = true;
+    if (frontReassign) frontReassign.disabled = true;
+    if (saveBtn) saveBtn.style.display = 'none';
+  } else {
+    // Pending, Pending Verification, or Checked In
+    if (dropdownLabel) dropdownLabel.hidden = false;
+    if (staticLabel) {
+      staticLabel.hidden = true;
+      staticLabel.style.display = 'none';
+    }
+    if (cancelReasonWrap) cancelReasonWrap.hidden = true;
+    if (saveBtn) saveBtn.style.display = '';
+
+    const statusSelect = document.getElementById('frontAppointmentStatus');
+    if (statusSelect) {
+      statusSelect.value = ['Pending', 'Checked In', 'Cancelled'].includes(currentStatus) ? currentStatus : 'Pending';
+    }
+    document.getElementById('cancellationReason').value = '';
+    document.getElementById('cancellationNotes').value = '';
+
+    if (frontReassign) {
+      const isOrtho = /orthodont|braces|aligner|retainer/i.test(data.service || '');
+      // Only Pending can reassign dentist; Checked In locks assignment
+      const canReassign = !isOrtho && (currentStatus === 'Pending' || currentStatus === 'Pending Verification');
+      frontReassign.disabled = !canReassign;
+    }
+    toggleCancellation();
+  }
+
   const frontAppointmentModal = document.getElementById('frontAppointmentModal');
   frontAppointmentModal.dataset.patientName = data.patient || '';
   frontAppointmentModal.dataset.patientId = data.patientId || data.appointmentId || button.dataset.patientId || data.patient || '';
@@ -3925,14 +4088,16 @@ document.getElementById('saveFrontAppointmentStatus')?.addEventListener('click',
       }
     }
 
+    const cancellationReasonText = status === 'Cancelled'
+      ? `${reason.value}${document.getElementById('cancellationNotes').value ? ' — ' + document.getElementById('cancellationNotes').value : ''}`
+      : null;
+
     const response = await fetch('/api/appointments/' + encodeURIComponent(appointmentId) + '/status', {
       method: 'PATCH',
       headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '' },
       body: JSON.stringify({
         status,
-        cancellation_reason: status === 'Cancelled'
-          ? `${reason.value}${document.getElementById('cancellationNotes').value ? ' — ' + document.getElementById('cancellationNotes').value : ''}`
-          : null
+        cancellation_reason: cancellationReasonText
       })
     });
     const payload = await response.json().catch(() => ({}));
@@ -3941,6 +4106,10 @@ document.getElementById('saveFrontAppointmentStatus')?.addEventListener('click',
       return;
     }
     savedAppointment = payload;
+    if (savedAppointment) {
+      currentFrontLoadedAppointment = { ...(currentFrontLoadedAppointment || {}), ...savedAppointment, status, cancellation_reason: cancellationReasonText };
+      window.currentFrontLoadedAppointment = currentFrontLoadedAppointment;
+    }
   }
 
   if (activeFrontAppointmentRow) {
@@ -3963,34 +4132,28 @@ document.getElementById('saveFrontAppointmentStatus')?.addEventListener('click',
     viewButton.dataset.status = status;
     viewButton.dataset.arrival = arrival;
 
-    const updates = JSON.parse(localStorage.getItem('cerilloAppointmentUpdates') || '{}');
-    updates[activeFrontAppointmentRow.dataset.appointmentId || viewButton.dataset.datetime] = {
-      status,
-      arrival,
-      cancellationReason: status === 'Cancelled' ? reason.value : '',
-      cancellationNotes: status === 'Cancelled'
-        ? document.getElementById('cancellationNotes').value
-        : ''
-    };
-    // Database is authoritative. Do not persist status overrides that can contradict failed server updates.
     localStorage.removeItem('cerilloAppointmentUpdates');
   }
 
-  const patient = document.getElementById('frontAppointmentPatient').textContent;
   const offerAnotherAppointment = status === 'Cancelled'
     && document.getElementById('offerReschedule').checked;
 
   document.getElementById('frontAppointmentModal').close();
 
-  if (offerAnotherAppointment) {
-    const registerModal = document.getElementById('registerAppointmentModal');
-    if (registerModal) {
-      const nameParts = patient.trim().split(/\s+/);
-      const inputs = registerModal.querySelectorAll('input');
-      if (inputs[0]) inputs[0].value = nameParts[0] || '';
-      if (inputs[1]) inputs[1].value = nameParts.slice(1).join(' ');
-      registerModal.showModal();
+  const handleAfterSave = () => {
+    if (offerAnotherAppointment) {
+      triggerReschedulePrefill();
     }
+  };
+
+  if (typeof window.showCerilloSuccess === 'function') {
+    window.showCerilloSuccess(
+      'Status Saved',
+      `The appointment status has been successfully updated to ${status}.`,
+      handleAfterSave
+    );
+  } else {
+    handleAfterSave();
   }
 });
 
@@ -4133,7 +4296,7 @@ window.addEventListener('storage', renderSharedAvailability);
           Date &amp; Time
          </dt>
 <dd data-vh-datetime="">
-          03 Oct 2026 · 10:15 AM
+          —
          </dd>
 </div>
 <div>
@@ -4147,6 +4310,7 @@ window.addEventListener('storage', renderSharedAvailability);
 </dl>
 </article>
 <article class="info-card">
+<div data-vh-clinical-details hidden style="display:none;">
 <h4>
         Clinical findings
        </h4>
@@ -4159,6 +4323,7 @@ window.addEventListener('storage', renderSharedAvailability);
 <p data-vh-diagnosis="">
         Routine dental care and recall.
        </p>
+</div>
 <h4>
         Dentist notes
        </h4>
@@ -4488,8 +4653,8 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
 </select>
 </label>
 <label>
-         Email
-         <input id="regEmail" required="" type="email"/>
+         Email (optional)
+         <input id="regEmail" type="email"/>
 </label>
 <label>
          Primary phone
@@ -4510,7 +4675,7 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
 </div>
 </label>
 <label>
-         Last dental visit
+         Last dental visit (optional)
          <input id="regLastDentalVisit" type="date"/>
 </label>
 <label class="span-2">
@@ -4518,15 +4683,15 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
          <input id="regAddress" required=""/>
 </label>
 <label>
-         Allergies
-         <textarea id="regAllergies" placeholder="Type None if none" required="" rows="3"></textarea>
+         Allergies (optional)
+         <textarea id="regAllergies" placeholder="Type None if none" rows="3"></textarea>
 </label>
 <label>
-         Current medications
-         <textarea id="regMeds" placeholder="Type None if none" required="" rows="3"></textarea>
+         Current medications (optional)
+         <textarea id="regMeds" placeholder="Type None if none" rows="3"></textarea>
 </label>
 <label class="span-2">
-         Medical history
+         Medical history (optional)
          <textarea id="regMedicalHistory" placeholder="Relevant medical conditions, surgeries, pregnancy, bleeding risk, etc." rows="3"></textarea>
 </label>
 <label>
@@ -4779,8 +4944,7 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     const picker = document.getElementById('existingPatientPicker');
     const newFields = document.getElementById('newPatientFields');
     const select = document.getElementById('existingPatientSelect');
-    const summary = document.getElementById('existingPatientSummary');
-    const newRequired = ['regFirstName','regLastName','regDob','regEmail','regPhone','regAddress','regAllergies','regMeds'];
+    const newRequired = ['regFirstName','regLastName','regDob','regPhone','regAddress'];
 
     function setMode(mode) {
      modeButtons.forEach(function (button) {
@@ -4851,7 +5015,7 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
   if(false && saveButton){
     saveButton.addEventListener('click', function(){
       const isExisting=document.getElementById('registerAppointmentModal')?.dataset.patientMode==='existing';
-      const requiredIds=(isExisting?['existingPatientSelect']:['regFirstName','regLastName','regDob','regEmail','regPhone','regAddress','regAllergies','regMeds']).concat(['regService','regDentist','regDate','regTime']);
+      const requiredIds=(isExisting?['existingPatientSelect']:['regFirstName','regLastName','regDob','regPhone','regAddress']).concat(['regService','regDentist','regDate','regTime']);
       for(const id of requiredIds){
         const el=document.getElementById(id);
         if(el && !el.checkValidity()){ el.reportValidity(); return; }
@@ -5402,19 +5566,64 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
   function applyPatientFilters(table){
     if(!table) return;
     const id=table.id;
+    const dateFilterEl=document.getElementById('frontPatientDateFilter') || document.querySelector('[data-patient-date-filter="'+id+'"]');
+    const customDateEl=document.getElementById('frontPatientCustomDate');
+    const dateFilterVal=dateFilterEl?.value || '';
     const segment=document.querySelector('[data-patient-segment-for="'+id+'"]')?.value || '';
     const procedure=document.querySelector('[data-patient-procedure-for="'+id+'"]')?.value || '';
+
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    
+    // Start of current week (Monday) and end of current week (Sunday)
+    const currentDay = now.getDay();
+    const distToMon = (currentDay + 6) % 7;
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - distToMon);
+    monday.setHours(0, 0, 0, 0);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999);
+
+    const thisMonthStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
     table.querySelectorAll('tbody tr').forEach(function(row){
-      const matches=(!segment || row.dataset.segment===segment) && (!procedure || row.dataset.procedure===procedure);
-      row.dataset.segmentHidden=matches ? 'false' : 'true';
-      row.hidden=!matches || row.dataset.searchHidden==='true' || row.dataset.filterHidden==='true';
+      const rowDate = (row.dataset.date || '').slice(0, 10);
+      let dateMatch = true;
+
+      if (dateFilterVal === 'today') {
+        dateMatch = rowDate === todayStr;
+      } else if (dateFilterVal === 'this_week') {
+        if (!rowDate) {
+          dateMatch = false;
+        } else {
+          const rDate = new Date(rowDate);
+          dateMatch = rDate >= monday && rDate <= sunday;
+        }
+      } else if (dateFilterVal === 'this_month') {
+        dateMatch = rowDate.slice(0, 7) === thisMonthStr;
+      } else if (dateFilterVal === 'custom' && customDateEl?.value) {
+        dateMatch = rowDate === customDateEl.value;
+      }
+
+      const segmentMatch = !segment || row.dataset.segment === segment;
+      const procMatch = !procedure || row.dataset.procedure === procedure;
+      const matches = dateMatch && segmentMatch && procMatch;
+
+      row.dataset.segmentHidden = matches ? 'false' : 'true';
+      row.hidden = !matches || row.dataset.searchHidden === 'true' || row.dataset.filterHidden === 'true';
+      row.style.display = row.hidden ? 'none' : '';
     });
   }
 
   document.addEventListener('change',function(event){
-    const control=event.target.closest('[data-patient-segment-for],[data-patient-procedure-for]');
+    const control=event.target.closest('[data-patient-segment-for],[data-patient-procedure-for],[data-patient-date-filter],#frontPatientDateFilter,#frontPatientCustomDate');
     if(!control) return;
-    const id=control.dataset.patientSegmentFor || control.dataset.patientProcedureFor;
+    if (control.id === 'frontPatientDateFilter' || control.dataset.patientDateFilter) {
+      const customInput = document.getElementById('frontPatientCustomDate');
+      if (customInput) customInput.style.display = control.value === 'custom' ? 'inline-block' : 'none';
+    }
+    const id=control.dataset.patientSegmentFor || control.dataset.patientProcedureFor || control.dataset.patientDateFilter || 'front-patient-table';
     applyPatientFilters(document.getElementById(id));
   });
 
@@ -5812,8 +6021,12 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     try {
       await json('/api/appointments', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
       modal.close();
-      alert('Appointment saved. The patient remains a guest until the appointment is completed.');
-      window.location.reload();
+      if (typeof window.showCerilloSuccess === 'function') {
+        window.showCerilloSuccess('Appointment Booked', 'Patient registered and appointment created successfully.', () => { window.location.reload(); });
+      } else {
+        alert('Appointment saved. The patient remains a guest until the appointment is completed.');
+        window.location.reload();
+      }
     } catch (error) { alert(error.message); }
     finally { save.disabled = false; }
   }, true);
@@ -6244,8 +6457,12 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
       if (!res.ok) throw new Error(data.message || Object.values(data.errors || {}).flat().join(' ') || 'Payment could not be processed.');
 
       const pName = checkoutPatientName?.textContent || 'Patient';
-      alert(`Payment of ${money(amount)} successfully processed for ${pName}.`);
       checkoutModal.close();
+      if (typeof window.showCerilloSuccess === 'function') {
+        window.showCerilloSuccess('Payment Processed', `Payment of ${money(amount)} successfully processed for ${pName}.`);
+      } else {
+        alert(`Payment of ${money(amount)} successfully processed for ${pName}.`);
+      }
 
       refreshPatientQueue();
       if (typeof window.refreshFrontPaymentsTable === 'function') window.refreshFrontPaymentsTable();

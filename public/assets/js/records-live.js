@@ -55,6 +55,57 @@
     return 'tooth-finding';
   }
 
+  // =========================================================================
+  // Universal Cerillo Success Modal
+  // =========================================================================
+  function ensureCerilloSuccessModal() {
+    let modal = document.getElementById('cerilloSuccessModal');
+    if (!modal) {
+      modal = document.createElement('dialog');
+      modal.id = 'cerilloSuccessModal';
+      modal.className = 'modal cerillo-success-modal';
+      modal.innerHTML = `
+        <div class="modal-shell" style="padding:28px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;">
+          <div style="width:56px;height:56px;border-radius:50%;background:#ecfdf5;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#12b76a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+          </div>
+          <h3 data-cerillo-success-title style="margin:0 0 8px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3;">Success</h3>
+          <p data-cerillo-success-msg style="margin:0 0 24px;font-size:14px;color:#64748b;line-height:1.5;">Action completed successfully.</p>
+          <button type="button" class="btn btn-primary" data-cerillo-success-done style="min-width:140px;padding:10px 24px;font-weight:600;border-radius:10px;background:#3157e8;color:#ffffff;border:none;cursor:pointer;">Done</button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.close();
+      });
+    }
+    return modal;
+  }
+
+  function showCerilloSuccess(title, message, callback) {
+    const modal = ensureCerilloSuccessModal();
+    const titleEl = modal.querySelector('[data-cerillo-success-title]');
+    const msgEl = modal.querySelector('[data-cerillo-success-msg]');
+    const doneBtn = modal.querySelector('[data-cerillo-success-done]');
+
+    if (titleEl) titleEl.textContent = title || 'Success';
+    if (msgEl) msgEl.textContent = message || 'Action completed successfully.';
+
+    const handleDone = () => {
+      doneBtn.removeEventListener('click', handleDone);
+      modal.removeEventListener('close', handleDone);
+      modal.close();
+      if (typeof callback === 'function') callback();
+    };
+
+    doneBtn.addEventListener('click', handleDone);
+    modal.addEventListener('close', handleDone, { once: true });
+    modal.showModal();
+  }
+  window.showCerilloSuccess = showCerilloSuccess;
+
   function hydrateDentalChart(modal, teeth) {
     if (!modal) return;
     const allStateClasses = ['tooth-sound', 'tooth-decay', 'tooth-finding', 'tooth-planned', 'tooth-completed', 'tooth-missing', 'tooth-impacted'];
@@ -173,10 +224,12 @@
                 </dl>
               </article>
               <article class="info-card">
-                <h4>Clinical findings</h4>
-                <p data-vh-findings>No clinical findings recorded.</p>
-                <h4>Diagnosis & Treatment Plan</h4>
-                <p data-vh-diagnosis>Routine dental care and recall.</p>
+                <div data-vh-clinical-details>
+                  <h4>Clinical findings</h4>
+                  <p data-vh-findings>No clinical findings recorded.</p>
+                  <h4>Diagnosis & Treatment Plan</h4>
+                  <p data-vh-diagnosis>Routine dental care and recall.</p>
+                </div>
                 <h4>Dentist notes</h4>
                 <p data-vh-notes>No notes recorded.</p>
                 <div data-vh-prescriptions-wrap hidden>
@@ -240,6 +293,17 @@
       } else {
         rxWrap.hidden = true;
       }
+    }
+
+    // Hide Clinical findings, Diagnosis & Treatment Plan on front-desk
+    const isFrontDesk = document.body.dataset.workspaceView === 'front_desk' ||
+      window.location.pathname.includes('/front-desk') ||
+      !!document.getElementById('front-desk-table-1') ||
+      !!document.getElementById('front-appointment-register');
+    const clinicalSection = dialog.querySelector('[data-vh-clinical-details]');
+    if (clinicalSection) {
+      clinicalSection.hidden = isFrontDesk;
+      clinicalSection.style.display = isFrontDesk ? 'none' : '';
     }
 
     dialog.showModal();
@@ -372,13 +436,35 @@
 
       // Billing Ledger Tab
       const formatPHP = val => new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(Number(val || 0));
-      setPr('[data-pr-ledger-charges]', formatPHP(summary.total_charges));
-      setPr('[data-pr-ledger-payments]', formatPHP(summary.total_payments));
+
+      let toothBilling = [];
+      try { toothBilling = JSON.parse(localStorage.getItem('cerilloPatientToothBilling') || '[]'); } catch (_) {}
+      const matchingToothBills = toothBilling.filter(b => 
+        (b.patientId && (
+          String(b.patientId) === String(patient.id) ||
+          String(b.patientId) === String(patient.formatted_patient_code) ||
+          String(b.patientId) === String(patient.patient_code)
+        )) ||
+        (b.patientName && patient.name && b.patientName.trim().toLowerCase() === patient.name.trim().toLowerCase())
+      );
+
+      let extraCharges = 0;
+      matchingToothBills.forEach(b => {
+        const price = Number(b.price || 0);
+        if (!isNaN(price)) extraCharges += price;
+      });
+
+      const effectiveTotalCharges = Number(summary.total_charges || 0) + extraCharges;
+      const effectiveTotalPayments = Number(summary.total_payments || 0);
+      const effectiveBalance = Math.max(0, effectiveTotalCharges - effectiveTotalPayments);
+
+      setPr('[data-pr-ledger-charges]', formatPHP(effectiveTotalCharges));
+      setPr('[data-pr-ledger-payments]', formatPHP(effectiveTotalPayments));
       setPr('[data-pr-ledger-adjustments]', '-₱0.00');
-      setPr('[data-pr-ledger-balance]', formatPHP(summary.balance));
+      setPr('[data-pr-ledger-balance]', formatPHP(effectiveBalance));
       const frontProceedCheckout = modal.querySelector('#frontPatientProceedCheckoutBtn');
       if (frontProceedCheckout) {
-        const hasBalance = Number(summary.balance || 0) > 0.009;
+        const hasBalance = effectiveBalance > 0.009;
         frontProceedCheckout.hidden = !hasBalance;
         frontProceedCheckout.disabled = !hasBalance;
         frontProceedCheckout.setAttribute('aria-hidden', hasBalance ? 'false' : 'true');
@@ -386,15 +472,39 @@
 
       const ledgerTbody = modal.querySelector('[data-pr-ledger-tbody], table[data-patient-ledger] tbody');
       if (ledgerTbody) {
-        if (transactions.length > 0) {
-          ledgerTbody.innerHTML = transactions.map(t => `
+        let combinedRows = transactions.map(t => ({
+          date: dateTime(t.created_at),
+          ref: escapeHtml(t.reference || `TXN-${t.id}`),
+          desc: escapeHtml(t.description || 'Dental Procedure'),
+          charge: formatPHP(t.amount),
+          paid: t.status === 'completed' ? formatPHP(t.amount) : '—',
+          balance: '₱0.00'
+        }));
+
+        matchingToothBills.forEach(b => {
+          const count = Array.isArray(b.items) ? b.items.length : 0;
+          const desc = b.type === 'consultation-invoice'
+            ? `Dental consultation · ${count} procedure${count === 1 ? '' : 's'}`
+            : (b.procedure || (b.tooth ? `Tooth #${b.tooth} procedure` : 'Dental procedure'));
+          combinedRows.push({
+            date: b.createdAt ? dateTime(b.createdAt) : dateTime(new Date()),
+            ref: escapeHtml(b.reference || `DNT-${b.id || 'PROC'}`),
+            desc: escapeHtml(desc),
+            charge: formatPHP(b.price),
+            paid: '—',
+            balance: formatPHP(b.price)
+          });
+        });
+
+        if (combinedRows.length > 0) {
+          ledgerTbody.innerHTML = combinedRows.map(r => `
             <tr>
-              <td>${dateTime(t.created_at)}</td>
-              <td>${escapeHtml(t.reference || `TXN-${t.id}`)}</td>
-              <td>${escapeHtml(t.description || 'Dental Procedure')}</td>
-              <td>${formatPHP(t.amount)}</td>
-              <td>${t.status === 'completed' ? formatPHP(t.amount) : '—'}</td>
-              <td>₱0.00</td>
+              <td>${r.date}</td>
+              <td>${r.ref}</td>
+              <td>${r.desc}</td>
+              <td>${r.charge}</td>
+              <td>${r.paid}</td>
+              <td>${r.balance}</td>
             </tr>
           `).join('');
         } else {
@@ -542,7 +652,7 @@
       <div class="modal-shell payment-receipt-shell">
         <header class="modal-header payment-receipt-header">
           <div>
-            <p class="eyebrow">Billing &amp; Payments · Admin</p>
+            <p class="eyebrow">Billing &amp; Payments</p>
             <h3>Payment Receipt</h3>
             <p data-admin-payment-reference>Transaction details</p>
           </div>
@@ -685,17 +795,30 @@
     allTransactionsList = rows;
     adminPaymentCache.clear();
     rows.forEach(t => adminPaymentCache.set(String(t.id), t));
-    const render = (transaction, ledger) => {
+    const render = (transaction, ledger, tableId) => {
       const appointment = transaction.appointment;
       const patient = transaction.patient?.name || appointment?.guest_name || 'Guest patient';
-      const service = transaction.service?.name || appointment?.service?.name || '—';
       const date = dateTime(transaction.created_at);
+      const time = new Date(transaction.created_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
       const amount = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(Number(transaction.amount || 0));
-      if (ledger) return `<tr><td>${escapeHtml(date)}</td><td>${escapeHtml(transaction.id ? `TXN-${transaction.id}` : '—')}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(appointment?.dentist?.name || '—')}</td><td>${escapeHtml(transaction.payment_method || '—')}</td><td>${escapeHtml(amount)}</td><td><span class="status ${transaction.status === 'voided' ? 'danger' : 'success'}">${escapeHtml(transaction.status)}</span></td></tr>`;
-      return `<tr><td>${escapeHtml(date)} · ${escapeHtml(new Date(transaction.created_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }))}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(amount)}</td><td><span class="status ${transaction.status === 'voided' ? 'danger' : 'success'}">${escapeHtml(transaction.status)}</span></td><td>${escapeHtml(transaction.payment_method || '—')}</td><td><button class="table-action" type="button" data-transaction-id="${transaction.id}">View</button></td></tr>`;
+      if (ledger) {
+        return `<tr><td>${escapeHtml(date)}</td><td>${escapeHtml(transaction.id ? `TXN-${transaction.id}` : '—')}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(appointment?.dentist?.name || '—')}</td><td>${escapeHtml(transaction.payment_method || '—')}</td><td>${escapeHtml(amount)}</td><td><span class="status ${transaction.status === 'voided' ? 'danger' : 'success'}">${escapeHtml(transaction.status)}</span></td></tr>`;
+      }
+      if (tableId === 'front-desk-table-5') {
+        const ref = transaction.id ? `TXN-${String(transaction.id).padStart(5, '0')}` : '—';
+        return `<tr>
+          <td><strong>${escapeHtml(ref)}</strong></td>
+          <td>${escapeHtml(patient)}</td>
+          <td>${escapeHtml(amount)}</td>
+          <td>${escapeHtml(transaction.payment_method || '—')}</td>
+          <td><span class="status ${transaction.status === 'voided' ? 'danger' : 'success'}">${escapeHtml(transaction.status || 'completed')}</span></td>
+          <td><button class="table-action" type="button" data-transaction-id="${transaction.id}">View</button></td>
+        </tr>`;
+      }
+      return `<tr><td>${escapeHtml(date)} · ${escapeHtml(time)}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(amount)}</td><td><span class="status ${transaction.status === 'voided' ? 'danger' : 'success'}">${escapeHtml(transaction.status || 'completed')}</span></td><td>${escapeHtml(transaction.payment_method || '—')}</td><td><button class="table-action" type="button" data-transaction-id="${transaction.id}">View</button></td></tr>`;
     };
     tables.forEach(table => {
-      table.tBodies[0].innerHTML = rows.map(transaction => render(transaction, table.id === 'admin-table-4')).join('') || `<tr><td colspan="${table.id === 'admin-table-4' ? 7 : 6}" class="muted">No transactions found.</td></tr>`;
+      table.tBodies[0].innerHTML = rows.map(transaction => render(transaction, table.id === 'admin-table-4', table.id)).join('') || `<tr><td colspan="${table.id === 'admin-table-4' ? 7 : 6}" class="muted">No transactions found.</td></tr>`;
     });
   }
 
@@ -1079,6 +1202,9 @@
         if (msg) msg.textContent = 'Saving dental chart changes...';
         savePatientChart(dialog).then(() => {
           if (msg) msg.textContent = 'Dental chart changes saved to database.';
+          if (typeof window.showCerilloSuccess === 'function') {
+            window.showCerilloSuccess('Dental Chart Saved', 'Patient dental chart and conditions have been saved.');
+          }
         }).catch(err => {
           if (msg) msg.textContent = 'Error saving dental chart.';
         });
@@ -1091,7 +1217,7 @@
       return;
     }
 
-    const txnBtn = event.target.closest('#admin-table-3 [data-transaction-id]');
+    const txnBtn = event.target.closest('#admin-table-3 [data-transaction-id], #front-desk-table-5 [data-transaction-id], [data-transaction-id]');
     if (txnBtn) {
       const payment = adminPaymentCache.get(String(txnBtn.dataset.transactionId));
       if (payment) {
@@ -1178,13 +1304,10 @@
           msg.textContent = `Account created and saved to the database for ${data.name || name}.`;
         }
         form.reset();
-        window.setTimeout(() => {
-          form.closest('dialog')?.close();
-          if (msg) {
-            msg.textContent = '';
-            msg.className = 'account-form-message';
-          }
-        }, 900);
+        form.closest('dialog')?.close();
+        if (typeof window.showCerilloSuccess === 'function') {
+          window.showCerilloSuccess('Account Created', `Account created successfully for ${data.name || name}.`);
+        }
       } catch (err) {
         if (msg) {
           msg.className = 'account-form-message error';
@@ -1232,9 +1355,10 @@
           msg.style.color = '#12b76a';
         }
         await loadAdminAccounts();
-        setTimeout(() => {
-          form.closest('dialog')?.close();
-        }, 800);
+        form.closest('dialog')?.close();
+        if (typeof window.showCerilloSuccess === 'function') {
+          window.showCerilloSuccess('Account Updated', `Account details for ${data.name || name} updated successfully.`);
+        }
       } catch (err) {
         if (msg) {
           msg.textContent = '⚠️ ' + err.message;

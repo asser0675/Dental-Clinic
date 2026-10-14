@@ -47,4 +47,18 @@ class Appointment extends Model
     {
         return $this->hasOne(ClinicalSession::class);
     }
+
+    public static function autoMarkNoShows(): void
+    {
+        static::whereIn('status', ['Pending', 'Pending Verification', 'Scheduled'])
+            ->where(function ($q) {
+                $q->whereDate('starts_at', '<', now()->toDateString())
+                    ->orWhere(function ($q2) {
+                        $q2->whereDate('starts_at', '=', now()->toDateString())
+                            ->whereTime('starts_at', '<=', '17:00:00')
+                            ->whereRaw('CURRENT_TIME >= "17:00:00"');
+                    });
+            })
+            ->update(['status' => 'No-Show']);
+    }
 }

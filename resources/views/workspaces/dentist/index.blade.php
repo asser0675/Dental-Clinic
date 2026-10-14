@@ -6414,6 +6414,9 @@ Instructions
       }
 
       showToast(successMsg, false);
+      if (typeof window.showCerilloSuccess === 'function') {
+        window.showCerilloSuccess('Assessment Saved', 'Dental assessment and clinical records have been saved successfully.');
+      }
 
       const pid = currentAppointment?.patient?.id || modal.dataset.patientId || completeData?.patient_id;
       if (chart && pid) {
