@@ -924,6 +924,9 @@ View
           Patient
          </th>
 <th>
+          Service
+         </th>
+<th>
           Amount
          </th>
 <th>
@@ -938,7 +941,7 @@ View
 </tr>
 </thead>
 <tbody>
-<tr><td colspan="6" class="muted" style="text-align:center;padding:24px;">Loading payment records...</td></tr>
+<tr><td colspan="7" class="muted" style="text-align:center;padding:24px;">Loading payment records...</td></tr>
 </tbody>
 </table>
 </div>

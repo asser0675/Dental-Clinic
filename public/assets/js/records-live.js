@@ -981,9 +981,11 @@
       }
       if (tableId === 'front-desk-table-5') {
         const ref = transaction.id ? `TXN-${String(transaction.id).padStart(5, '0')}` : '—';
+        const service = transaction.service?.name || transaction.appointment?.service?.name || '—';
         return `<tr>
           <td><strong>${escapeHtml(ref)}</strong></td>
           <td>${escapeHtml(patient)}</td>
+          <td>${escapeHtml(service)}</td>
           <td>${escapeHtml(amount)}</td>
           <td>${escapeHtml(transaction.payment_method || '—')}</td>
           <td><span class="status ${transaction.status === 'voided' ? 'danger' : 'success'}">${escapeHtml(transaction.status || 'completed')}</span></td>
