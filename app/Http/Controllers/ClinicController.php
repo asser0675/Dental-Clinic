@@ -74,8 +74,11 @@ class ClinicController extends Controller
             'profiles_needing_update' => PatientRecord::whereHas('appointments', fn ($q) => $q->where('status', 'Completed')->when($scopedToDentist, fn ($q2) => $q2->where('dentist_id', $r->user()->id)))->where(fn ($q) => $q->whereNull('phone')->orWhere('phone', '')->orWhereNull('email')->orWhere('email', '')->orWhereNull('date_of_birth'))->count(),
         ];
         $apptQuery = Appointment::with(['patient', 'service', 'dentist'])->latest('starts_at');
-        if ($role === 'front_desk') {
+        if (in_array($role, ['front_desk', 'dentist'], true) || ($role === 'admin' && $r->query('view') === 'dentist')) {
             $apptQuery->where('starts_at', '>=', now()->subHours(24));
+        }
+        if ($scopedToDentist) {
+            $apptQuery->where('dentist_id', $r->user()->id);
         }
         $appointments = $apptQuery->get();
         $patients = PatientRecord::whereHas('appointments', fn ($q) => $q->where('status', 'Completed')->when($scopedToDentist, fn ($q2) => $q2->where('dentist_id', $r->user()->id)))
@@ -97,7 +100,7 @@ class ClinicController extends Controller
 
         return match ($role) {
             'front_desk' => view('workspaces.front-desk.index', compact('metrics', 'appointments', 'patients', 'services', 'dentists', 'queueAppointments')),
-            'dentist' => view('workspaces.dentist.index', compact('metrics')),
+            'dentist' => view('workspaces.dentist.index', compact('metrics', 'appointments', 'patients', 'services', 'dentists', 'queueAppointments')),
             'admin' => view('workspaces.admin.index', compact('metrics', 'appointments', 'patients', 'services', 'dentists', 'queueAppointments')),
             'super_admin' => view('workspaces.super-admin.index'),
             default => view('workspaces.patient.index')
@@ -361,26 +364,31 @@ class ClinicController extends Controller
         ]);
         $appointment = ! empty($v['appointment_id']) ? Appointment::find($v['appointment_id']) : null;
         $patientId = $v['patient_id'] ?? $appointment?->patient_id;
-        if (! $appointment && $patientId) {
-            $appointment = Appointment::where('patient_id', $patientId)->latest('starts_at')->first();
-        }
-        $serviceId = $v['service_id'] ?? $appointment?->service_id;
+
         if ($appointment && $patientId && $appointment->patient_id && (int) $appointment->patient_id !== (int) $patientId) {
             abort(422, 'The selected treatment does not belong to this patient.');
         }
-        if ($appointment && $serviceId && (int) $appointment->service_id !== (int) $serviceId) {
-            abort(422, 'The selected service does not match this appointment.');
+
+        // When paying for an appointment, use the appointment's service; otherwise use provided service_id
+        $serviceId = $appointment ? $appointment->service_id : ($v['service_id'] ?? null);
+        if (! $serviceId && $appointment) {
+            $serviceId = $appointment->service_id;
         }
-        $service = $serviceId ? Service::find($serviceId) : $appointment?->service;
+        if (! $serviceId) {
+            $serviceId = 1;
+        }
+        $service = Service::find($serviceId) ?? $appointment?->service;
 
         if ($appointment && $service) {
             $alreadyPaid = (float) Transaction::where('appointment_id', $appointment->id)
                 ->where('status', 'completed')
                 ->sum('amount');
-            $remaining = max(0, (float) $service->price - $alreadyPaid);
+            $charge = (float) ($appointment->service?->price ?? $service->price);
+            $remaining = max(0, $charge - $alreadyPaid);
             abort_if($remaining <= 0, 422, 'This treatment has no outstanding balance.');
 
-            $installmentEligible = (bool) preg_match('/ortho|brace/i', (string) $service->name);
+            $serviceName = (string) ($appointment->service?->name ?? $service->name);
+            $installmentEligible = (bool) preg_match('/ortho|brace/i', $serviceName);
             if (! $installmentEligible && abs((float) $v['amount'] - $remaining) > 0.009) {
                 abort(422, 'The payable amount for this treatment is fixed at PHP '.number_format($remaining, 2).'.');
             }

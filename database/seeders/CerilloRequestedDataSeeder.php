@@ -61,7 +61,7 @@ class CerilloRequestedDataSeeder extends Seeder
         }
 
         if (! $admin) {
-            $admin = new User();
+            $admin = new User;
         }
 
         $admin->fill([

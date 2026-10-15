@@ -156,29 +156,65 @@
     const billing = data.billing_kpis;
     const paymentsSection = document.getElementById('payments');
     if (paymentsSection && billing) {
-      const cards = paymentsSection.querySelectorAll('.stats-grid > .stat-card');
-      if (cards.length >= 4) {
-        // Card 1: Collected today
-        const c1Strong = cards[0].querySelector('strong');
-        const c1Span = cards[0].querySelector('span');
-        if (c1Strong) c1Strong.textContent = money(billing.collected_today);
-        if (c1Span) c1Span.textContent = `${billing.payments_today} payment${billing.payments_today === 1 ? '' : 's'}`;
+      const kpiCollected = paymentsSection.querySelector('[data-payment-kpi="collected"]');
+      const kpiOutstanding = paymentsSection.querySelector('[data-payment-kpi="outstanding"]');
+      const kpiCash = paymentsSection.querySelector('[data-payment-kpi="cash"]');
+      const kpiDigital = paymentsSection.querySelector('[data-payment-kpi="digital"]');
 
-        // Card 2: Outstanding
-        const c2Strong = cards[1].querySelector('strong');
-        const c2Span = cards[1].querySelector('span');
-        if (c2Strong) c2Strong.textContent = money(billing.outstanding_total);
-        if (c2Span) c2Span.textContent = `${billing.outstanding_patients_count} patient${billing.outstanding_patients_count === 1 ? '' : 's'}`;
+      if (kpiCollected) {
+        // Front-Desk workspace
+        const cStrong = kpiCollected.querySelector('strong') || kpiCollected.appendChild(document.createElement('strong'));
+        const cSpan = kpiCollected.querySelector('span') || kpiCollected.appendChild(document.createElement('span'));
+        cStrong.textContent = money(billing.collected_today);
+        cSpan.textContent = `${billing.payments_today} posted payment${billing.payments_today === 1 ? '' : 's'}`;
 
-        // Card 3: Partial balances
-        const c3Strong = cards[2].querySelector('strong');
-        const c3Span = cards[2].querySelector('span');
-        if (c3Strong) c3Strong.textContent = money(billing.partial_total);
-        if (c3Span) c3Span.textContent = `${billing.partial_count} active plan${billing.partial_count === 1 ? '' : 's'}`;
+        if (kpiOutstanding) {
+          const oStrong = kpiOutstanding.querySelector('strong') || kpiOutstanding.appendChild(document.createElement('strong'));
+          const oSpan = kpiOutstanding.querySelector('span') || kpiOutstanding.appendChild(document.createElement('span'));
+          oStrong.textContent = money(billing.outstanding_total);
+          oSpan.textContent = `${billing.outstanding_patients_count} open balance${billing.outstanding_patients_count === 1 ? '' : 's'}`;
+        }
 
-        // Card 4: Adjustments
-        const c4Strong = cards[3].querySelector('strong');
-        if (c4Strong) c4Strong.textContent = money(billing.adjustments_month);
+        if (kpiCash) {
+          const cashVal = Number(data.collections_by_method?.Cash ?? 0);
+          const cashStrong = kpiCash.querySelector('strong') || kpiCash.appendChild(document.createElement('strong'));
+          cashStrong.textContent = money(cashVal);
+        }
+
+        if (kpiDigital) {
+          const digitalVal = Number(data.collections_by_method?.GCash ?? 0) +
+            Number(data.collections_by_method?.Card ?? 0) +
+            Number(data.collections_by_method?.Maya ?? 0) +
+            Number(data.collections_by_method?.['Bank Transfer'] ?? 0);
+          const digStrong = kpiDigital.querySelector('strong') || kpiDigital.appendChild(document.createElement('strong'));
+          digStrong.textContent = money(digitalVal);
+        }
+      } else {
+        // Admin workspace
+        const cards = paymentsSection.querySelectorAll('.stats-grid > .stat-card');
+        if (cards.length >= 4) {
+          // Card 1: Collected today
+          const c1Strong = cards[0].querySelector('strong');
+          const c1Span = cards[0].querySelector('span');
+          if (c1Strong) c1Strong.textContent = money(billing.collected_today);
+          if (c1Span) c1Span.textContent = `${billing.payments_today} payment${billing.payments_today === 1 ? '' : 's'}`;
+
+          // Card 2: Outstanding
+          const c2Strong = cards[1].querySelector('strong');
+          const c2Span = cards[1].querySelector('span');
+          if (c2Strong) c2Strong.textContent = money(billing.outstanding_total);
+          if (c2Span) c2Span.textContent = `${billing.outstanding_patients_count} patient${billing.outstanding_patients_count === 1 ? '' : 's'}`;
+
+          // Card 3: Partial balances
+          const c3Strong = cards[2].querySelector('strong');
+          const c3Span = cards[2].querySelector('span');
+          if (c3Strong) c3Strong.textContent = money(billing.partial_total);
+          if (c3Span) c3Span.textContent = `${billing.partial_count} active plan${billing.partial_count === 1 ? '' : 's'}`;
+
+          // Card 4: Adjustments
+          const c4Strong = cards[3].querySelector('strong');
+          if (c4Strong) c4Strong.textContent = money(billing.adjustments_month);
+        }
       }
     }
 
@@ -253,7 +289,7 @@
         if (table.closest('#front-desk-table-1')) {
           return `<tr data-appointment-id="${appointment.id}"><td>${escapeHtml(time)}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(service)}</td><td>${escapeHtml(dentist)}</td><td><span class="status ${statusClass}">${escapeHtml(appointment.status)}</span></td></tr>`;
         }
-        return `<tr data-appointment-id="${appointment.id}" style="cursor:pointer;"><td>${escapeHtml(time)}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(service)}</td><td><span class="status ${statusClass}">${escapeHtml(appointment.status)}</span></td></tr>`;
+        return `<tr data-appointment-id="${appointment.id}" data-patient-id="${appointment.patient_id || appointment.patient?.id || ''}" style="cursor:pointer;"><td>${escapeHtml(time)}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(service)}</td><td><span class="status ${statusClass}">${escapeHtml(appointment.status)}</span></td></tr>`;
       }).join('') || '<tr><td colspan="5" class="muted">No appointments recorded today.</td></tr>';
     });
   }

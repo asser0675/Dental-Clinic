@@ -49,7 +49,7 @@ class SimpleReceiptPdf
             '<< /Type /Catalog /Pages 2 0 R >>',
             '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
             '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>',
-            '<< /Length '.strlen($content).' >>' . "\nstream\n" . $content . "endstream",
+            '<< /Length '.strlen($content).' >>'."\nstream\n".$content.'endstream',
             '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
         ];
 
@@ -73,6 +73,7 @@ class SimpleReceiptPdf
     private static function escape(string $text): string
     {
         $text = preg_replace('/[^\x20-\x7E]/', ' ', $text) ?? $text;
+
         return str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $text);
     }
 }

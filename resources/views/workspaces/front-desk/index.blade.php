@@ -816,7 +816,7 @@ View
 </tr>
 @empty
 <tr>
-<td colspan="6" class="muted" style="text-align:center;padding:24px;">No patients found in directory.</td>
+<td colspan="6" class="muted" style="text-align:center;padding:24px;">No patients yet.</td>
 </tr>
 @endforelse
 </tbody>
@@ -840,48 +840,32 @@ View
 </div>
 <div class="stats-grid">
 <article class="stat-card" data-payment-kpi="collected">
-<p>
+      <p>
        Collected today
       </p>
-<strong>
-       ₱18,450
-      </strong>
-<span>
-       9 posted payments
-      </span>
+      <strong>₱0.00</strong>
+      <span>0 posted payments</span>
 </article>
 <article class="stat-card" data-payment-kpi="outstanding">
-<p>
+      <p>
        Outstanding
       </p>
-<strong>
-       ₱7,200
-      </strong>
-<span>
-       4 open balances
-      </span>
+      <strong>₱0.00</strong>
+      <span>0 open balances</span>
 </article>
 <article class="stat-card" data-payment-kpi="cash">
-<p>
+      <p>
        Cash
       </p>
-<strong>
-       ₱6,500
-      </strong>
-<span>
-       Today
-      </span>
+      <strong>₱0.00</strong>
+      <span>Today</span>
 </article>
 <article class="stat-card" data-payment-kpi="digital">
-<p>
+      <p>
        GCash / Card
       </p>
-<strong>
-       ₱11,950
-      </strong>
-<span>
-       Today
-      </span>
+      <strong>₱0.00</strong>
+      <span>Today</span>
 </article>
 </div>
 <div class="panel table-panel">
@@ -2797,7 +2781,7 @@ View
 </label>
 <label>
          Auto-generated progress note
-         <textarea id="autoProgressNote" rows="4">Select one or more teeth to draft the clinical progress note.</textarea>
+         <textarea id="autoProgressNote" rows="4" placeholder="Enter clinical progress note (optional)..."></textarea>
 </label>
 <div class="tooth-form-actions">
 <span data-tooth-form-message="">
@@ -4328,7 +4312,7 @@ window.addEventListener('storage', renderSharedAvailability);
         Dentist notes
        </h4>
 <p data-vh-notes="">
-        No notes recorded.
+        None
        </p>
 <div data-vh-prescriptions-wrap="" hidden="">
 <h4>
@@ -4517,7 +4501,34 @@ window.addEventListener('storage', renderSharedAvailability);
         Reference / Notes
         <input id="checkoutPaymentNotes" placeholder="Optional reference / invoice note"/>
 </label>
-<div class="ortho-installment-fields" hidden="" id="orthoInstallmentFields"><strong>Orthodontic Braces installment plan</strong><p class="small muted">Installments are available only for braces.</p><div class="form-grid"><label>Payment arrangement<select id="orthoPaymentArrangement"><option>Full payment</option><option>Installment</option></select></label><label>Down payment (₱)<input id="orthoDownPayment" min="0" type="number" value="5000"/></label><label>Installment term<select id="orthoInstallmentTerm"><option>3 months</option><option>6 months</option><option>12 months</option><option>18 months</option></select></label><label>Monthly installment (₱)<input id="orthoMonthlyAmount" min="0" placeholder="Calculated / agreed amount" type="number"/></label></div></div><div class="form-actions span-2">
+<div class="ortho-installment-fields" hidden="" id="orthoInstallmentFields">
+  <strong>Orthodontic Braces Installment Plan</strong>
+  <p class="small muted">Flexible installment schedule with monthly adjustment tracking.</p>
+  <div class="form-grid">
+    <label>Payment arrangement
+      <select id="orthoPaymentArrangement">
+        <option value="Installment" selected>Installment plan</option>
+        <option value="Full payment">Full payment / Remaining balance</option>
+      </select>
+    </label>
+    <label>Down payment (₱)
+      <input id="orthoDownPayment" min="0" type="number" value="5000" data-base-downpayment="5000"/>
+    </label>
+    <label>Installment term
+      <select id="orthoInstallmentTerm">
+        <option value="3">3 months</option>
+        <option value="6">6 months</option>
+        <option value="12">12 months (1 year)</option>
+        <option value="18">18 months (1.5 years)</option>
+        <option value="24" selected>2 years / 24 months</option>
+      </select>
+    </label>
+    <label>Monthly installment (₱)
+      <input id="orthoMonthlyAmount" min="0" placeholder="Calculated amount" type="number" readonly/>
+    </label>
+  </div>
+  <div id="orthoInstallmentStatusNotice" style="margin-top: 10px; padding: 12px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 13px; color: #334155; line-height: 1.5;"></div>
+</div><div class="form-actions span-2">
 <button class="btn btn-secondary" onclick="this.closest('dialog').close()" type="button">
          Cancel
         </button>
@@ -4684,11 +4695,11 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
 </label>
 <label>
          Allergies (optional)
-         <textarea id="regAllergies" placeholder="Type None if none" rows="3"></textarea>
+         <textarea id="regAllergies" placeholder="leave blank if none" rows="3"></textarea>
 </label>
 <label>
          Current medications (optional)
-         <textarea id="regMeds" placeholder="Type None if none" rows="3"></textarea>
+         <textarea id="regMeds" placeholder="leave blank if none" rows="3"></textarea>
 </label>
 <label class="span-2">
          Medical history (optional)
@@ -4836,7 +4847,8 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     const note = dialog.querySelector('#autoProgressNote');
     if (!note) return;
     if (!selected.length) {
-      note.value = 'Select one or more teeth to draft the clinical progress note.';
+      note.value = '';
+      note.placeholder = 'Enter clinical progress note (optional)...';
       return;
     }
     const condition = dialog.querySelector('#toothCondition')?.value || 'clinical finding';
@@ -5734,17 +5746,12 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
 
 <script id="frontDeskNewUpdateCompatibility">
 (function(){
- const ORTHO=/orthodont|braces|aligner|retainer/i;
- document.addEventListener('click',function(event){
-   const btn=event.target.closest('#front-appointment-register .appointment-view');
-   if(btn){ window.cerilloActiveAppointmentRow=btn.closest('tr'); }
- });
- const regService=document.getElementById('regService');
- if(regService && !Array.from(regService.options).some(function(o){return /braces/i.test(o.value||o.textContent);})){ const o=document.createElement('option');o.textContent='Orthodontic Braces';o.value='Orthodontic Braces';regService.appendChild(o); }
- const arrangement=document.getElementById('orthoPaymentArrangement');
- const fields=document.getElementById('orthoInstallmentFields');
- function arrangementState(){ if(!fields||fields.hidden)return; const installment=arrangement?.value==='Installment'; ['orthoDownPayment','orthoInstallmentTerm','orthoMonthlyAmount'].forEach(function(id){const el=document.getElementById(id);const label=el?.closest('label');if(label)label.style.display=installment?'grid':'none';}); }
- arrangement?.addEventListener('change',arrangementState); arrangementState();
+  document.addEventListener('click',function(event){
+    const btn=event.target.closest('#front-appointment-register .appointment-view');
+    if(btn){ window.cerilloActiveAppointmentRow=btn.closest('tr'); }
+  });
+  const regService=document.getElementById('regService');
+  if(regService && !Array.from(regService.options).some(function(o){return /braces/i.test(o.value||o.textContent);})){ const o=document.createElement('option');o.textContent='Orthodontic Braces';o.value='Orthodontic Braces';regService.appendChild(o); }
 })();
 </script>
 
@@ -6290,6 +6297,151 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
   const processCheckoutBtn = document.getElementById('processCheckoutBtn');
   const orthoInstallmentFields = document.getElementById('orthoInstallmentFields');
   let checkoutBillingItems = [];
+  let currentPatientTransactions = [];
+
+  function setupOrthoInstallmentPlan(option, balance) {
+    const arrangementEl = document.getElementById('orthoPaymentArrangement');
+    const downEl = document.getElementById('orthoDownPayment');
+    const termEl = document.getElementById('orthoInstallmentTerm');
+    const monthlyEl = document.getElementById('orthoMonthlyAmount');
+    const noticeEl = document.getElementById('orthoInstallmentStatusNotice');
+
+    const apptId = option.dataset.appointmentId;
+    const matchingItem = checkoutBillingItems.find(b => String(b.appointment_id || b.toothBillId) === String(option.value)) || {};
+    const servicePrice = Number(matchingItem.service_price || option.dataset.servicePrice || 50000);
+
+    const orthoTxs = currentPatientTransactions.filter(t => 
+      String(t.status || '').toLowerCase() === 'completed' &&
+      ((apptId && String(t.appointment_id) === String(apptId)) || /ortho|brace/i.test(t.description || ''))
+    );
+    const totalPaidSoFar = orthoTxs.reduce((sum, t) => sum + Number(t.amount || 0), 0) || Number(matchingItem.paid || 0);
+
+    const baseDown = Number(downEl?.dataset.baseDownpayment || 5000);
+    const isDownpaymentPaid = totalPaidSoFar >= baseDown || orthoTxs.length >= 1 || (servicePrice - balance) >= baseDown;
+
+    const termVal = termEl ? termEl.value : '24';
+    let termMonths = 24;
+    const mMatch = termVal.match(/(\d+)/);
+    if (mMatch) termMonths = parseInt(mMatch[1], 10);
+    if (/2\s*years/i.test(termVal)) termMonths = 24;
+
+    const termText = termMonths === 24 ? '2 years (24 months)' :
+      (termMonths === 18 ? '1.5 years (18 months)' :
+      (termMonths === 12 ? '1 year (12 months)' :
+      `${termMonths} months`));
+
+    const netFinanced = Math.max(0, servicePrice - baseDown);
+    const standardMonthly = Math.round(netFinanced / termMonths) || 1875;
+    if (monthlyEl) monthlyEl.value = standardMonthly.toFixed(2);
+
+    let installmentsPaidCount = 0;
+    let missedVisits = 0;
+
+    if (isDownpaymentPaid) {
+      if (downEl) {
+        downEl.value = baseDown;
+        downEl.readOnly = true;
+        downEl.title = 'Initial downpayment has already been completed in a previous visit.';
+      }
+      const adjustmentTxs = orthoTxs.slice(1);
+      installmentsPaidCount = Math.max(adjustmentTxs.length, Math.floor(Math.max(0, totalPaidSoFar - baseDown) / (standardMonthly || 1)));
+
+      if (orthoTxs.length > 0 && orthoTxs[0].created_at) {
+        const firstDate = new Date(orthoTxs[0].created_at);
+        const now = new Date();
+        const monthsElapsed = Math.max(0, (now.getFullYear() - firstDate.getFullYear()) * 12 + (now.getMonth() - firstDate.getMonth()));
+        missedVisits = Math.max(0, monthsElapsed - (installmentsPaidCount + 1));
+      }
+    } else {
+      if (downEl) {
+        downEl.value = baseDown;
+        downEl.readOnly = false;
+        downEl.title = 'Enter initial downpayment for braces installation.';
+      }
+    }
+
+    const monthsRemaining = Math.max(0, termMonths - installmentsPaidCount);
+    const totalAllottedMonths = termMonths + missedVisits;
+    const allottedYears = Math.floor(totalAllottedMonths / 12);
+    const allottedRemMonths = totalAllottedMonths % 12;
+    let allottedText = '';
+    if (allottedYears > 0 && allottedRemMonths > 0) {
+      allottedText = `${allottedYears} year${allottedYears > 1 ? 's' : ''} and ${allottedRemMonths} month${allottedRemMonths > 1 ? 's' : ''}`;
+    } else if (allottedYears > 0) {
+      allottedText = `${allottedYears} year${allottedYears > 1 ? 's' : ''}`;
+    } else {
+      allottedText = `${allottedRemMonths} months`;
+    }
+
+    const isFullPayment = arrangementEl && arrangementEl.value.toLowerCase().includes('full');
+
+    let payableAmount = balance;
+    if (!isFullPayment) {
+      if (!isDownpaymentPaid) {
+        payableAmount = Math.min(baseDown, balance);
+      } else {
+        // Standard single monthly installment - never double amount for missed months
+        payableAmount = Math.min(standardMonthly, balance);
+      }
+    }
+
+    if (checkoutAmountToPay) {
+      checkoutAmountToPay.value = payableAmount.toFixed(2);
+      checkoutAmountToPay.max = balance.toFixed(2);
+      checkoutAmountToPay.readOnly = false;
+      checkoutAmountToPay.classList.remove('is-readonly-amount');
+    }
+
+    if (checkoutTreatmentDesc) {
+      checkoutTreatmentDesc.textContent = `${option.dataset.serviceName || option.textContent} · Remaining ${money(balance)}`;
+    }
+
+    if (noticeEl) {
+      let statusHtml = '';
+      if (isFullPayment) {
+        statusHtml = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <strong>Payment Arrangement:</strong>
+            <span style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:4px; font-weight:700;">Full Payment</span>
+          </div>
+          <div>• <strong>Payable Today:</strong> ${money(balance)} (Clears remaining balance in full)</div>
+          <div>• <strong>Total Service Cost:</strong> ${money(servicePrice)} · <strong>Total Paid to Date:</strong> ${money(totalPaidSoFar)}</div>
+        `;
+      } else if (!isDownpaymentPaid) {
+        statusHtml = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <strong>Installment Setup (Initial Visit):</strong>
+            <span style="background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:4px; font-weight:700;">Downpayment Visit</span>
+          </div>
+          <div>• <strong>Payable Today:</strong> <span style="font-weight:700; color:#0f172a;">${money(baseDown)}</span> (Initial Downpayment)</div>
+          <div>• <strong>Installment Term:</strong> ${termText} (${money(standardMonthly)} / month for adjustment visits)</div>
+          <div>• <strong>Remaining Balance After Downpayment:</strong> ${money(Math.max(0, balance - baseDown))}</div>
+          <div class="small muted" style="margin-top:4px;">Next month, patient will return for adjustment and process only the monthly installment of ${money(standardMonthly)}.</div>
+        `;
+      } else {
+        const nextMonthNumber = installmentsPaidCount + 1;
+        statusHtml = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <strong>Monthly Adjustment Payment:</strong>
+            <span style="background:#ecfdf5; color:#047857; padding:2px 8px; border-radius:4px; font-weight:700;">Month ${nextMonthNumber} of ${termMonths}</span>
+          </div>
+          <div>• <strong>Payable Today:</strong> <span style="font-weight:800; color:#047857; font-size:14px;">${money(payableAmount)}</span> (Single monthly adjustment fee)</div>
+          <div>• <strong>Downpayment:</strong> Completed (${money(baseDown)} paid)</div>
+          <div>• <strong>Installments Paid:</strong> ${installmentsPaidCount} of ${termMonths} monthly adjustments completed</div>
+          <div>• <strong>Remaining Duration:</strong> ${monthsRemaining} month${monthsRemaining === 1 ? '' : 's'} to pay (${money(balance)} remaining balance)</div>
+          ${missedVisits > 0 ? `
+            <div style="margin-top:6px; padding:6px 10px; background:#fffbeb; border:1px solid #fef3c7; border-radius:6px; color:#92400e;">
+              <strong>Allotted Treatment Timeline:</strong> ${allottedText} (extended by ${missedVisits} missed month${missedVisits > 1 ? 's' : ''}).<br>
+              <span class="small">Per clinic policy, missed visits do not accumulate or double fees. Today's payable amount remains only ${money(payableAmount)}.</span>
+            </div>
+          ` : `
+            <div>• <strong>Allotted Treatment Timeline:</strong> ${allottedText} (${termMonths} months)</div>
+          `}
+        `;
+      }
+      noticeEl.innerHTML = statusHtml;
+    }
+  }
 
   function configureCheckoutItem(option) {
     if (!option || !option.value) {
@@ -6302,22 +6454,41 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
       return;
     }
     const balance = Number(option.dataset.balance || 0);
-    const installmentEligible = option.dataset.installment === 'true';
+    const installmentEligible = option.dataset.installment === 'true' || /ortho|brace/i.test(option.dataset.serviceName || option.textContent || '');
     if (checkoutAppointmentId) checkoutAppointmentId.value = option.dataset.appointmentId || '';
-    if (checkoutAmountToPay) {
-      checkoutAmountToPay.value = balance.toFixed(2);
-      checkoutAmountToPay.max = balance.toFixed(2);
-      checkoutAmountToPay.readOnly = !installmentEligible;
-      checkoutAmountToPay.classList.toggle('is-readonly-amount', !installmentEligible);
-      checkoutAmountToPay.title = installmentEligible
-        ? 'Orthodontic/braces services may accept an installment up to the remaining balance.'
-        : 'The payable amount is fixed to the remaining balance for this treatment.';
+
+    if (orthoInstallmentFields) {
+      orthoInstallmentFields.hidden = !installmentEligible;
     }
-    if (orthoInstallmentFields) orthoInstallmentFields.hidden = !installmentEligible;
-    if (checkoutTreatmentDesc) {
-      checkoutTreatmentDesc.textContent = `${option.dataset.serviceName || option.textContent} · Remaining ${money(balance)}`;
+
+    if (installmentEligible) {
+      setupOrthoInstallmentPlan(option, balance);
+    } else {
+      if (checkoutAmountToPay) {
+        checkoutAmountToPay.value = balance.toFixed(2);
+        checkoutAmountToPay.max = balance.toFixed(2);
+        checkoutAmountToPay.readOnly = false;
+        checkoutAmountToPay.classList.remove('is-readonly-amount');
+        checkoutAmountToPay.title = 'The payable amount for this treatment.';
+      }
+      if (checkoutTreatmentDesc) {
+        checkoutTreatmentDesc.textContent = `${option.dataset.serviceName || option.textContent} · Remaining ${money(balance)}`;
+      }
     }
   }
+
+  document.getElementById('orthoPaymentArrangement')?.addEventListener('change', () => {
+    const opt = checkoutService?.selectedOptions?.[0];
+    if (opt) configureCheckoutItem(opt);
+  });
+  document.getElementById('orthoInstallmentTerm')?.addEventListener('change', () => {
+    const opt = checkoutService?.selectedOptions?.[0];
+    if (opt) configureCheckoutItem(opt);
+  });
+  document.getElementById('orthoDownPayment')?.addEventListener('input', () => {
+    const opt = checkoutService?.selectedOptions?.[0];
+    if (opt) configureCheckoutItem(opt);
+  });
 
   async function openPatientCheckout(patientId) {
     if (!checkoutModal) return;
@@ -6351,21 +6522,78 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
       const data = await res.json();
       const patient = data.patient || {};
       const summary = data.summary || { balance: 0, total_charges: 0, total_payments: 0 };
-      checkoutBillingItems = Array.isArray(data.billing_items) ? data.billing_items : [];
+      checkoutBillingItems = Array.isArray(data.billing_items) ? [...data.billing_items] : [];
+      const transactions = Array.isArray(data.transactions) ? data.transactions : [];
+      currentPatientTransactions = transactions;
+
+      let toothBilling = [];
+      try { toothBilling = JSON.parse(localStorage.getItem('cerilloPatientToothBilling') || '[]'); } catch (_) {}
+      const matchingToothBills = toothBilling.filter(b => 
+        (b.patientId && (
+          String(b.patientId) === String(patient.id) ||
+          String(b.patientId) === String(patient.formatted_patient_code) ||
+          String(b.patientId) === String(patient.patient_code)
+        )) ||
+        (b.patientName && patient.name && b.patientName.trim().toLowerCase() === patient.name.trim().toLowerCase())
+      );
+
+      const isBillPaid = b => {
+        if (b.status === 'Paid' || b.status === 'completed' || b.paid) return true;
+        if (transactions.some(t => 
+          (b.reference && t.reference && String(t.reference).toLowerCase() === String(b.reference).toLowerCase()) ||
+          (b.id && t.reference && String(t.reference).includes(String(b.id)))
+        )) return true;
+        if (b.appointmentId && transactions.some(t => String(t.appointment_id) === String(b.appointmentId) && t.status === 'completed')) return true;
+        return false;
+      };
+
+      const unpaidToothBills = matchingToothBills.filter(b => !isBillPaid(b));
+      unpaidToothBills.forEach(b => {
+        const count = Array.isArray(b.items) ? b.items.length : 0;
+        const serviceName = b.type === 'consultation-invoice'
+          ? `Dental Consultation (${count} procedure${count === 1 ? '' : 's'})`
+          : (b.procedure || (b.tooth ? `Tooth #${b.tooth} Procedure` : 'Dental Procedure'));
+        const price = Number(b.price || 0);
+        if (price > 0) {
+          checkoutBillingItems.push({
+            isToothBill: true,
+            toothBillId: b.id,
+            toothBillRef: b.reference || `DNT-${b.id || 'PROC'}`,
+            appointment_id: b.appointmentId || '',
+            service_id: b.serviceId || 1,
+            service_name: serviceName,
+            service_price: price,
+            paid: 0,
+            balance: price,
+            installment_eligible: false,
+            status: 'Completed',
+            starts_at: b.createdAt || new Date().toISOString()
+          });
+        }
+      });
 
       if (checkoutPatientSelect) checkoutPatientSelect.value = String(patient.id || patientId);
       if (checkoutPatientName) checkoutPatientName.textContent = patient.name || 'Patient';
       if (checkoutPatientCode) checkoutPatientCode.textContent = patient.formatted_patient_code || window.CerilloFormat?.patientCode(patient.patient_code, patient.id) || patient.patient_code || '—';
       if (checkoutPatientId) checkoutPatientId.value = patient.id;
 
-      const realBalance = Number(summary.balance || 0);
+      const realBalance = Number(summary.balance || 0) + unpaidToothBills.reduce((s, b) => s + Number(b.price || 0), 0);
       if (checkoutOutstandingAmount) checkoutOutstandingAmount.textContent = money(realBalance);
 
       if (checkoutService) {
         if (checkoutBillingItems.length) {
           checkoutService.innerHTML = checkoutBillingItems.map(item => {
             const dateLabel = item.starts_at ? new Date(item.starts_at).toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' }) : '';
-            return `<option value="${item.appointment_id}" data-appointment-id="${item.appointment_id}" data-service-id="${item.service_id || ''}" data-service-name="${escapeHtml(item.service_name)}" data-balance="${Number(item.balance || 0)}" data-installment="${item.installment_eligible ? 'true' : 'false'}">${escapeHtml(item.service_name)}${dateLabel ? ` · ${escapeHtml(dateLabel)}` : ''} · ${money(item.balance)}</option>`;
+            return `<option value="${item.appointment_id || ('tb_' + item.toothBillId)}" 
+              data-appointment-id="${item.appointment_id || ''}" 
+              data-service-id="${item.service_id || '1'}" 
+              data-service-name="${escapeHtml(item.service_name)}" 
+              data-balance="${Number(item.balance || 0)}" 
+              data-installment="${item.installment_eligible ? 'true' : 'false'}"
+              data-is-tooth-bill="${item.isToothBill ? 'true' : 'false'}"
+              data-tooth-bill-id="${item.toothBillId || ''}"
+              data-tooth-bill-ref="${escapeHtml(item.toothBillRef || '')}"
+            >${escapeHtml(item.service_name)}${dateLabel ? ` · ${escapeHtml(dateLabel)}` : ''} · ${money(item.balance)}</option>`;
           }).join('');
           checkoutService.disabled = checkoutBillingItems.length === 1;
           configureCheckoutItem(checkoutService.selectedOptions[0]);
@@ -6404,15 +6632,18 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
   checkoutPaymentForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const pid = checkoutPatientId?.value || checkoutPatientSelect?.value;
-    const apptId = checkoutAppointmentId?.value || null;
     const selectedServiceOpt = checkoutService?.selectedOptions?.[0];
+    const isToothBill = selectedServiceOpt?.dataset.isToothBill === 'true';
+    const toothBillId = selectedServiceOpt?.dataset.toothBillId;
+    const toothBillRef = selectedServiceOpt?.dataset.toothBillRef;
+    const apptId = checkoutAppointmentId?.value || selectedServiceOpt?.dataset.appointmentId || null;
     const serviceId = selectedServiceOpt?.dataset.serviceId || null;
     const amount = Number(checkoutAmountToPay?.value || 0);
     const paymentMethod = document.getElementById('checkoutPaymentMethod')?.value || 'Cash';
     const remaining = Number(selectedServiceOpt?.dataset.balance || 0);
-    const installmentEligible = selectedServiceOpt?.dataset.installment === 'true';
+    const installmentEligible = selectedServiceOpt?.dataset.installment === 'true' || /ortho|brace/i.test(selectedServiceOpt?.dataset.serviceName || selectedServiceOpt?.textContent || '');
 
-    if (!pid || !apptId || !serviceId) {
+    if (!pid || (!apptId && !isToothBill)) {
       alert('Select a patient with an outstanding treatment before recording payment.');
       return;
     }
@@ -6437,11 +6668,15 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     try {
       const payload = {
         patient_id: pid,
-        appointment_id: apptId,
-        service_id: serviceId,
         amount,
         payment_method: paymentMethod
       };
+      if (!isToothBill && apptId) {
+        payload.appointment_id = apptId;
+      } else if (isToothBill && selectedServiceOpt?.dataset.appointmentId) {
+        payload.appointment_id = selectedServiceOpt.dataset.appointmentId;
+      }
+      if (serviceId) payload.service_id = serviceId;
 
       const res = await fetch('/api/transactions', {
         method: 'POST',
@@ -6455,6 +6690,25 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || Object.values(data.errors || {}).flat().join(' ') || 'Payment could not be processed.');
+
+      if (isToothBill && toothBillId) {
+        try {
+          const list = JSON.parse(localStorage.getItem('cerilloPatientToothBilling') || '[]');
+          let changed = false;
+          list.forEach(b => {
+            if (String(b.id) === String(toothBillId) || (toothBillRef && b.reference === toothBillRef)) {
+              b.status = 'Paid';
+              b.paid = true;
+              b.paidAt = new Date().toISOString();
+              changed = true;
+            }
+          });
+          if (changed) {
+            localStorage.setItem('cerilloPatientToothBilling', JSON.stringify(list));
+            window.dispatchEvent(new CustomEvent('cerillo-tooth-billing-updated'));
+          }
+        } catch (_) {}
+      }
 
       const pName = checkoutPatientName?.textContent || 'Patient';
       checkoutModal.close();
@@ -6513,20 +6767,21 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
       .filter(payment => String(payment.payment_method || '').toLowerCase() !== 'cash')
       .reduce((total, payment) => total + Number(payment.amount || 0), 0);
 
-    const collectedCard = kpi('collected');
-    const outstandingCard = kpi('outstanding');
-    const cashCard = kpi('cash');
-    const digitalCard = kpi('digital');
-    if (collectedCard) {
-      collectedCard.querySelector('strong').textContent = money(collected);
-      collectedCard.querySelector('span').textContent = `${completed.length} posted payments`;
-    }
-    if (outstandingCard) {
-      outstandingCard.querySelector('strong').textContent = '₱0.00';
-      outstandingCard.querySelector('span').textContent = '0 open balances';
-    }
-    if (cashCard) cashCard.querySelector('strong').textContent = money(cash);
-    if (digitalCard) digitalCard.querySelector('strong').textContent = money(digital);
+    const setCard = (el, amountStr, countStr) => {
+      if (!el) return;
+      let st = el.querySelector('strong');
+      if (!st) { st = document.createElement('strong'); el.appendChild(st); }
+      if (amountStr !== null) st.textContent = amountStr;
+      if (countStr !== null) {
+        let sp = el.querySelector('span');
+        if (!sp) { sp = document.createElement('span'); el.appendChild(sp); }
+        sp.textContent = countStr;
+      }
+    };
+
+    setCard(kpi('collected'), money(collected), `${completed.length} posted payment${completed.length === 1 ? '' : 's'}`);
+    setCard(kpi('cash'), money(cash), null);
+    setCard(kpi('digital'), money(digital), null);
   }
 
   const detailModal = document.createElement('dialog');
@@ -6547,7 +6802,6 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
         <div class="payment-receipt-actions">
           <button class="btn secondary" data-payment-email type="button">Send to email</button>
           <button class="btn" data-payment-pdf type="button">Export to PDF</button>
-          <button class="btn secondary" data-payment-close type="button">Close</button>
         </div>
       </footer>
     </div>`;
@@ -6561,12 +6815,18 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     return String(status || '').toLowerCase() === 'completed' ? 'success' : 'warning';
   }
 
-  function renderPaymentDetail(payment) {
+  async function renderPaymentDetail(payment) {
+    if (payment.appointment_id && (!payment.appointment || !payment.appointment.dentist || !payment.appointment.service)) {
+      try {
+        const apptRes = await fetch('/api/appointments/' + encodeURIComponent(payment.appointment_id), { headers: { Accept: 'application/json' } });
+        if (apptRes.ok) payment.appointment = await apptRes.json();
+      } catch (_) {}
+    }
     const body = detailModal.querySelector('[data-payment-detail-body]');
     const reference = `TXN-${String(payment.id).padStart(5, '0')}`;
-    const patient = payment.patient?.name || payment.appointment?.guest_name || 'Guest patient';
+    const patient = payment.patient?.name || payment.appointment?.patient?.name || payment.appointment?.guest_name || 'Guest patient';
     const patientCode = payment.patient?.formatted_patient_code || window.CerilloFormat?.patientCode(payment.patient?.patient_code, payment.patient?.id) || 'Guest';
-    const email = payment.patient?.email || payment.appointment?.guest_email || '';
+    const email = payment.patient?.email || payment.appointment?.guest_email || payment.appointment?.patient?.email || '';
     const service = payment.service?.name || payment.appointment?.service?.name || 'Dental Treatment';
     const dentist = payment.appointment?.dentist?.name || 'Not specified';
     const recordedBy = payment.recorded_by?.name || payment.recordedBy?.name || 'Front Desk';
@@ -6590,7 +6850,6 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
       </div>
       <section class="payment-receipt-contact">
         <div><small>Email receipt to</small><strong>${email ? escapeHtml(email) : 'No email address on file'}</strong></div>
-        <div><small>Database transaction</small><strong>#${escapeHtml(payment.id)}</strong></div>
       </section>`;
 
     const emailBtn = detailModal.querySelector('[data-payment-email]');

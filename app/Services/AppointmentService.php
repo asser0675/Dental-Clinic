@@ -115,7 +115,8 @@ class AppointmentService
                 );
             }
 
-            foreach (DentalChartEntry::where('clinical_session_id', $session->id)->orderBy('id')->get() as $entry) {
+            $chartEntries = DentalChartEntry::with('tooth')->where('clinical_session_id', $session->id)->orderBy('id')->get();
+            foreach ($chartEntries as $entry) {
                 $entry->update(['patient_id' => $patient->id]);
                 PatientToothRecord::updateOrCreate(
                     ['patient_id' => $patient->id, 'tooth_id' => $entry->tooth_id],
@@ -126,6 +127,52 @@ class AppointmentService
                         'last_updated_by' => $entry->dentist_id,
                     ]
                 );
+            }
+
+            if ($chartEntries->isNotEmpty()) {
+                $currentFindings = $session->clinical_findings;
+                if (empty($currentFindings) || (is_array($currentFindings) && count($currentFindings) === 1 && preg_match('/^\d+\s+tooth findings/i', $currentFindings[0]))) {
+                    $findingsList = [];
+                    foreach ($chartEntries as $entry) {
+                        $tLabel = $entry->tooth?->label ?: ('Tooth '.($entry->tooth?->id ?? ''));
+                        $cond = $entry->condition ?: 'Documented';
+                        $note = trim((string) ($entry->notes ?? ''));
+                        $findingsList[] = $tLabel.': '.$cond.($note ? ' ('.$note.')' : '');
+                    }
+                    if (! empty($findingsList)) {
+                        $session->update(['clinical_findings' => array_values(array_unique($findingsList))]);
+                    }
+                }
+
+                if (empty($sessionPayload['diagnosis']) || $sessionPayload['diagnosis'] === 'Routine clinical assessment and monitoring.') {
+                    $diagList = [];
+                    foreach ($chartEntries as $entry) {
+                        if ($entry->condition && ! in_array($entry->condition, ['Sound / Healthy'], true)) {
+                            $tLabel = $entry->tooth?->label ?: ('Tooth '.($entry->tooth?->id ?? ''));
+                            $diagList[] = $tLabel.': '.$entry->condition;
+                        }
+                    }
+                    if (! empty($diagList)) {
+                        $session->update(['diagnosis' => implode("\n", array_unique($diagList))]);
+                    }
+                }
+
+                if (empty($sessionPayload['treatment_recommendations']) || $sessionPayload['treatment_recommendations'] === 'Routine oral hygiene & recall.') {
+                    $treatList = [];
+                    foreach ($chartEntries as $entry) {
+                        if ($entry->condition && ! in_array($entry->condition, ['Sound / Healthy'], true)) {
+                            $tLabel = $entry->tooth?->label ?: ('Tooth '.($entry->tooth?->id ?? ''));
+                            $cond = strtolower((string) $entry->condition);
+                            $proc = str_contains($cond, 'caries') || str_contains($cond, 'decay')
+                                ? 'Composite Restoration'
+                                : (str_contains($cond, 'extraction') ? 'Tooth Extraction' : $entry->condition);
+                            $treatList[] = $tLabel.': '.$proc;
+                        }
+                    }
+                    if (! empty($treatList)) {
+                        $session->update(['treatment_recommendations' => implode("\n", array_unique($treatList))]);
+                    }
+                }
             }
 
             TreatmentRecord::where('clinical_session_id', $session->id)

@@ -174,18 +174,13 @@ class DirectoryController extends Controller
         }
 
         $totalPayments = (float) $transactions->where('status', 'completed')->sum('amount');
-        $billableAppts = $patient->appointments->whereIn('status', ['Completed', 'In Progress', 'Checked In']);
-        $totalCharges = (float) $billableAppts->sum(fn ($a) => (float) ($a->service?->price ?? 0));
-        if ($totalCharges <= 0 && $patient->appointments->isNotEmpty()) {
-            $totalCharges = (float) $patient->appointments->whereNotIn('status', ['Cancelled', 'No-Show'])->sum(fn ($a) => (float) ($a->service?->price ?? 0));
-        }
-        $balance = max(0, $totalCharges - $totalPayments);
+        $billableAppts = $patient->appointments
+            ->filter(fn ($appt) => in_array($appt->status, ['Completed', 'In Progress', 'Checked In'], true) && $appt->service);
 
         // Build appointment-level balances for Front Desk checkout. This keeps the
         // selected treatment and payable amount tied to the actual database visit
         // instead of guessing from a generic service dropdown.
-        $billingItems = $patient->appointments
-            ->filter(fn ($appt) => in_array($appt->status, ['Completed', 'In Progress', 'Checked In'], true) && $appt->service)
+        $billingItems = $billableAppts
             ->map(function ($appt) use ($transactions) {
                 $charge = (float) ($appt->service?->price ?? 0);
                 $paid = (float) $transactions
@@ -210,6 +205,12 @@ class DirectoryController extends Controller
             })
             ->filter(fn ($item) => $item['balance'] > 0)
             ->values();
+
+        $balance = (float) $billingItems->sum('balance');
+        $totalCharges = (float) $billableAppts->sum(fn ($a) => (float) ($a->service?->price ?? 0));
+        if ($totalCharges < $totalPayments + $balance) {
+            $totalCharges = $totalPayments + $balance;
+        }
 
         $allXrays = [];
         if (! $isFrontDesk) {
@@ -270,6 +271,64 @@ class DirectoryController extends Controller
                     $findings = implode("\n", array_filter($findings));
                 }
 
+                if ((! $findings || preg_match('/^\d+\s+tooth findings recorded\.$/i', trim((string) $findings)) || trim((string) $findings) === 'Clinical findings recorded.') && $session) {
+                    $chartFindings = $session->dentalChartEntries()
+                        ->with('tooth')
+                        ->get()
+                        ->map(function ($entry) {
+                            $label = $entry->tooth?->label ?: ('Tooth '.($entry->tooth?->id ?? ''));
+                            $cond = $entry->condition ?? 'Sound / Healthy';
+                            $notes = $entry->notes ? " ({$entry->notes})" : '';
+
+                            return "{$label}: {$cond}{$notes}";
+                        })
+                        ->filter()
+                        ->implode("\n");
+                    if ($chartFindings) {
+                        $findings = $chartFindings;
+                    }
+                }
+
+                $diagnosis = $session?->diagnosis;
+                if ((! $diagnosis || $diagnosis === 'Routine clinical assessment and monitoring.') && $session) {
+                    $chartDiag = $session->dentalChartEntries()
+                        ->with('tooth')
+                        ->where('condition', '!=', 'Sound / Healthy')
+                        ->get()
+                        ->map(function ($entry) {
+                            $label = $entry->tooth?->label ?: ('Tooth '.($entry->tooth?->id ?? ''));
+
+                            return "{$label}: {$entry->condition}";
+                        })
+                        ->filter()
+                        ->implode("\n");
+                    if ($chartDiag) {
+                        $diagnosis = $chartDiag;
+                    }
+                }
+
+                $treatmentRecs = $session?->treatment_recommendations;
+                if ((! $treatmentRecs || $treatmentRecs === 'Routine oral care and recall.') && $session) {
+                    $chartTreatments = $session->dentalChartEntries()
+                        ->with('tooth')
+                        ->where('condition', '!=', 'Sound / Healthy')
+                        ->get()
+                        ->map(function ($entry) {
+                            $label = $entry->tooth?->label ?: ('Tooth '.($entry->tooth?->id ?? ''));
+                            $cond = strtolower((string) $entry->condition);
+                            $proc = str_contains($cond, 'caries') || str_contains($cond, 'decay')
+                                ? 'Composite Restoration'
+                                : (str_contains($cond, 'extraction') ? 'Tooth Extraction' : $entry->condition);
+
+                            return "{$label}: {$proc}";
+                        })
+                        ->filter()
+                        ->implode("\n");
+                    if ($chartTreatments) {
+                        $treatmentRecs = $chartTreatments;
+                    }
+                }
+
                 $prescriptionText = $session?->prescriptions;
                 if (($prescriptionText === null || trim((string) $prescriptionText) === '') && $session) {
                     $prescriptionText = $session->prescriptionRecords
@@ -297,10 +356,10 @@ class DirectoryController extends Controller
                     'dentist' => $a->dentist?->name ?? 'Attending Dentist',
                     'dentist_id' => $a->dentist_id,
                     'clinical_findings' => $findings ?: 'No clinical findings recorded.',
-                    'diagnosis' => $session?->diagnosis ?: 'No diagnosis recorded.',
-                    'treatment_recommendations' => $session?->treatment_recommendations ?: 'Routine oral care and recall.',
-                    'dentist_notes' => $session?->dentist_notes ?: ($a->treatment_notes ?: 'No dentist notes recorded.'),
-                    'treatment_notes' => $session?->treatment_notes ?: ($a->treatment_notes ?: null),
+                    'diagnosis' => $diagnosis ?: 'No diagnosis recorded.',
+                    'treatment_recommendations' => $treatmentRecs ?: 'Routine oral care and recall.',
+                    'dentist_notes' => ($session?->dentist_notes && ! preg_match('/select\s+one\s+or\s+more/i', $session->dentist_notes)) ? $session->dentist_notes : (($a->treatment_notes && ! preg_match('/select\s+one\s+or\s+more/i', $a->treatment_notes)) ? $a->treatment_notes : 'None'),
+                    'treatment_notes' => ($session?->treatment_notes && ! preg_match('/select\s+one\s+or\s+more/i', $session->treatment_notes)) ? $session->treatment_notes : (($a->treatment_notes && ! preg_match('/select\s+one\s+or\s+more/i', $a->treatment_notes)) ? $a->treatment_notes : 'None'),
                     'prescriptions' => $prescriptionText ?: null,
                     'xrays' => $session?->xrays ?? [],
                     'finalized_at' => $session?->finalized_at?->toIso8601String(),
@@ -699,6 +758,106 @@ class DirectoryController extends Controller
             ->count();
         $activeTreatmentPlans = Appointment::whereIn('status', ['Scheduled', 'Checked In', 'In Progress'])->count();
 
+        // Collections trend (last 6 months)
+        $collectionsTrend = [];
+        $maxCollections = 1;
+        for ($i = 5; $i >= 0; $i--) {
+            $mStart = $now->copy()->subMonths($i)->startOfMonth();
+            $mEnd = $now->copy()->subMonths($i)->endOfMonth();
+            $amt = (float) Transaction::where('status', 'completed')->whereBetween('created_at', [$mStart, $mEnd])->sum('amount');
+            if ($amt > $maxCollections) {
+                $maxCollections = $amt;
+            }
+            $collectionsTrend[] = [
+                'month' => $mStart->format('M'),
+                'year' => $mStart->format('Y'),
+                'amount' => $amt,
+                'formatted' => '₱'.number_format($amt, 2),
+            ];
+        }
+        foreach ($collectionsTrend as &$ct) {
+            $ct['height_percent'] = max($ct['amount'] > 0 ? 8 : 2, round(($ct['amount'] / $maxCollections) * 100));
+        }
+        unset($ct);
+
+        // Payment method mix
+        $txMethodGroups = Transaction::where('status', 'completed')
+            ->whereBetween('created_at', [$start, $end])
+            ->selectRaw('payment_method, count(*) as count, sum(amount) as total')
+            ->groupBy('payment_method')
+            ->get();
+        $totalMethodAmount = (float) $txMethodGroups->sum('total');
+
+        $knownMethods = ['GCash', 'Cash', 'Card', 'Maya', 'Bank Transfer'];
+        $methodMix = [];
+        foreach ($txMethodGroups as $mg) {
+            $amt = (float) $mg->total;
+            $share = $totalMethodAmount > 0 ? round(($amt / $totalMethodAmount) * 100, 1) : 0;
+            $methodMix[] = [
+                'method' => $mg->payment_method ?: 'Other',
+                'count' => (int) $mg->count,
+                'amount' => $amt,
+                'formatted_amount' => '₱'.number_format($amt, 2),
+                'share' => $share,
+            ];
+        }
+        $foundMethodNames = array_column($methodMix, 'method');
+        foreach ($knownMethods as $km) {
+            if (! in_array($km, $foundMethodNames, true)) {
+                $methodMix[] = [
+                    'method' => $km,
+                    'count' => 0,
+                    'amount' => 0.0,
+                    'formatted_amount' => '₱0.00',
+                    'share' => 0,
+                ];
+            }
+        }
+
+        // Treatment plan acceptance
+        $periodSessions = ClinicalSession::whereBetween('created_at', [$start, $end])
+            ->whereNotNull('treatment_recommendations')
+            ->where('treatment_recommendations', '!=', '')
+            ->get();
+        if ($periodSessions->isEmpty()) {
+            $periodSessions = ClinicalSession::whereNotNull('treatment_recommendations')->get();
+        }
+        $acceptedPlans = $periodSessions->whereNotNull('finalized_at')->count();
+        $pendingPlans = $periodSessions->whereNull('finalized_at')->count();
+        $totalPlans = $acceptedPlans + $pendingPlans;
+        $acceptanceRate = $totalPlans > 0 ? round(($acceptedPlans / $totalPlans) * 100, 1) : 100;
+        $treatmentAcceptance = [
+            'total' => $totalPlans,
+            'accepted' => $acceptedPlans,
+            'pending' => $pendingPlans,
+            'acceptance_rate' => $acceptanceRate,
+        ];
+
+        // Dentist workload
+        $dentists = User::whereIn('role', ['dentist', 'admin'])->orderBy('name')->get();
+        $dentistWorkload = [];
+        $maxCases = 1;
+        foreach ($dentists as $d) {
+            $cases = $appts->where('dentist_id', $d->id)->where('status', 'Completed')->count();
+            $totalAppts = $appts->where('dentist_id', $d->id)->count();
+            if ($cases > $maxCases) {
+                $maxCases = $cases;
+            }
+            $dentistWorkload[] = [
+                'dentist_id' => $d->id,
+                'name' => $d->name,
+                'completed_cases' => $cases,
+                'total_appointments' => $totalAppts,
+            ];
+        }
+        foreach ($dentistWorkload as &$dw) {
+            $dw['percentage'] = max(10, round(($dw['completed_cases'] / max(1, $maxCases)) * 100));
+        }
+        unset($dw);
+
+        $totalBilled = (float) $appts->where('status', 'Completed')->sum(fn ($a) => $a->service?->price ?? 0);
+        $collectionRate = $totalBilled > 0 ? min(100, round(($totalRevenue / $totalBilled) * 100, 1)) : 100;
+
         return response()->json([
             'period' => $filter,
             'period_label' => $periodLabel,
@@ -711,8 +870,13 @@ class DirectoryController extends Controller
             'no_show_visits' => $noShowCount,
             'cancellation_rate' => $cancellationRate,
             'total_revenue' => $totalRevenue,
+            'collection_rate' => $collectionRate,
             'new_patients' => $newPatients,
             'monthly_visits' => $monthlyVisits,
+            'collections_trend' => $collectionsTrend,
+            'payment_method_mix' => $methodMix,
+            'treatment_acceptance' => $treatmentAcceptance,
+            'dentist_workload' => $dentistWorkload,
             'services' => $services,
             'recall_due' => $recallDue,
             'active_treatment_plans' => $activeTreatmentPlans,

@@ -98,12 +98,21 @@ class AppointmentController extends Controller
     public function index(Request $r)
     {
         Appointment::autoMarkNoShows();
-        $v = $r->validate(['dentist_id' => 'nullable|exists:users,id', 'status' => 'nullable|string', 'date' => 'nullable|date', 'from' => 'nullable|date', 'to' => 'nullable|date|after_or_equal:from', 'per_page' => 'nullable|integer|min:1|max:100']);
+        $v = $r->validate([
+            'dentist_id' => 'nullable|exists:users,id',
+            'status' => 'nullable|string',
+            'date' => 'nullable|date',
+            'from' => 'nullable|date',
+            'to' => 'nullable|date|after_or_equal:from',
+            'per_page' => 'nullable|integer|min:1|max:1000',
+            'calendar' => 'nullable|boolean',
+            'all' => 'nullable|boolean',
+        ]);
         $q = Appointment::with(['service', 'dentist', 'patient']);
         if ($r->user()->role === 'dentist' || ($r->user()->role === 'admin' && $r->query('view') === 'dentist')) {
             $q->where('dentist_id', $r->user()->id);
         }
-        if ($r->user()->role === 'front_desk' && ! $r->filled('date') && ! $r->filled('from')) {
+        if (! $r->boolean('calendar') && ! $r->boolean('all') && (in_array($r->user()->role, ['front_desk', 'dentist'], true) || ($r->user()->role === 'admin' && $r->query('view') === 'dentist')) && ! $r->filled('date') && ! $r->filled('from')) {
             $q->where('starts_at', '>=', now()->subHours(24));
         }
         $q->when($r->filled('dentist_id'), fn ($query) => $query->where('dentist_id', $v['dentist_id']))
@@ -112,7 +121,9 @@ class AppointmentController extends Controller
             ->when($r->filled('from'), fn ($query) => $query->whereDate('starts_at', '>=', $v['from']))
             ->when($r->filled('to'), fn ($query) => $query->whereDate('starts_at', '<=', $v['to']));
 
-        return response()->json($q->latest('starts_at')->paginate($v['per_page'] ?? 25));
+        $orderDir = $r->boolean('calendar') ? 'asc' : 'desc';
+
+        return response()->json($q->orderBy('starts_at', $orderDir)->paginate($v['per_page'] ?? 25));
     }
 
     public function verify(Request $r, Appointment $appointment)
@@ -217,9 +228,9 @@ class AppointmentController extends Controller
     public function complete(Request $r, Appointment $appointment)
     {
         abort_unless(in_array($r->user()->role, ['admin', 'dentist'], true), 403);
-        abort_unless($appointment->dentist_id === $r->user()->id, 403);
+        abort_unless($appointment->dentist_id === $r->user()->id || $r->user()->role === 'admin', 403);
         $v = $r->validate([
-            'clinical_findings' => 'nullable|string|max:10000',
+            'clinical_findings' => 'nullable',
             'diagnosis' => 'nullable|string|max:10000',
             'treatment_recommendations' => 'nullable|string|max:10000',
             'dentist_notes' => 'nullable|string|max:50000',
@@ -233,7 +244,11 @@ class AppointmentController extends Controller
             'prescription_details.instructions' => 'nullable|string|max:5000',
         ]);
         if (isset($v['clinical_findings'])) {
-            $v['clinical_findings'] = [$v['clinical_findings']];
+            if (is_string($v['clinical_findings'])) {
+                $v['clinical_findings'] = array_values(array_filter(array_map('trim', explode("\n", $v['clinical_findings']))));
+            } elseif (is_array($v['clinical_findings'])) {
+                $v['clinical_findings'] = array_values(array_filter($v['clinical_findings']));
+            }
         }
 
         return response()->json($this->service->complete($appointment, (int) $r->user()->id, $v));

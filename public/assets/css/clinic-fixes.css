@@ -1120,3 +1120,671 @@ dialog.cerillo-success-modal::backdrop {
   }
 }
 
+
+/* ==========================================================================
+   Admin Workspace Responsive KPIs & Category Navigation
+   ========================================================================== */
+.sidebar-category-header {
+  padding: 12px 14px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.sidebar-category-divider {
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  margin: 12px 10px;
+}
+
+body.dark-mode .sidebar-category-divider {
+  border-color: rgba(51, 65, 85, 0.6);
+}
+
+#dashboard .metric-strip {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  margin: 16px 0 !important;
+}
+
+#dashboard .stat-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  margin: 16px 0 !important;
+}
+
+#dashboard .metric-box,
+#dashboard .stat-card {
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+#dashboard .metric-box:hover,
+#dashboard .stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+@media (max-width: 1024px) {
+  #dashboard .metric-strip,
+  #dashboard .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  #dashboard .metric-strip,
+  #dashboard .stat-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
+
+/* Dental chart sub-module under patient records: hide treatment invoice draft frame unless in appointment modal */
+#patientViewModal:not([data-opened-from-appointment="true"]) [data-consultation-cart],
+#patientViewModal:not([data-opened-from-appointment="true"]) .consultation-cart-panel,
+#dentistPatientModal:not([data-opened-from-appointment="true"]) [data-consultation-cart],
+#dentistPatientModal:not([data-opened-from-appointment="true"]) .consultation-cart-panel,
+.clinical-record-modal:not([data-opened-from-appointment="true"]) [data-consultation-cart],
+.clinical-record-modal:not([data-opened-from-appointment="true"]) .consultation-cart-panel {
+  display: none !important;
+}
+
+#patientViewModal[data-opened-from-appointment="true"][data-assessment-started="true"] [data-consultation-cart],
+#patientViewModal[data-opened-from-appointment="true"][data-assessment-started="true"] .consultation-cart-panel,
+#dentistPatientModal[data-opened-from-appointment="true"][data-assessment-started="true"] [data-consultation-cart],
+#dentistPatientModal[data-opened-from-appointment="true"][data-assessment-started="true"] .consultation-cart-panel {
+  display: block !important;
+}
+
+/* Patient Records module: Teeth are read-only and non-clickable */
+#patientViewModal:not([data-opened-from-appointment="true"]) .tooth-unit,
+#dentistPatientModal:not([data-opened-from-appointment="true"]) .tooth-unit,
+dialog.clinical-record-modal:not([data-opened-from-appointment="true"]) .premium-dental-chart .tooth-unit {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+/* Appointments module: Teeth are clickable and interactive */
+#patientViewModal[data-opened-from-appointment="true"] .tooth-unit,
+#dentistPatientModal[data-opened-from-appointment="true"] .tooth-unit,
+#dentistAppointmentDetailModal .tooth-unit,
+dialog.clinical-record-modal[data-opened-from-appointment="true"] .premium-dental-chart .tooth-unit {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Calendar Agenda indicator legend - placed below Agenda word on the left */
+.admin-calendar-agenda-head {
+  display: block !important;
+}
+
+.admin-calendar-agenda-title-block {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  width: 100% !important;
+}
+
+.calendar-status-legend {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px 14px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #475467 !important;
+  text-align: left !important;
+  margin: 6px 0 8px 0 !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.calendar-status-legend span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  color: #475467 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+.calendar-status-legend i {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+}
+
+.calendar-status-legend .dot-scheduled { background-color: #2563eb !important; }
+.calendar-status-legend .dot-completed { background-color: #16a34a !important; }
+.calendar-status-legend .dot-progress { background-color: #eab308 !important; }
+.calendar-status-legend .dot-cancelled { background-color: #dc2626 !important; }
+
+/* Status Color Indicators: Blue=Scheduled, Green=Completed, Yellow=In Progress, Red=Cancelled */
+/* 🔵 Blue: Scheduled / Pending */
+#calendar .admin-calendar-agenda-item.scheduled .agenda-status-dot,
+#calendar .admin-calendar-agenda-item.info .agenda-status-dot,
+.admin-calendar-agenda-item.scheduled .agenda-status-dot,
+.admin-calendar-agenda-item.info .agenda-status-dot,
+.dentist-calendar-agenda-item.scheduled .agenda-status-dot,
+.dentist-calendar-agenda-item.info .agenda-status-dot,
+.month-event-dot.scheduled,
+.month-event-dot.info {
+  background-color: #2563eb !important;
+}
+
+#calendar .admin-calendar-event.scheduled,
+#calendar .admin-calendar-event.info,
+.admin-calendar-event.scheduled,
+.admin-calendar-event.info {
+  border-left-color: #2563eb !important;
+  background: #eff6ff !important;
+}
+
+/* 🟢 Green: Completed */
+#calendar .admin-calendar-agenda-item.completed .agenda-status-dot,
+#calendar .admin-calendar-agenda-item.success .agenda-status-dot,
+.admin-calendar-agenda-item.completed .agenda-status-dot,
+.admin-calendar-agenda-item.success .agenda-status-dot,
+.dentist-calendar-agenda-item.completed .agenda-status-dot,
+.dentist-calendar-agenda-item.success .agenda-status-dot,
+.month-event-dot.completed,
+.month-event-dot.success {
+  background-color: #16a34a !important;
+}
+
+#calendar .admin-calendar-event.completed,
+#calendar .admin-calendar-event.success,
+.admin-calendar-event.completed,
+.admin-calendar-event.success {
+  border-left-color: #16a34a !important;
+  background: #f0fdf4 !important;
+}
+
+/* 🟡 Yellow: In Progress / Checked In */
+#calendar .admin-calendar-agenda-item.progress .agenda-status-dot,
+#calendar .admin-calendar-agenda-item.checked .agenda-status-dot,
+#calendar .admin-calendar-agenda-item.warning .agenda-status-dot,
+.admin-calendar-agenda-item.progress .agenda-status-dot,
+.admin-calendar-agenda-item.checked .agenda-status-dot,
+.admin-calendar-agenda-item.warning .agenda-status-dot,
+.dentist-calendar-agenda-item.progress .agenda-status-dot,
+.dentist-calendar-agenda-item.checked .agenda-status-dot,
+.dentist-calendar-agenda-item.warning .agenda-status-dot,
+.month-event-dot.progress,
+.month-event-dot.checked,
+.month-event-dot.warning {
+  background-color: #eab308 !important;
+}
+
+#calendar .admin-calendar-event.progress,
+#calendar .admin-calendar-event.checked,
+#calendar .admin-calendar-event.warning,
+.admin-calendar-event.progress,
+.admin-calendar-event.checked,
+.admin-calendar-event.warning {
+  border-left-color: #eab308 !important;
+  background: #fefce8 !important;
+}
+
+/* 🔴 Red: Cancelled / No-Show */
+#calendar .admin-calendar-agenda-item.cancelled .agenda-status-dot,
+#calendar .admin-calendar-agenda-item.no-show .agenda-status-dot,
+#calendar .admin-calendar-agenda-item.danger .agenda-status-dot,
+.admin-calendar-agenda-item.cancelled .agenda-status-dot,
+.admin-calendar-agenda-item.no-show .agenda-status-dot,
+.admin-calendar-agenda-item.danger .agenda-status-dot,
+.dentist-calendar-agenda-item.cancelled .agenda-status-dot,
+.dentist-calendar-agenda-item.no-show .agenda-status-dot,
+.dentist-calendar-agenda-item.danger .agenda-status-dot,
+.month-event-dot.cancelled,
+.month-event-dot.no-show,
+.month-event-dot.danger {
+  background-color: #dc2626 !important;
+}
+
+#calendar .admin-calendar-event.cancelled,
+#calendar .admin-calendar-event.no-show,
+#calendar .admin-calendar-event.danger,
+.admin-calendar-event.cancelled,
+.admin-calendar-event.no-show,
+.admin-calendar-event.danger {
+  border-left-color: #dc2626 !important;
+  background: #fef2f2 !important;
+}
+
+/* Tooth Finding abbreviation badge stated directly below the tooth - neutral, no color coding */
+.tooth-finding-display {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 20px !important;
+  height: 18px !important;
+  padding: 0 4px !important;
+  border-radius: 4px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  margin: 2px auto 1px !important;
+  white-space: nowrap !important;
+  z-index: 3 !important;
+  letter-spacing: -0.01em !important;
+  background: #f1f5f9 !important;
+  color: #1e293b !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+}
+
+/* Neutralize across all tooth states - no color coding */
+.tooth-unit .tooth-finding-display,
+.tooth-unit.tooth-decay .tooth-finding-display,
+.tooth-unit.tooth-completed .tooth-finding-display,
+.tooth-unit.tooth-missing .tooth-finding-display,
+.tooth-unit.tooth-impacted .tooth-finding-display,
+.tooth-unit.tooth-finding .tooth-finding-display,
+.tooth-unit.tooth-planned .tooth-finding-display {
+  background: #f1f5f9 !important;
+  color: #1e293b !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.tooth-unit.tooth-sound .tooth-finding-display,
+.tooth-unit:not([data-has-finding="true"]):not([data-finding]) .tooth-finding-display {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Reports & Analytics: Clickable KPI Cards, Layouts & Responsiveness
+   ========================================================================== */
+
+#reports .metric-strip {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  margin: 18px 0 !important;
+}
+
+#reports .clickable-kpi-card {
+  position: relative !important;
+  cursor: pointer !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
+  user-select: none !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  padding: 16px 18px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+#reports .clickable-kpi-card:hover {
+  transform: translateY(-2.5px) !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+#reports .clickable-kpi-card:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.1) !important;
+}
+
+#reports .clickable-kpi-card .kpi-card-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 6px !important;
+}
+
+#reports .clickable-kpi-card .kpi-card-header small {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  margin: 0 !important;
+}
+
+#reports .clickable-kpi-card .kpi-click-hint {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 6px !important;
+  background: #f1f5f9 !important;
+  color: #94a3b8 !important;
+  transition: all 0.18s ease !important;
+}
+
+#reports .clickable-kpi-card:hover .kpi-click-hint {
+  background: #eff6ff !important;
+  color: #2563eb !important;
+}
+
+#reports .clickable-kpi-card strong {
+  display: block !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  line-height: 1.2 !important;
+  margin: 4px 0 !important;
+  word-break: break-word !important;
+}
+
+#reports .clickable-kpi-card span {
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+}
+
+/* Report Grids */
+#reports .report-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  margin-top: 18px !important;
+}
+
+#reports .report-grid > .service-utilization-panel {
+  grid-column: 1 / -1 !important;
+}
+
+#reports .report-expansion-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  margin-top: 18px !important;
+}
+
+#reports .report-expansion-grid .report-wide {
+  grid-column: span 1 !important;
+}
+
+#reports .report-chart-card,
+#reports .report-visual-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  padding: 20px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
+}
+
+#reports .report-chart-card:hover,
+#reports .report-visual-card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07) !important;
+}
+
+/* Collections Trend Chart Styling */
+#adminCollectionsTrendWrap .line-chart-svg {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 220px !important;
+}
+
+#adminCollectionsTrendWrap .chart-grid-lines line {
+  stroke: #f1f5f9 !important;
+  stroke-width: 1 !important;
+  stroke-dasharray: 4 4 !important;
+}
+
+#adminCollectionsTrendWrap .chart-area {
+  fill: rgba(37, 99, 235, 0.08) !important;
+}
+
+#adminCollectionsTrendWrap .chart-line {
+  fill: none !important;
+  stroke: #2563eb !important;
+  stroke-width: 3 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+#adminCollectionsTrendWrap .chart-point {
+  cursor: pointer !important;
+  transition: r 0.15s ease, fill 0.15s ease !important;
+}
+
+#adminCollectionsTrendWrap .chart-point:hover {
+  r: 6.5 !important;
+  fill: #1d4ed8 !important;
+}
+
+#adminCollectionsTrendWrap .chart-axis-labels text {
+  fill: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  font-family: inherit !important;
+}
+
+/* Payment Method Mix */
+#reports .donut-layout {
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+  margin-top: 14px !important;
+  flex-wrap: wrap !important;
+}
+
+#reports .donut-chart.payment-donut {
+  width: 130px !important;
+  height: 130px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.06) !important;
+}
+
+#reports .donut-chart.payment-donut > div {
+  width: 82px !important;
+  height: 82px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+}
+
+#reports .donut-chart.payment-donut strong {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  line-height: 1.1 !important;
+}
+
+#reports .donut-chart.payment-donut span {
+  font-size: 9.5px !important;
+  color: #64748b !important;
+  font-weight: 600 !important;
+}
+
+#reports .chart-legend-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  flex: 1 1 160px !important;
+}
+
+#reports .chart-legend-list span {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  font-size: 12px !important;
+  color: #334155 !important;
+  font-weight: 500 !important;
+  padding: 4px 6px !important;
+  border-radius: 6px !important;
+  background: #f8fafc !important;
+}
+
+#reports .chart-legend-list span strong {
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin-left: 8px !important;
+}
+
+/* Treatment Plan Acceptance */
+#reports .big-percentage {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+  margin: 16px 0 10px !important;
+}
+
+#reports .big-percentage strong {
+  font-size: 42px !important;
+  font-weight: 900 !important;
+  color: #1e293b !important;
+  line-height: 1 !important;
+}
+
+#reports .big-percentage span {
+  font-size: 12px !important;
+  color: #64748b !important;
+  font-weight: 600 !important;
+}
+
+#reports .stacked-progress {
+  height: 12px !important;
+  border-radius: 999px !important;
+  background: #e2e8f0 !important;
+  overflow: hidden !important;
+  margin-bottom: 12px !important;
+}
+
+#reports .stacked-progress i {
+  display: block !important;
+  height: 100% !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important;
+  transition: width 0.4s ease !important;
+}
+
+#reports .mini-stats {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  font-size: 11px !important;
+  color: #64748b !important;
+}
+
+#reports .mini-stats strong {
+  color: #0f172a !important;
+  font-size: 13px !important;
+}
+
+/* Dentist Workload */
+#reports .workload-bars {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  margin-top: 14px !important;
+}
+
+#reports .workload-bars > div {
+  display: grid !important;
+  grid-template-columns: 180px 1fr 80px !important;
+  align-items: center !important;
+  gap: 12px !important;
+  font-size: 12.5px !important;
+}
+
+#reports .workload-bars > div > span {
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+#reports .workload-bars > div > div {
+  background: #f1f5f9 !important;
+  height: 10px !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+}
+
+#reports .workload-bars > div > div > i {
+  display: block !important;
+  height: 100% !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%) !important;
+  transition: width 0.4s ease !important;
+}
+
+#reports .workload-bars > div > strong {
+  text-align: right !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  font-size: 12px !important;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1100px) {
+  #reports .metric-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 820px) {
+  #reports .metric-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  #reports .report-grid,
+  #reports .report-expansion-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  #reports .workload-bars > div {
+    grid-template-columns: 120px 1fr 60px !important;
+    font-size: 11.5px !important;
+  }
+
+  #reports .donut-layout {
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 520px) {
+  #reports .metric-strip {
+    grid-template-columns: 1fr !important;
+  }
+
+  #reports .workload-bars > div {
+    grid-template-columns: 1fr !important;
+    gap: 4px !important;
+  }
+
+  #reports .workload-bars > div > strong {
+    text-align: left !important;
+  }
+}
+
+

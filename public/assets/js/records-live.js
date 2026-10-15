@@ -13,9 +13,13 @@
       day: '2-digit', month: 'short', year: 'numeric'
     });
   };
-  const statusClass = status => status === 'Completed' ? 'success'
-    : ['Cancelled', 'No-Show'].includes(status) ? 'danger'
-      : ['Checked In', 'In Progress'].includes(status) ? 'info' : 'warning';
+  const statusClass = status => {
+    const s = String(status || '').trim();
+    if (s === 'Completed') return 'success';
+    if (['Cancelled', 'No-Show', 'No Show'].includes(s)) return 'danger';
+    if (['Checked In', 'In Progress', 'Started', 'Ongoing'].includes(s)) return 'warning';
+    return 'info';
+  };
   const databaseTime = value => {
     if (!value) return '—';
     const match = String(value).match(/[ T](\d{2}):(\d{2})/);
@@ -106,6 +110,103 @@
   }
   window.showCerilloSuccess = showCerilloSuccess;
 
+  const TOOTH_FINDING_ABBR_MAP = {
+    'Sound / Healthy': '/',
+    'Missing / Extracted': 'M',
+    'Unerupted': 'Un',
+    'Present': 'P',
+    'Root Fragment': 'RF',
+    'Amalgam Restoration': 'Am',
+    'Composite Restoration': 'Co',
+    'Extraction Indicated': 'X',
+    'Observation': 'O',
+    'Temporary Filling': 'TF',
+    'Dentinal Caries': 'C',
+    'Root Canal Treated': 'RCT',
+    'Impacted': 'Im',
+    'Jacket Crown': 'Jc',
+    'Glass Ionomer': 'GI',
+    'Sealant': 'S',
+    'Erupted': 'ER',
+    '3/Q': '3/Q',
+    'Metal Crown': 'MC',
+    'Partially Erupted': 'PE',
+    'Treatment Planned': 'TP',
+    'QC': 'QC'
+  };
+
+  function getToothFindingAbbr(condition) {
+    if (!condition) return '';
+    if (TOOTH_FINDING_ABBR_MAP[condition]) return TOOTH_FINDING_ABBR_MAP[condition];
+    const lower = String(condition).trim().toLowerCase();
+    for (const [k, v] of Object.entries(TOOTH_FINDING_ABBR_MAP)) {
+      if (lower === k.toLowerCase() || lower === v.toLowerCase()) return v;
+    }
+    if (lower.includes('caries') || lower.includes('decay')) return 'C';
+    if (lower.includes('composite')) return 'Co';
+    if (lower.includes('amalgam')) return 'Am';
+    if (lower.includes('root fragment')) return 'RF';
+    if (lower.includes('root canal')) return 'RCT';
+    if (lower.includes('impacted')) return 'Im';
+    if (lower.includes('missing') || lower.includes('extracted')) return 'M';
+    if (lower.includes('crown')) return 'MC';
+    if (lower.includes('sealant')) return 'S';
+    return condition.slice(0, 3).toUpperCase();
+  }
+
+  function updateToothFindingBelow(tooth, finding) {
+    if (!tooth) return;
+    if (!tooth.dataset.originalName) {
+      tooth.dataset.originalName = tooth.querySelector('small')?.textContent?.trim() || tooth.dataset.toothName || '';
+    }
+    const isSound = !finding || /sound\s*\/\s*healthy/i.test(finding) || finding === '/';
+    let badge = tooth.querySelector('.tooth-finding-display');
+    const small = tooth.querySelector('small');
+
+    if (isSound) {
+      tooth.dataset.hasFinding = 'false';
+      delete tooth.dataset.finding;
+      tooth.dataset.condition = 'Sound / Healthy';
+      if (badge) {
+        badge.style.display = 'none';
+        badge.textContent = '';
+      }
+      if (small) {
+        small.classList.remove('has-finding');
+        small.textContent = tooth.dataset.originalName || tooth.dataset.toothName || '';
+        small.title = tooth.dataset.toothName || '';
+      }
+      return;
+    }
+
+    tooth.dataset.hasFinding = 'true';
+    tooth.dataset.finding = finding;
+    tooth.dataset.condition = finding;
+    const abbr = getToothFindingAbbr(finding);
+
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'tooth-finding-display';
+      const sil = tooth.querySelector('.tooth-silhouette');
+      if (sil) {
+        sil.insertAdjacentElement('afterend', badge);
+      } else {
+        tooth.prepend(badge);
+      }
+    }
+    badge.textContent = abbr;
+    badge.title = finding;
+    badge.style.display = 'inline-flex';
+
+    if (small) {
+      small.classList.remove('has-finding');
+      small.textContent = tooth.dataset.originalName || tooth.dataset.toothName || '';
+      small.title = `${tooth.dataset.originalName || tooth.dataset.toothName || 'Tooth'}: ${abbr} (${finding})`;
+    }
+  }
+  window.updateToothFindingBelow = updateToothFindingBelow;
+  window.getToothFindingAbbr = getToothFindingAbbr;
+
   function hydrateDentalChart(modal, teeth) {
     if (!modal) return;
     const allStateClasses = ['tooth-sound', 'tooth-decay', 'tooth-finding', 'tooth-planned', 'tooth-completed', 'tooth-missing', 'tooth-impacted'];
@@ -113,6 +214,7 @@
       btn.classList.remove(...allStateClasses);
       btn.classList.add('tooth-sound');
       delete btn._toothRecord;
+      updateToothFindingBelow(btn, 'Sound / Healthy');
     });
 
     if (!Array.isArray(teeth)) return;
@@ -127,23 +229,38 @@
         btn.dataset.condition = tooth.condition || 'Sound / Healthy';
         btn.dataset.presence = tooth.presence || 'Present';
         btn._toothRecord = tooth;
+        updateToothFindingBelow(btn, tooth.condition);
       });
     });
   }
 
   function renderPatientRecordPrescriptions(modal, visits) {
-    if (!modal || modal.id !== 'patientViewModal') return;
+    if (!modal || (modal.id !== 'patientViewModal' && modal.id !== 'dentistPatientModal')) return;
     const chart = modal.querySelector('.premium-dental-chart');
     if (!chart) return;
 
     const chartTitle = chart.querySelector('.premium-chart-title h4');
     const chartDesc = chart.querySelector('.premium-chart-title p');
     if (chartTitle) chartTitle.textContent = 'Dental Chart Record';
-    if (chartDesc) chartDesc.textContent = 'Recorded tooth conditions from completed clinical visits. This chart is read-only.';
+    const isClickable = modal.dataset.openedFromAppointment === 'true';
+    if (chartDesc) {
+      chartDesc.textContent = isClickable
+        ? 'Click on teeth to record clinical findings and plan procedures for this appointment.'
+        : 'Recorded tooth conditions from completed clinical visits. This chart is read-only.';
+    }
 
     chart.querySelectorAll('.tooth-unit').forEach(tooth => {
-      tooth.setAttribute('aria-disabled', 'true');
-      tooth.setAttribute('tabindex', '-1');
+      if (!isClickable) {
+        tooth.setAttribute('aria-disabled', 'true');
+        tooth.setAttribute('tabindex', '-1');
+        tooth.style.pointerEvents = 'none';
+        tooth.style.cursor = 'default';
+      } else {
+        tooth.removeAttribute('aria-disabled');
+        tooth.removeAttribute('tabindex');
+        tooth.style.pointerEvents = 'auto';
+        tooth.style.cursor = 'pointer';
+      }
       tooth.classList.remove('tooth-picked', 'selected');
       tooth.setAttribute('aria-pressed', 'false');
     });
@@ -270,19 +387,33 @@
     }
 
     const findingsEl = dialog.querySelector('[data-vh-findings]');
-    if (findingsEl) findingsEl.textContent = visit.clinical_findings || 'No clinical findings recorded.';
+    if (findingsEl) {
+      findingsEl.style.whiteSpace = 'pre-line';
+      findingsEl.textContent = visit.clinical_findings || 'No clinical findings recorded.';
+    }
 
     const diagnosisEl = dialog.querySelector('[data-vh-diagnosis]');
     if (diagnosisEl) {
-      let diagText = visit.diagnosis || 'Routine dental care and recall.';
-      if (visit.treatment_recommendations) {
-        diagText += `\n\nTreatment Recommendations:\n${visit.treatment_recommendations}`;
+      diagnosisEl.style.whiteSpace = 'pre-line';
+      const parts = [];
+      if (visit.diagnosis) {
+        parts.push(`Diagnosis:\n${visit.diagnosis}`);
       }
-      diagnosisEl.textContent = diagText;
+      if (visit.treatment_recommendations) {
+        parts.push(`Treatment Plan:\n${visit.treatment_recommendations}`);
+      }
+      diagnosisEl.textContent = parts.length > 0 ? parts.join('\n\n') : 'Routine dental care and recall.';
     }
 
     const notesEl = dialog.querySelector('[data-vh-notes]');
-    if (notesEl) notesEl.textContent = visit.dentist_notes || visit.treatment_notes || 'No notes recorded.';
+    if (notesEl) {
+      const rawNotes = (visit.dentist_notes || visit.treatment_notes || '').trim();
+      if (!rawNotes || /select\s+one\s+or\s+more/i.test(rawNotes) || /no\s+notes\s+recorded/i.test(rawNotes) || rawNotes.toLowerCase() === 'none') {
+        notesEl.textContent = 'None';
+      } else {
+        notesEl.textContent = rawNotes;
+      }
+    }
 
     const rxWrap = dialog.querySelector('[data-vh-prescriptions-wrap]');
     const rxEl = dialog.querySelector('[data-vh-prescriptions]');
@@ -332,6 +463,14 @@
       modal.dataset.patientId = patient.formatted_patient_code || window.CerilloFormat?.patientCode(patient.patient_code, patient.id) || patient.patient_code || '—';
       modal.dataset.patientName = patient.name;
       modal.dataset.rawPatientId = patient.id;
+
+      if (!modal.dataset.appointmentId || modal.dataset.openedFromAppointment !== 'true') {
+        modal.dataset.openedFromAppointment = 'false';
+        delete modal.dataset.appointmentId;
+        delete modal.dataset.assessmentStarted;
+        const apptBar = modal.querySelector('[data-patient-appointment-bar]');
+        if (apptBar) apptBar.hidden = true;
+      }
 
       // Header
       const avatarEl = modal.querySelector('[data-pr-avatar], .patient-identity-row .avatar');
@@ -448,15 +587,27 @@
         (b.patientName && patient.name && b.patientName.trim().toLowerCase() === patient.name.trim().toLowerCase())
       );
 
+      const isBillPaid = b => {
+        if (b.status === 'Paid' || b.status === 'completed' || b.paid) return true;
+        if (transactions.some(t => 
+          (b.reference && t.reference && String(t.reference).toLowerCase() === String(b.reference).toLowerCase()) ||
+          (b.id && t.reference && String(t.reference).includes(String(b.id)))
+        )) return true;
+        if (b.appointmentId && transactions.some(t => String(t.appointment_id) === String(b.appointmentId) && t.status === 'completed')) return true;
+        return false;
+      };
+
+      const unpaidMatchingToothBills = matchingToothBills.filter(b => !isBillPaid(b));
+
       let extraCharges = 0;
-      matchingToothBills.forEach(b => {
+      unpaidMatchingToothBills.forEach(b => {
         const price = Number(b.price || 0);
-        if (!isNaN(price)) extraCharges += price;
+        if (!isNaN(price) && price > 0) extraCharges += price;
       });
 
       const effectiveTotalCharges = Number(summary.total_charges || 0) + extraCharges;
       const effectiveTotalPayments = Number(summary.total_payments || 0);
-      const effectiveBalance = Math.max(0, effectiveTotalCharges - effectiveTotalPayments);
+      const effectiveBalance = Math.max(0, Number(summary.balance || 0) + extraCharges);
 
       setPr('[data-pr-ledger-charges]', formatPHP(effectiveTotalCharges));
       setPr('[data-pr-ledger-payments]', formatPHP(effectiveTotalPayments));
@@ -482,6 +633,7 @@
         }));
 
         matchingToothBills.forEach(b => {
+          const paid = isBillPaid(b);
           const count = Array.isArray(b.items) ? b.items.length : 0;
           const desc = b.type === 'consultation-invoice'
             ? `Dental consultation · ${count} procedure${count === 1 ? '' : 's'}`
@@ -491,8 +643,8 @@
             ref: escapeHtml(b.reference || `DNT-${b.id || 'PROC'}`),
             desc: escapeHtml(desc),
             charge: formatPHP(b.price),
-            paid: '—',
-            balance: formatPHP(b.price)
+            paid: paid ? formatPHP(b.price) : '—',
+            balance: paid ? '₱0.00' : formatPHP(b.price)
           });
         });
 
@@ -574,7 +726,15 @@
       const isDentist = table.id === 'dentist-table-3';
       const isFront = table.id === 'front-patient-table';
 
-      table.tBodies[0].innerHTML = rows.map(patient => {
+      let tableRows = rows;
+      if (isDentist && document.body.dataset.headDentistId) {
+        const headDentistId = Number(document.body.dataset.headDentistId);
+        tableRows = rows.filter(patient => {
+          return Array.isArray(patient.appointments) && patient.appointments.some(a => Number(a.dentist_id) === headDentistId);
+        });
+      }
+
+      table.tBodies[0].innerHTML = tableRows.map(patient => {
         const appointment = Array.isArray(patient.appointments) && patient.appointments.length ? patient.appointments[0] : null;
         const rawDob = patient.date_of_birth ? String(patient.date_of_birth).slice(0, 10) : '';
         const ageVal = rawDob ? Math.floor((Date.now() - new Date(rawDob).getTime()) / 31557600000) : null;
@@ -592,7 +752,7 @@
           return `<tr data-procedure="${escapeHtml(serviceName)}" data-segment="Restorative"><td>${escapeHtml(patient.name)}${patientCode ? `<small class="table-subtext">${escapeHtml(patientCode)}</small>` : ''}</td><td>${escapeHtml(age)}</td><td>${escapeHtml(patient.formatted_phone || window.CerilloFormat?.phone(patient.phone) || patient.email || '—')}</td><td>${escapeHtml(allergies)}</td><td>${dateStr}</td><td>${action}</td></tr>`;
         }
         return `<tr data-procedure="${escapeHtml(serviceName)}" data-segment="Restorative"><td>${escapeHtml(patient.name)}<small class="table-subtext">${escapeHtml(patient.formatted_patient_code || window.CerilloFormat?.patientCode(patient.patient_code, patient.id) || patient.patient_code)}</small></td><td>${escapeHtml(age)}</td><td>${escapeHtml(patient.formatted_phone || window.CerilloFormat?.phone(patient.phone) || patient.email || '—')}</td><td>${escapeHtml(allergies)}</td><td>${dateStr}</td><td><span class="badge success">Active</span></td><td>${action}</td></tr>`;
-      }).join('') || `<tr><td colspan="${isFront ? 6 : 7}" class="muted">No completed patient records found.</td></tr>`;
+      }).join('') || `<tr><td colspan="${isFront ? 6 : 7}" class="muted">${isDentist ? 'No completed patient records handled by head dentist yet.' : 'No completed patient records found.'}</td></tr>`;
     });
   }
 
@@ -600,21 +760,28 @@
     const tables = Array.from(document.querySelectorAll('#admin-appointment-register, #dentist-table-2, #front-appointment-register'));
     if (!tables.length) return;
     const appointmentParams = new URLSearchParams({ per_page: '100' });
-    if (document.body.dataset.workspaceView === 'dentist') appointmentParams.set('view', 'dentist');
+    if (document.body.dataset.workspaceView === 'dentist' || document.body.dataset.workspaceRole === 'dentist' || window.location.pathname.includes('/dentist') || !!document.getElementById('dentist-table-2')) {
+      appointmentParams.set('view', 'dentist');
+    }
     const response = await fetch('/api/appointments?' + appointmentParams.toString(), { headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error('Appointments could not be loaded.');
     const data = await response.json();
     const rows = data.data || [];
     tables.forEach(table => {
       if (!table?.tBodies[0]) return;
-      table.tBodies[0].innerHTML = rows.map(appointment => {
+      let tableRows = rows;
+      if (table.id === 'dentist-table-2' && document.body.dataset.headDentistId) {
+        const headDentistId = Number(document.body.dataset.headDentistId);
+        tableRows = rows.filter(a => Number(a.dentist_id) === headDentistId);
+      }
+      table.tBodies[0].innerHTML = tableRows.map(appointment => {
         const patient = appointment.patient?.name || appointment.guest_name || 'Guest patient';
         const service = appointment.service?.name || '—';
         const dentist = appointment.dentist?.name || '—';
         const date = dateTime(appointment.starts_at);
         const time = databaseTime(appointment.starts_at);
         const status = `<span class="status ${statusClass(appointment.status)}">${escapeHtml(appointment.status)}</span>`;
-        if (table.id === 'dentist-table-2') return `<tr data-appointment-id="${appointment.id}" data-starts-at="${escapeHtml(appointment.starts_at || '')}"><td>${escapeHtml(patient)}</td><td>${escapeHtml(service)}</td><td>${escapeHtml(date)}</td><td>${escapeHtml(time)}</td><td>${status}</td><td><button class="table-action appointment-view" data-appointment-id="${appointment.id}" type="button">View</button></td></tr>`;
+        if (table.id === 'dentist-table-2') return `<tr data-appointment-id="${appointment.id}" data-patient-id="${appointment.patient_id || appointment.patient?.id || ''}" data-starts-at="${escapeHtml(appointment.starts_at || '')}"><td>${escapeHtml(patient)}</td><td>${escapeHtml(service)}</td><td>${escapeHtml(date)}</td><td>${escapeHtml(time)}</td><td>${status}</td><td><button class="table-action appointment-view" data-appointment-id="${appointment.id}" data-patient-id="${appointment.patient_id || appointment.patient?.id || ''}" type="button">View</button></td></tr>`;
         if (table.id === 'front-appointment-register') {
           const arrival = appointment.status === 'Checked In' ? timeOnly(appointment.checked_in_at)
             : appointment.status === 'Cancelled' ? timeOnly(appointment.cancelled_at) : '—';
@@ -622,13 +789,8 @@
           return `<tr data-appointment-id="${appointment.id}" data-filter-tags="${escapeHtml(appointment.status)}"><td><strong>${escapeHtml(patient)}</strong></td><td>${escapeHtml(dentist)}</td><td>${escapeHtml(service)}</td><td>${escapeHtml(date)}</td><td>${escapeHtml(time)}</td><td>${arrivalMarkup}</td><td><button class="table-action appointment-view" data-appointment-id="${appointment.id}" data-arrival="${escapeHtml(arrival)}" data-status="${escapeHtml(appointment.status)}" type="button">View</button></td></tr>`;
         }
         if (table.id === 'admin-appointment-register') {
-          const arrival = appointment.status === 'Checked In' && appointment.checked_in_at ? timeOnly(appointment.checked_in_at)
-            : (appointment.status === 'Completed' ? 'Completed' : (appointment.status === 'Cancelled' ? 'Cancelled' : 'Not arrived'));
-          const arrivalMarkup = appointment.checked_in_at
-            ? `<span class="arrival-state arrived">${escapeHtml(timeOnly(appointment.checked_in_at))}</span>`
-            : `<span class="arrival-state ${appointment.status === 'Completed' ? 'arrived' : 'waiting'}">${escapeHtml(appointment.status === 'Completed' ? 'Completed' : (appointment.status === 'Cancelled' ? 'Cancelled' : 'Not arrived'))}</span>`;
           const pCode = appointment.patient?.formatted_patient_code || window.CerilloFormat?.patientCode(appointment.patient?.patient_code, appointment.patient?.id) || '';
-          return `<tr data-appointment-id="${appointment.id}" data-filter-tags="${escapeHtml(appointment.status)}"><td><strong>${escapeHtml(patient)}</strong>${pCode ? `<small class="table-subtext">${escapeHtml(pCode)}</small>` : ''}</td><td>${escapeHtml(dentist)}</td><td>${escapeHtml(service)}</td><td>${escapeHtml(date)}</td><td>${escapeHtml(time)}</td><td>${arrivalMarkup}</td><td><button class="table-action appointment-view" data-appointment-id="${appointment.id}" type="button">View</button></td></tr>`;
+          return `<tr data-appointment-id="${appointment.id}" data-filter-tags="${escapeHtml(appointment.status)}"><td><strong>${escapeHtml(patient)}</strong>${pCode ? `<small class="table-subtext">${escapeHtml(pCode)}</small>` : ''}</td><td>${escapeHtml(dentist)}</td><td>${escapeHtml(service)}</td><td>${escapeHtml(date)}</td><td>${escapeHtml(time)}</td><td>${status}</td><td><button class="table-action appointment-view" data-appointment-id="${appointment.id}" type="button">View</button></td></tr>`;
         }
         return `<tr data-appointment-id="${appointment.id}"><td>${escapeHtml(date)} · ${escapeHtml(time)}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(dentist)}</td><td>${escapeHtml(service)}</td><td>${status}</td><td><button class="table-action appointment-view" data-appointment-id="${appointment.id}" type="button">View</button></td></tr>`;
       }).join('') || `<tr><td colspan="7" class="muted">No appointments found.</td></tr>`;
@@ -643,80 +805,91 @@
   let activeAdminPaymentId = null;
 
   function ensureAdminPaymentModal() {
-    let modal = document.getElementById('adminPaymentDetailModal');
-    if (modal) return modal;
-    modal = document.createElement('dialog');
-    modal.id = 'adminPaymentDetailModal';
-    modal.className = 'modal payment-receipt-modal';
-    modal.innerHTML = `
-      <div class="modal-shell payment-receipt-shell">
-        <header class="modal-header payment-receipt-header">
-          <div>
-            <p class="eyebrow">Billing &amp; Payments</p>
-            <h3>Payment Receipt</h3>
-            <p data-admin-payment-reference>Transaction details</p>
-          </div>
-          <button class="icon-btn" data-admin-payment-close type="button" aria-label="Close payment details">×</button>
-        </header>
-        <div class="modal-body payment-receipt-body" data-admin-payment-body></div>
-        <footer class="modal-footer payment-receipt-footer">
-          <span class="muted" data-admin-payment-email-note></span>
-          <div class="payment-receipt-actions">
-            <button class="btn secondary" data-admin-payment-email type="button">Send to email</button>
-            <button class="btn" data-admin-payment-pdf type="button">Export to PDF</button>
-            <button class="btn secondary" data-admin-payment-close type="button">Close</button>
-          </div>
-        </footer>
-      </div>`;
-    document.body.append(modal);
-    modal.querySelectorAll('[data-admin-payment-close]').forEach(btn => btn.addEventListener('click', () => modal.close()));
-    modal.addEventListener('click', event => { if (event.target === modal) modal.close(); });
+    let modal = document.getElementById('adminPaymentModal') || document.getElementById('adminPaymentDetailModal');
+    if (!modal) {
+      modal = document.createElement('dialog');
+      modal.id = 'adminPaymentDetailModal';
+      modal.className = 'modal payment-receipt-modal';
+      modal.innerHTML = `
+        <div class="modal-shell payment-receipt-shell">
+          <header class="modal-header payment-receipt-header">
+            <div>
+              <p class="eyebrow">Billing &amp; Payments</p>
+              <h3>Payment Receipt</h3>
+              <p data-admin-payment-reference>Transaction details</p>
+            </div>
+            <button class="icon-btn" data-admin-payment-close type="button" aria-label="Close payment details">×</button>
+          </header>
+          <div class="modal-body payment-receipt-body" data-admin-payment-body></div>
+          <footer class="modal-footer payment-receipt-footer">
+            <span class="muted" data-admin-payment-email-note></span>
+            <div class="payment-receipt-actions">
+              <button class="btn secondary" data-admin-payment-email type="button">Send to email</button>
+              <button class="btn" data-admin-payment-pdf type="button">Export to PDF</button>
+            </div>
+          </footer>
+        </div>`;
+      document.body.append(modal);
+    }
+    if (!modal.dataset.boundReceiptEvents) {
+      modal.dataset.boundReceiptEvents = '1';
+      modal.querySelectorAll('[data-admin-payment-close]').forEach(btn => btn.addEventListener('click', () => modal.close()));
+      modal.addEventListener('click', event => { if (event.target === modal) modal.close(); });
 
-    modal.querySelector('[data-admin-payment-pdf]')?.addEventListener('click', () => {
-      if (!activeAdminPaymentId) return;
-      const link = document.createElement('a');
-      link.href = `/api/payments/${encodeURIComponent(activeAdminPaymentId)}/pdf`;
-      link.download = `Cerillo-Receipt-TXN-${String(activeAdminPaymentId).padStart(5, '0')}.pdf`;
-      document.body.append(link);
-      link.click();
-      link.remove();
-    });
+      modal.querySelector('[data-admin-payment-pdf]')?.addEventListener('click', () => {
+        if (!activeAdminPaymentId) return;
+        const link = document.createElement('a');
+        link.href = `/api/payments/${encodeURIComponent(activeAdminPaymentId)}/pdf`;
+        link.download = `Cerillo-Receipt-TXN-${String(activeAdminPaymentId).padStart(5, '0')}.pdf`;
+        document.body.append(link);
+        link.click();
+        link.remove();
+      });
 
-    modal.querySelector('[data-admin-payment-email]')?.addEventListener('click', async event => {
-      if (!activeAdminPaymentId) return;
-      const button = event.currentTarget;
-      const original = button.textContent;
-      button.disabled = true;
-      button.textContent = 'Sending...';
-      try {
-        const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
-        const response = await fetch(`/api/payments/${encodeURIComponent(activeAdminPaymentId)}/email`, {
-          method: 'POST',
-          headers: { Accept: 'application/json', 'X-CSRF-TOKEN': csrf }
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message || 'Receipt could not be sent.');
-        const note = modal.querySelector('[data-admin-payment-email-note]');
-        if (note) note.textContent = data.message || 'Receipt sent.';
-      } catch (err) {
-        const note = modal.querySelector('[data-admin-payment-email-note]');
-        if (note) note.textContent = err.message || 'Receipt could not be sent.';
-      } finally {
-        button.disabled = false;
-        button.textContent = original;
-      }
-    });
+      modal.querySelector('[data-admin-payment-email]')?.addEventListener('click', async event => {
+        if (!activeAdminPaymentId) return;
+        const button = event.currentTarget;
+        const original = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Sending...';
+        try {
+          const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+          const response = await fetch(`/api/payments/${encodeURIComponent(activeAdminPaymentId)}/email`, {
+            method: 'POST',
+            headers: { Accept: 'application/json', 'X-CSRF-TOKEN': csrf }
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.message || 'Receipt could not be sent.');
+          const note = modal.querySelector('[data-admin-payment-email-note]');
+          if (note) note.textContent = data.message || 'Receipt sent.';
+        } catch (err) {
+          const note = modal.querySelector('[data-admin-payment-email-note]');
+          if (note) note.textContent = err.message || 'Receipt could not be sent.';
+        } finally {
+          button.disabled = false;
+          button.textContent = original;
+        }
+      });
+    }
 
     return modal;
   }
 
-  function renderAdminPaymentDetail(payment) {
+  async function renderAdminPaymentDetail(payment) {
+    if (payment.appointment_id && (!payment.appointment || !payment.appointment.dentist || !payment.appointment.service)) {
+      try {
+        const apptRes = await fetch('/api/appointments/' + encodeURIComponent(payment.appointment_id), { headers: { Accept: 'application/json' } });
+        if (apptRes.ok) payment.appointment = await apptRes.json();
+      } catch (err) {
+        console.warn('Could not enrich payment appointment data:', err);
+      }
+    }
     const modal = ensureAdminPaymentModal();
     const body = modal.querySelector('[data-admin-payment-body]');
     const reference = `TXN-${String(payment.id).padStart(5, '0')}`;
-    const patient = payment.patient?.name || payment.appointment?.guest_name || 'Guest patient';
+    const patient = payment.patient?.name || payment.appointment?.patient?.name || payment.appointment?.guest_name || 'Guest patient';
     const patientCode = payment.patient?.formatted_patient_code || window.CerilloFormat?.patientCode(payment.patient?.patient_code, payment.patient?.id) || 'Guest';
-    const email = payment.patient?.email || payment.appointment?.guest_email || '';
+    const email = payment.patient?.email || payment.appointment?.guest_email || payment.appointment?.patient?.email || '';
     const service = payment.service?.name || payment.appointment?.service?.name || 'Dental Treatment';
     const dentist = payment.appointment?.dentist?.name || 'Not specified';
     const recordedBy = payment.recorded_by?.name || payment.recordedBy?.name || 'Front Desk';
@@ -743,7 +916,6 @@
       </div>
       <section class="payment-receipt-contact">
         <div><small>Email receipt to</small><strong>${email ? escapeHtml(email) : 'No email address on file'}</strong></div>
-        <div><small>Database transaction</small><strong>#${escapeHtml(String(payment.id))}</strong></div>
       </section>`;
 
     const emailBtn = modal.querySelector('[data-admin-payment-email]');
@@ -802,7 +974,7 @@
       const time = new Date(transaction.created_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
       const amount = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(Number(transaction.amount || 0));
       if (ledger) {
-        return `<tr><td>${escapeHtml(date)}</td><td>${escapeHtml(transaction.id ? `TXN-${transaction.id}` : '—')}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(appointment?.dentist?.name || '—')}</td><td>${escapeHtml(transaction.payment_method || '—')}</td><td>${escapeHtml(amount)}</td><td><span class="status ${transaction.status === 'voided' ? 'danger' : 'success'}">${escapeHtml(transaction.status)}</span></td></tr>`;
+        return `<tr><td>${escapeHtml(date)}</td><td>${escapeHtml(transaction.id ? `TXN-${transaction.id}` : '—')}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(transaction.payment_method || '—')}</td><td>${escapeHtml(amount)}</td></tr>`;
       }
       if (tableId === 'front-desk-table-5') {
         const ref = transaction.id ? `TXN-${String(transaction.id).padStart(5, '0')}` : '—';
@@ -818,7 +990,7 @@
       return `<tr><td>${escapeHtml(date)} · ${escapeHtml(time)}</td><td>${escapeHtml(patient)}</td><td>${escapeHtml(amount)}</td><td><span class="status ${transaction.status === 'voided' ? 'danger' : 'success'}">${escapeHtml(transaction.status || 'completed')}</span></td><td>${escapeHtml(transaction.payment_method || '—')}</td><td><button class="table-action" type="button" data-transaction-id="${transaction.id}">View</button></td></tr>`;
     };
     tables.forEach(table => {
-      table.tBodies[0].innerHTML = rows.map(transaction => render(transaction, table.id === 'admin-table-4', table.id)).join('') || `<tr><td colspan="${table.id === 'admin-table-4' ? 7 : 6}" class="muted">No transactions found.</td></tr>`;
+      table.tBodies[0].innerHTML = rows.map(transaction => render(transaction, table.id === 'admin-table-4', table.id)).join('') || `<tr><td colspan="${table.id === 'admin-table-4' ? 5 : 6}" class="muted">No transactions found.</td></tr>`;
     });
   }
 
@@ -839,18 +1011,24 @@
   async function loadAdminAccounts() {
     const table = document.querySelector('#admin-table-7');
     if (!table?.tBodies[0]) return;
-    const response = await fetch('/api/accounts', { headers: { Accept: 'application/json' } });
-    if (!response.ok) throw new Error('Accounts could not be loaded.');
-    allAdminAccounts = await response.json();
-    table.tBodies[0].innerHTML = allAdminAccounts.map(account => `
-      <tr data-user-id="${account.id}">
-        <td><strong>${escapeHtml(account.name)}</strong></td>
-        <td>${escapeHtml((account.role || '').replace('_', ' '))}</td>
-        <td>${escapeHtml(account.email)}</td>
-        <td><span class="badge ${account.status === 'Inactive' ? 'danger' : 'success'}">${escapeHtml(account.status || 'Active')}</span></td>
-        <td><button class="table-action account-view-btn" data-user-id="${account.id}" type="button">View</button></td>
-      </tr>
-    `).join('') || '<tr><td colspan="5" class="muted">No staff accounts found.</td></tr>';
+    try {
+      const response = await fetch('/api/accounts', { headers: { Accept: 'application/json' } });
+      if (!response.ok) return;
+      allAdminAccounts = await response.json();
+      table.tBodies[0].innerHTML = allAdminAccounts.map(account => {
+        const roleLabel = account.role === 'admin' ? 'Admin / Head Dentist' : (account.role === 'dentist' ? 'Dentist' : 'Front Desk');
+        return `
+        <tr data-user-id="${account.id}">
+          <td><strong>${escapeHtml(account.name)}</strong></td>
+          <td>${escapeHtml(roleLabel)}</td>
+          <td>${escapeHtml(account.email)}</td>
+          <td><span class="badge ${account.status === 'Inactive' ? 'danger' : 'success'}">${escapeHtml(account.status || 'Active')}</span></td>
+          <td><button class="table-action account-view-btn" data-user-id="${account.id}" type="button">View</button></td>
+        </tr>
+      `}).join('') || '<tr><td colspan="5" class="muted">No staff accounts found.</td></tr>';
+    } catch (e) {
+      console.warn('loadAdminAccounts error:', e);
+    }
   }
 
   async function loadAdminActivity(filter = 'all', search = '') {
@@ -968,6 +1146,133 @@
     if (indItems.length >= 2) {
       indItems[0].querySelector('strong').textContent = rep.recall_due ?? 0;
       indItems[1].querySelector('strong').textContent = rep.active_treatment_plans ?? 0;
+    }
+
+    // Update Collections Trend
+    const collectionsTotal = document.getElementById('adminCollectionsTrendTotal');
+    if (collectionsTotal) {
+      collectionsTotal.textContent = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(Number(rep.total_revenue || 0));
+    }
+    const collectionsWrap = document.getElementById('adminCollectionsTrendWrap');
+    if (collectionsWrap && Array.isArray(rep.collections_trend)) {
+      const items = rep.collections_trend;
+      const amounts = items.map(x => Number(x.amount || 0));
+      const peak = Math.max(...amounts, 1000);
+      const w = 720, h = 210, padX = 55, padTop = 36, padBottom = 36;
+      const usableW = w - padX * 2;
+      const usableH = h - padTop - padBottom;
+      const stepX = items.length > 1 ? usableW / (items.length - 1) : usableW;
+      
+      const points = items.map((item, idx) => {
+        const x = padX + (idx * stepX);
+        const y = (h - padBottom) - ((Number(item.amount || 0) / peak) * usableH);
+        return { x, y, item };
+      });
+
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(1)},${h - padBottom} L ${points[0].x.toFixed(1)},${h - padBottom} Z`;
+
+      const gridLines = [padTop, padTop + usableH * 0.33, padTop + usableH * 0.66, h - padBottom]
+        .map(y => `<line x1="${padX - 10}" x2="${w - padX + 10}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"></line>`).join('');
+
+      const axisLabels = points.map(p => {
+        return `<text x="${p.x.toFixed(1)}" y="${h - 12}" text-anchor="middle">${escapeHtml(p.item.month)}</text>`;
+      }).join('');
+
+      const dots = points.map(p => {
+        const formatted = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(Number(p.item.amount || 0));
+        return `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" class="chart-point" fill="#2563eb" stroke="#ffffff" stroke-width="2"><title>${escapeHtml(p.item.month)} ${escapeHtml(String(p.item.year || ''))}: ${formatted}</title></circle>`;
+      }).join('');
+
+      collectionsWrap.innerHTML = `
+        <svg class="line-chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="Collections Trend Chart">
+          <g class="chart-grid-lines">${gridLines}</g>
+          <path class="chart-area" d="${areaPath}"></path>
+          <path class="chart-line" d="${linePath}"></path>
+          <g class="chart-points">${dots}</g>
+          <g class="chart-axis-labels">${axisLabels}</g>
+        </svg>
+      `;
+    }
+
+    // Update Payment Method Mix
+    const paymentDonutTotal = document.getElementById('adminPaymentDonutTotal');
+    if (paymentDonutTotal) {
+      paymentDonutTotal.textContent = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', maximumFractionDigits: 0 }).format(Number(rep.total_revenue || 0));
+    }
+    const paymentDonut = document.getElementById('adminPaymentMethodDonut');
+    const paymentLegend = document.getElementById('adminPaymentMethodLegend');
+    if (Array.isArray(rep.payment_method_mix)) {
+      const colorMap = {
+        'Cash': { dot: 'green', color: '#16a34a' },
+        'GCash': { dot: 'blue', color: '#2563eb' },
+        'Card': { dot: 'violet', color: '#7c3aed' },
+        'Maya': { dot: 'cyan', color: '#06b6d4' },
+        'Bank Transfer': { dot: 'amber', color: '#f59e0b' },
+      };
+
+      if (paymentLegend) {
+        paymentLegend.innerHTML = rep.payment_method_mix.map(m => {
+          const cfg = colorMap[m.method] || { dot: 'blue', color: '#2563eb' };
+          const fmt = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(Number(m.amount || 0));
+          return `
+            <span>
+              <i class="dot ${cfg.dot}" style="background-color:${cfg.color};"></i>
+              ${escapeHtml(m.method)} (${m.count})
+              <strong>${fmt}</strong>
+            </span>
+          `;
+        }).join('');
+      }
+
+      if (paymentDonut) {
+        let currentDeg = 0;
+        const gradStops = [];
+        const totalAmt = Number(rep.total_revenue || 0);
+        if (totalAmt > 0) {
+          rep.payment_method_mix.forEach(m => {
+            const share = Number(m.share || 0);
+            if (share > 0) {
+              const cfg = colorMap[m.method] || { color: '#2563eb' };
+              const nextDeg = currentDeg + (share * 3.6);
+              gradStops.push(`${cfg.color} ${currentDeg.toFixed(1)}deg ${nextDeg.toFixed(1)}deg`);
+              currentDeg = nextDeg;
+            }
+          });
+        }
+        if (gradStops.length) {
+          paymentDonut.style.background = `conic-gradient(${gradStops.join(', ')})`;
+        } else {
+          paymentDonut.style.background = '#eef2f6';
+        }
+      }
+    }
+
+    // Update Treatment Plan Acceptance
+    if (rep.treatment_acceptance) {
+      const rateEl = document.getElementById('adminTreatmentAcceptanceRate');
+      const barEl = document.getElementById('adminTreatmentAcceptanceBar');
+      const acceptedEl = document.getElementById('adminTreatmentAcceptedCount');
+      const pendingEl = document.getElementById('adminTreatmentPendingCount');
+      const periodEl = document.getElementById('adminTreatmentAcceptancePeriod');
+      const rate = Number(rep.treatment_acceptance.acceptance_rate ?? 0);
+      if (rateEl) rateEl.textContent = `${rate}%`;
+      if (barEl) barEl.style.width = `${Math.min(100, Math.max(0, rate))}%`;
+      if (acceptedEl) acceptedEl.textContent = rep.treatment_acceptance.accepted ?? 0;
+      if (pendingEl) pendingEl.textContent = rep.treatment_acceptance.pending ?? 0;
+      if (periodEl && rep.period_label) periodEl.textContent = `rate ${rep.period_label}`;
+    }
+
+    // Update Dentist Workload
+    const workloadBars = document.getElementById('adminDentistWorkloadBars');
+    if (workloadBars && Array.isArray(rep.dentist_workload)) {
+      workloadBars.innerHTML = rep.dentist_workload.map(dw => `
+        <div>
+          <span>${escapeHtml(dw.name)}</span>
+          <div><i style="width:${dw.percentage}%;"></i></div>
+          <strong>${dw.completed_cases} ${dw.completed_cases === 1 ? 'case' : 'cases'}</strong>
+        </div>
+      `).join('') || '<div><span>No dentist workload records</span></div>';
     }
   }
 
@@ -1211,10 +1516,37 @@
       }
     }
 
-    const accBtn = event.target.closest('.account-view-btn');
-    if (accBtn) {
-      openAccountModal(accBtn.dataset.userId);
+    if (event.target.id === 'accountDetailEditBtn') {
+      const viewSec = document.getElementById('accountDetailViewSection');
+      const editSec = document.getElementById('accountDetailEditSection');
+      if (viewSec) viewSec.style.display = 'none';
+      if (editSec) editSec.style.display = 'block';
       return;
+    }
+    if (event.target.id === 'cancelAccountEditBtn') {
+      const viewSec = document.getElementById('accountDetailViewSection');
+      const editSec = document.getElementById('accountDetailEditSection');
+      if (viewSec) viewSec.style.display = 'block';
+      if (editSec) editSec.style.display = 'none';
+      return;
+    }
+    if (event.target.id === 'serviceScrollLeft') {
+      document.getElementById('serviceUtilizationTableWrap')?.scrollBy({ left: -200, behavior: 'smooth' });
+      return;
+    }
+    if (event.target.id === 'serviceScrollRight') {
+      document.getElementById('serviceUtilizationTableWrap')?.scrollBy({ left: 200, behavior: 'smooth' });
+      return;
+    }
+
+    const accBtn = event.target.closest('.account-view-btn, #admin-table-7 button.table-action, #admin-table-7 [data-user-id]');
+    if (accBtn) {
+      const uid = accBtn.dataset.userId || accBtn.closest('tr')?.dataset.userId;
+      if (uid) {
+        event.preventDefault();
+        openAccountModal(uid);
+        return;
+      }
     }
 
     const txnBtn = event.target.closest('#admin-table-3 [data-transaction-id], #front-desk-table-5 [data-transaction-id], [data-transaction-id]');
@@ -1238,6 +1570,7 @@
       } else {
         const modal = document.getElementById('dentistAppointmentDetailModal');
         if (modal) modal.showModal();
+        else openAdminAppointment(button.dataset.appointmentId || button).catch(error => alert(error.message));
       }
       return;
     }
@@ -1246,23 +1579,85 @@
     }
   });
 
-  function openAccountModal(userId) {
-    const account = allAdminAccounts.find(a => String(a.id) === String(userId));
+  async function openAccountModal(userId) {
+    if (!userId) return;
+    let account = allAdminAccounts.find(a => String(a.id) === String(userId));
+    if (!account) {
+      const row = document.querySelector(`#admin-table-7 tr[data-user-id="${userId}"]`);
+      if (row) {
+        const cells = row.querySelectorAll('td');
+        const roleText = cells[1]?.textContent?.trim() || '';
+        const role = roleText.includes('Dentist') && !roleText.includes('Admin') ? 'dentist' : (roleText.includes('Front') ? 'front_desk' : 'admin');
+        account = {
+          id: userId,
+          name: cells[0]?.textContent?.trim() || '',
+          role: role,
+          email: cells[2]?.textContent?.trim() || '',
+          status: cells[3]?.textContent?.trim() || 'Active'
+        };
+      }
+    }
+    if (!account) {
+      try {
+        const res = await fetch('/api/accounts', { headers: { Accept: 'application/json' } });
+        if (res.ok) {
+          allAdminAccounts = await res.json();
+          account = allAdminAccounts.find(a => String(a.id) === String(userId));
+        }
+      } catch (err) {
+        console.warn('Could not load accounts:', err);
+      }
+    }
     if (!account) return;
     const modal = document.getElementById('accountDetailModal');
     if (!modal) return;
 
-    document.getElementById('editAccountId').value = account.id;
-    document.getElementById('editAccountName').value = account.name || '';
-    document.getElementById('editAccountEmail').value = account.email || '';
-    document.getElementById('editAccountRole').value = account.role || 'front_desk';
-    document.getElementById('editAccountStatus').value = account.status || 'Active';
-    document.getElementById('editAccountPassword').value = '';
+    // View mode data
+    const viewName = document.getElementById('viewAccountName');
+    const viewEmail = document.getElementById('viewAccountEmail');
+    const viewRole = document.getElementById('viewAccountRole');
+    const viewStatus = document.getElementById('viewAccountStatus');
+    if (viewName) viewName.textContent = account.name || '—';
+    if (viewEmail) viewEmail.textContent = account.email || '—';
+    if (viewRole) {
+      const roleText = account.role === 'admin' ? 'Admin / Head Dentist' : (account.role === 'dentist' ? 'Dentist' : 'Front Desk');
+      viewRole.textContent = roleText;
+    }
+    if (viewStatus) {
+      viewStatus.textContent = account.status || 'Active';
+      viewStatus.className = `badge ${account.status === 'Inactive' ? 'danger' : 'success'}`;
+    }
+
+    // Edit inputs
+    const editId = document.getElementById('editAccountId');
+    const editName = document.getElementById('editAccountName');
+    const editEmail = document.getElementById('editAccountEmail');
+    const editRole = document.getElementById('editAccountRole');
+    const editStatus = document.getElementById('editAccountStatus');
+    const editPassword = document.getElementById('editAccountPassword');
+    if (editId) editId.value = account.id;
+    if (editName) editName.value = account.name || '';
+    if (editEmail) editEmail.value = account.email || '';
+    if (editRole) editRole.value = account.role || 'front_desk';
+    if (editStatus) editStatus.value = account.status || 'Active';
+    if (editPassword) editPassword.value = '';
+
+    // Show View Mode by default
+    const viewSec = document.getElementById('accountDetailViewSection');
+    const editSec = document.getElementById('accountDetailEditSection');
+    if (viewSec) viewSec.style.display = 'block';
+    if (editSec) editSec.style.display = 'none';
 
     const msg = document.getElementById('accountFormMessage');
     if (msg) msg.textContent = '';
 
-    modal.showModal();
+    if (!modal.open) {
+      if (typeof modal.showModal === 'function') {
+        modal.showModal();
+      } else {
+        modal.setAttribute('open', '');
+      }
+    }
   }
 
   document.addEventListener('submit', async event => {
@@ -1355,6 +1750,27 @@
           msg.style.color = '#12b76a';
         }
         await loadAdminAccounts();
+        const updatedAcc = allAdminAccounts.find(a => String(a.id) === String(userId));
+        if (updatedAcc) {
+          const viewName = document.getElementById('viewAccountName');
+          const viewEmail = document.getElementById('viewAccountEmail');
+          const viewRole = document.getElementById('viewAccountRole');
+          const viewStatus = document.getElementById('viewAccountStatus');
+          if (viewName) viewName.textContent = updatedAcc.name || '—';
+          if (viewEmail) viewEmail.textContent = updatedAcc.email || '—';
+          if (viewRole) {
+            const roleText = updatedAcc.role === 'admin' ? 'Admin / Head Dentist' : (updatedAcc.role === 'dentist' ? 'Dentist' : 'Front Desk');
+            viewRole.textContent = roleText;
+          }
+          if (viewStatus) {
+            viewStatus.textContent = updatedAcc.status || 'Active';
+            viewStatus.className = `badge ${updatedAcc.status === 'Inactive' ? 'danger' : 'success'}`;
+          }
+        }
+        const viewSec = document.getElementById('accountDetailViewSection');
+        const editSec = document.getElementById('accountDetailEditSection');
+        if (viewSec) viewSec.style.display = 'block';
+        if (editSec) editSec.style.display = 'none';
         form.closest('dialog')?.close();
         if (typeof window.showCerilloSuccess === 'function') {
           window.showCerilloSuccess('Account Updated', `Account details for ${data.name || name} updated successfully.`);
@@ -1449,6 +1865,7 @@
   window.loadAppointments = loadAppointments;
   window.openPatientRecord = openPatientRecord;
   window.openVisitHistoryDetail = openVisitHistoryDetail;
+  window.openAccountModal = openAccountModal;
   window.loadAdminAccounts = loadAdminAccounts;
   window.loadAdminActivity = loadAdminActivity;
   window.loadAdminReports = loadAdminReports;
