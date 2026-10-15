@@ -57,23 +57,6 @@
      <p aria-live="polite" class="login-message visible" id="login-message" role="alert">{{ $errors->first() }}</p>
     @endif
     <p class="small muted auth-switch">Need a dental appointment? <a href="{{ route('booking') }}">Request an appointment online</a></p>
-    <aside aria-labelledby="test-accounts-title" class="test-accounts">
-     <div class="test-accounts-heading">
-      <p class="eyebrow">Portal access</p>
-      <h2 id="test-accounts-title">Account credentials</h2>
-      <p class="small muted">Use the account that matches the workspace you want to review.</p>
-     </div>
-     <div class="account-credential-list">
-      @foreach([
-       ['Super Admin', 'superadmin@cerillodental.com', 'Cerillo@2026'],
-       ['Admin', 'admin@cerillodental.com', 'Admin@2026'],
-       ['Dentist', 'dentist@cerillodental.com', 'Dentist@2026'],
-       ['Front Desk', 'frontdesk@cerillodental.com', 'FrontDesk@2026'],
-      ] as [$role, $email, $password])
-       <article class="account-credential"><strong>{{ $role }}</strong><span>{{ $email }}</span><code>{{ $password }}</code></article>
-      @endforeach
-     </div>
-    </aside>
     <aside class="auth-help" id="password-help">
      <strong>Password assistance</strong>
      <p class="small muted">Contact the clinic administrator if you need help recovering access to your account.</p>
