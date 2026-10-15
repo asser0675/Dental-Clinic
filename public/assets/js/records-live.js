@@ -746,7 +746,10 @@
         const serviceName = appointment?.service?.name || 'Dental Visit';
 
         if (isDentist) {
-          return `<tr data-procedure="${escapeHtml(serviceName)}" data-segment="Restorative"><td>${escapeHtml(patient.name)}${patientCode ? `<small class="table-subtext">${escapeHtml(patientCode)}</small>` : ''}</td><td>${escapeHtml(age)}</td><td>${escapeHtml(patient.formatted_phone || window.CerilloFormat?.phone(patient.phone) || '—')}</td><td>${escapeHtml(allergies)}</td><td>${dateStr} · ${escapeHtml(serviceName)}</td><td><span class="status success">Completed</span></td><td>${action}</td></tr>`;
+          const ageDisplay = ageVal !== null && ageVal >= 0 ? `${ageVal} yrs` : '—';
+          const apptDisplay = appointment ? `<div><strong>${escapeHtml(dateStr)}</strong></div><small class="table-subtext">${escapeHtml(serviceName)}</small>` : '—';
+          const ageMarkup = `<div><strong>${escapeHtml(ageDisplay)}</strong></div>${rawDob ? `<small class="table-subtext">${escapeHtml(rawDob)}</small>` : ''}`;
+          return `<tr data-procedure="${escapeHtml(serviceName)}" data-segment="Restorative"><td><strong>${escapeHtml(patient.name)}</strong>${patientCode ? `<small class="table-subtext">${escapeHtml(patientCode)}</small>` : ''}</td><td>${ageMarkup}</td><td>${escapeHtml(patient.formatted_phone || window.CerilloFormat?.phone(patient.phone) || '—')}</td><td>${escapeHtml(allergies)}</td><td>${apptDisplay}</td><td><span class="status success">Completed</span></td><td style="text-align: right;">${action}</td></tr>`;
         }
         if (isFront) {
           return `<tr data-procedure="${escapeHtml(serviceName)}" data-segment="Restorative"><td>${escapeHtml(patient.name)}${patientCode ? `<small class="table-subtext">${escapeHtml(patientCode)}</small>` : ''}</td><td>${escapeHtml(age)}</td><td>${escapeHtml(patient.formatted_phone || window.CerilloFormat?.phone(patient.phone) || patient.email || '—')}</td><td>${escapeHtml(allergies)}</td><td>${dateStr}</td><td>${action}</td></tr>`;

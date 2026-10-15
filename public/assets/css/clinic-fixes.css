@@ -1787,4 +1787,189 @@ dialog.clinical-record-modal[data-opened-from-appointment="true"] .premium-denta
   }
 }
 
+/* ==========================================================================
+   Data Backup & Recovery UI Styles
+   ========================================================================== */
+
+.topbar-backup-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  padding: 6px 14px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  transition: all 0.15s ease-in-out !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.topbar-backup-btn:hover {
+  background: #f8fafc !important;
+  border-color: #3b82f6 !important;
+  color: #1d4ed8 !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.12) !important;
+}
+
+.topbar-backup-btn svg {
+  color: #2563eb !important;
+}
+
+dialog.backup-recovery-modal[open] {
+  width: min(1080px, calc(100vw - 32px)) !important;
+  max-width: calc(100vw - 32px) !important;
+  max-height: 90vh !important;
+  border-radius: 16px !important;
+  border: 0 !important;
+  padding: 0 !important;
+  background: #ffffff !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.3) !important;
+}
+
+dialog.backup-recovery-modal::backdrop,
+dialog#backupRestoreConfirmModal::backdrop {
+  background: rgba(15, 23, 42, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+dialog.backup-recovery-modal .modal-shell {
+  display: flex !important;
+  flex-direction: column !important;
+  max-height: 90vh !important;
+}
+
+dialog.backup-recovery-modal .modal-scroll {
+  overflow-y: auto !important;
+  flex: 1 1 auto !important;
+}
+
+@media (max-width: 768px) {
+  .topbar-backup-btn span {
+    display: none;
+  }
+  .topbar-backup-btn {
+    padding: 8px !important;
+    border-radius: 50% !important;
+  }
+  .topbar-backup-btn svg {
+    margin: 0 !important;
+  }
+}
+
+.restore-backup-btn {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border: 1px solid #1d4ed8 !important;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2) !important;
+}
+
+.restore-backup-btn:hover {
+  background: #1d4ed8 !important;
+  border-color: #1e40af !important;
+}
+
+#backupsListTable th,
+#backupsListTable td {
+  vertical-align: middle !important;
+}
+
+#backupsListTable {
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+.backup-snapshot-cell {
+  padding: 12px 14px !important;
+  vertical-align: middle !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+  max-width: 100% !important;
+}
+
+.backup-snapshot-cell * {
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+.backup-filename-code {
+  display: inline-block !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  font-size: 11px !important;
+  color: #475569 !important;
+  background: #f1f5f9 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  border: 1px solid #e2e8f0 !important;
+  margin-top: 3px !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+  max-width: 100% !important;
+  line-height: 1.4 !important;
+}
+
+.backup-notes-text {
+  font-size: 12px !important;
+  color: #64748b !important;
+  margin-top: 4px !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  line-height: 1.4 !important;
+}
+
+.backup-recovery-modal .table-wrap {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* ==========================================================================
+   Table Overflow & Clipped Action Column Fix
+   ========================================================================== */
+
+.table-panel {
+  overflow: visible !important;
+}
+
+.table-wrap {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+#dentist-table-3 {
+  width: 100% !important;
+  min-width: 860px !important;
+}
+
+#dentist-table-3 th,
+#dentist-table-3 td {
+  padding: 12px 14px !important;
+  vertical-align: middle !important;
+}
+
+#dentist-table-3 th:last-child,
+#dentist-table-3 td:last-child {
+  text-align: right !important;
+  padding-right: 20px !important;
+  min-width: 140px !important;
+  white-space: nowrap !important;
+}
+
+#dentist-table-3 .table-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  min-width: 110px !important;
+  padding: 6px 14px !important;
+  box-sizing: border-box !important;
+}
+
 

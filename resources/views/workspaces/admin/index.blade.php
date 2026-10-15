@@ -70,6 +70,15 @@
       Admin Workspace
      </h1>
 </div>
+<div class="topbar-actions" style="display: flex; align-items: center; gap: 14px;">
+<button type="button" class="btn secondary sm topbar-backup-btn" id="openBackupModalBtn" aria-label="Open Backup and Recovery" title="Data Backup &amp; Recovery">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right: 6px; vertical-align: text-bottom;">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+    <polyline points="7 3 7 8 15 8"></polyline>
+  </svg>
+  <span>Backup &amp; Recovery</span>
+</button>
 <div aria-label="Current date and time" class="topbar-clock">
 <span data-live-date="">
       {{ now()->format('F j, Y') }}
@@ -77,6 +86,7 @@
 <strong data-live-time="">
       {{ now()->format('g:i A') }}
      </strong>
+</div>
 </div>
 </header>
 <section class="workspace-section active-section" id="dashboard">
@@ -2523,13 +2533,19 @@ Search rows
   $serviceName = $appointment?->service?->name ?? 'Dental Visit';
 @endphp
 <tr data-procedure="{{ $serviceName }}" data-segment="Restorative">
-  <td>{{ $p->name }}@if($patientCode)<small class="table-subtext">{{ $patientCode }}</small>@endif</td>
-  <td>{{ $age }}</td>
+  <td><strong>{{ $p->name }}</strong>@if($patientCode)<small class="table-subtext">{{ $patientCode }}</small>@endif</td>
+  <td>
+    <div><strong>{{ $ageVal !== null && $ageVal >= 0 ? $ageVal . ' yrs' : '—' }}</strong></div>
+    @if($rawDob)<small class="table-subtext">{{ $rawDob }}</small>@endif
+  </td>
   <td>{{ $p->formatted_phone ?? $p->phone ?? '—' }}</td>
   <td>{{ $allergies }}</td>
-  <td>{{ $dateStr }} · {{ $serviceName }}</td>
+  <td>
+    <div><strong>{{ $dateStr }}</strong></div>
+    <small class="table-subtext">{{ $serviceName }}</small>
+  </td>
   <td><span class="status success">Completed</span></td>
-  <td><button class="table-action" data-live-patient-id="{{ $p->id }}" type="button">View / Update</button></td>
+  <td style="text-align: right;"><button class="table-action" data-live-patient-id="{{ $p->id }}" type="button">View / Update</button></td>
 </tr>
 @empty
 <tr><td colspan="7" class="muted" style="text-align:center;padding:24px;">No completed patient records handled by head dentist yet.</td></tr>
@@ -2540,6 +2556,212 @@ Search rows
 </div>
 </section>
 </main>
+<!-- Data Backup and Recovery Modal -->
+<dialog aria-label="Data Backup and Recovery" class="modal modal-xl backup-recovery-modal" id="backupRecoveryModal">
+  <div class="modal-shell">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow">Data Protection &amp; Disaster Recovery</p>
+        <h3>Clinic Data Backup &amp; Recovery</h3>
+        <p>Create, maintain, and restore full backup copies of patient records, dental charts, appointments, and financial transactions.</p>
+      </div>
+      <button aria-label="Close Backup and Recovery modal" class="icon-btn" onclick="document.getElementById('backupRecoveryModal').close()" type="button">×</button>
+    </div>
+
+    <div class="modal-scroll" style="padding: 24px;">
+      <!-- System Backup Overview KPIs -->
+      <div class="backup-kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="card" style="padding: 16px; border: 1px solid var(--line, #e2e8f0); border-radius: 12px; background: #f8fafc;">
+          <small class="muted" style="text-transform: uppercase; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; color: #64748b;">Protected Records</small>
+          <div style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 4px;" id="backupTotalRecordsCount">-</div>
+          <span style="font-size: 12px; color: #16a34a; font-weight: 600;">● Active database records</span>
+        </div>
+        <div class="card" style="padding: 16px; border: 1px solid var(--line, #e2e8f0); border-radius: 12px; background: #f8fafc;">
+          <small class="muted" style="text-transform: uppercase; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; color: #64748b;">Stored Backups</small>
+          <div style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 4px;" id="backupSnapshotsCount">-</div>
+          <span style="font-size: 12px; color: #64748b;" id="backupStorageSize">0 KB disk usage</span>
+        </div>
+        <div class="card" style="padding: 16px; border: 1px solid var(--line, #e2e8f0); border-radius: 12px; background: #f8fafc;">
+          <small class="muted" style="text-transform: uppercase; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; color: #64748b;">Latest Snapshot</small>
+          <div style="font-size: 15px; font-weight: 700; color: #0f172a; margin-top: 8px;" id="backupLatestDate">Never</div>
+          <span style="font-size: 12px; color: #64748b;" id="backupLatestBy">-</span>
+        </div>
+      </div>
+
+      <!-- Action Panel: Create Backup & Upload File to Restore -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 28px;">
+        <!-- Card 1: Create Snapshot -->
+        <div class="card" style="padding: 20px; border: 1px solid #cbd5e1; border-radius: 14px; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h4 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Create New Backup</h4>
+              <p style="margin: 0; font-size: 12px; color: #64748b;">Capture a point-in-time snapshot of all clinic records</p>
+            </div>
+          </div>
+          <form id="createBackupForm">
+            <div style="margin-bottom: 14px;">
+              <label for="backupNotesInput" style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Backup Description / Notes (Optional)</label>
+              <input type="text" id="backupNotesInput" name="notes" placeholder="e.g. Regular weekly snapshot, Pre-maintenance archive..." style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px;" maxlength="255">
+            </div>
+            <button type="submit" class="btn primary sm" id="createBackupSubmitBtn" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 600;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Create Backup Snapshot</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Card 2: Restore from Snapshot or File -->
+        <div class="card" style="padding: 20px; border: 1px solid #cbd5e1; border-radius: 14px; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                <path d="M21 3v5h-5"></path>
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                <path d="M8 16H3v5"></path>
+              </svg>
+            </div>
+            <div>
+              <h4 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Restore from Saved Snapshot</h4>
+              <p style="margin: 0; font-size: 12px; color: #64748b;">Pick a snapshot below, or click "Restore" directly on any row in the list</p>
+            </div>
+          </div>
+
+          <form id="quickSnapshotRestoreForm">
+            <div style="margin-bottom: 12px;">
+              <label for="snapshotSelectDropdown" style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Select Saved Snapshot to Restore</label>
+              <select id="snapshotSelectDropdown" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px;">
+                <option value="">-- Choose a snapshot from the list below --</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <button type="submit" class="btn primary sm" id="quickSnapshotRestoreBtn" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; background: #2563eb; color: #ffffff;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                  <path d="M21 3v5h-5"></path>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                  <path d="M8 16H3v5"></path>
+                </svg>
+                <span>Restore Chosen Snapshot</span>
+              </button>
+              <button type="button" class="btn secondary sm" id="toggleUploadFormBtn" style="font-size: 12px;">
+                Upload External File Instead
+              </button>
+            </div>
+          </form>
+
+          <form id="uploadRestoreBackupForm" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px dashed #cbd5e1;">
+            <div style="margin-bottom: 10px;">
+              <label for="backupFileInput" style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Select Backup JSON File</label>
+              <input type="file" id="backupFileInput" name="backup_file" accept=".json,application/json" style="width: 100%; font-size: 12px;">
+            </div>
+            <button type="submit" class="btn secondary sm" id="uploadRestoreSubmitBtn" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: #b91c1c; border-color: #fca5a5;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>Upload &amp; Restore</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Backup Archives Table -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <div>
+          <h4 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Maintained Backup Archives</h4>
+          <span style="font-size: 12px; color: #64748b;">Click the blue <strong>"Restore"</strong> button on any snapshot to recover clinic records</span>
+        </div>
+        <button type="button" class="btn secondary sm" id="refreshBackupsListBtn" style="padding: 4px 10px; font-size: 12px;">
+          Refresh List
+        </button>
+      </div>
+
+      <div class="table-wrap" style="border: 1px solid #e2e8f0; border-radius: 12px; overflow-x: auto !important; overflow-y: hidden; background: #fff; width: 100%;">
+        <table class="table" id="backupsListTable" style="margin: 0; font-size: 13px; width: 100%; min-width: 720px; table-layout: fixed;">
+          <colgroup>
+            <col style="width: 40%;">
+            <col style="width: 22%;">
+            <col style="width: 11%;">
+            <col style="width: 9%;">
+            <col style="width: 18%;">
+          </colgroup>
+          <thead style="background: #f8fafc;">
+            <tr>
+              <th style="padding: 10px 14px; text-align: left;">Snapshot &amp; Description</th>
+              <th style="padding: 10px 14px; text-align: left;">Created At</th>
+              <th style="padding: 10px 14px; text-align: left;">Records</th>
+              <th style="padding: 10px 14px; text-align: left;">Size</th>
+              <th style="padding: 10px 14px; text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="backupsTableBody">
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 24px; color: #64748b;">
+                Loading backup copies...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 16px; padding: 12px 16px; border-radius: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; font-size: 12px; color: #166534; display: flex; align-items: center; gap: 8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 16v-4"></path>
+          <path d="M12 8h.01"></path>
+        </svg>
+        <span><strong>Automated Safety Rollback:</strong> Prior to any restoration process, the system automatically takes a pre-restore safety snapshot of the active clinic database so you can revert anytime.</span>
+      </div>
+    </div>
+
+    <div class="dialog-footer" style="padding: 16px 24px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end;">
+      <button class="btn secondary" onclick="document.getElementById('backupRecoveryModal').close()" type="button">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Confirmation Modal for Restore -->
+<dialog aria-label="Confirm Clinic Records Restore" class="modal modal-md" id="backupRestoreConfirmModal" style="max-width: 500px;">
+  <div class="modal-shell">
+    <div class="modal-head" style="border-bottom: 1px solid #fee2e2; background: #fff5f5;">
+      <div>
+        <p class="eyebrow" style="color: #dc2626;">Restoration Safety Confirmation</p>
+        <h3 style="color: #991b1b;">Restore Clinic Records?</h3>
+      </div>
+      <button aria-label="Cancel restore" class="icon-btn" onclick="document.getElementById('backupRestoreConfirmModal').close()" type="button">×</button>
+    </div>
+    <div class="modal-scroll" style="padding: 20px;">
+      <p style="font-size: 14px; color: #1e293b; margin-top: 0;">
+        You are about to restore clinic records from:
+      </p>
+      <div style="padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: monospace; font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 14px; word-break: break-all;" id="restoreTargetFilenameText">
+        backup_file.json
+      </div>
+      <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 12px; font-size: 12px; color: #92400e; margin-bottom: 16px;">
+        <strong style="display: block; margin-bottom: 4px;">⚠️ Important Safety Notice:</strong>
+        This action will replace existing live data with the records from the chosen snapshot. The system will automatically take a pre-restore safety backup beforehand to prevent accidental loss.
+      </div>
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button type="button" class="btn secondary" onclick="document.getElementById('backupRestoreConfirmModal').close()">Cancel</button>
+        <button type="button" class="btn danger" id="executeRestoreConfirmedBtn" style="display: inline-flex; align-items: center; gap: 8px; background: #dc2626; color: #fff; border: 0; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+          <span>Yes, Restore Clinic Records</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
 <dialog aria-label="Logout confirmation" class="modal modal-sm logout-modal" id="logoutConfirmModal">
 <div class="modal-shell">
 <div class="modal-head">
@@ -10565,5 +10787,6 @@ if(document.getElementById('services')?.classList.contains('active-section')) en
 <script defer src="/assets/js/cerillo-report-visit-charts.js"></script>
 <script defer src="/assets/js/cerillo-report-details.js"></script>
 <script defer src="/assets/js/cerillo-report-export.js"></script>
+<script src="{{ asset('assets/js/backup-recovery.js') }}"></script>
 </body>
 </html>

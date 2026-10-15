@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\DirectoryController;
 use App\Http\Controllers\OperationsController;
@@ -110,6 +111,11 @@ Route::middleware('auth')->group(function (): void {
             Route::delete('/services/{service}', [ClinicController::class, 'deleteService']);
             Route::get('/transactions', [ClinicController::class, 'transactions']);
             Route::post('/transactions/{transaction}/void', [ClinicController::class, 'voidPayment']);
+            Route::get('/backups', [BackupController::class, 'index']);
+            Route::post('/backups', [BackupController::class, 'store']);
+            Route::get('/backups/{filename}/download', [BackupController::class, 'download']);
+            Route::post('/backups/restore', [BackupController::class, 'restore']);
+            Route::delete('/backups/{filename}', [BackupController::class, 'destroy']);
         });
     });
 });
