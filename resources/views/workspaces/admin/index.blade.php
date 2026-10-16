@@ -8816,30 +8816,34 @@ Instructions
             return Boolean(tooth.dataset.finding || (tooth.dataset.condition && tooth.dataset.condition !== tooth.dataset.databaseCondition));
           });
 
-          for (const tooth of changed) {
-            const toothId = tooth.dataset.toothId || tooth.dataset.tooth;
-            const condition = tooth.dataset.finding || tooth.dataset.condition || 'Sound / Healthy';
-            const response = await fetch('/api/appointments/' + encodeURIComponent(appointmentId) + '/teeth', {
+          if (changed.length > 0) {
+            const teethPayload = changed.map(tooth => ({
+              tooth_id: tooth.dataset.toothId || tooth.dataset.tooth,
+              tooth_id_is_database_id: Boolean(tooth.dataset.toothId),
+              tooth_fdi: tooth.dataset.toothFdi || null,
+              condition: tooth.dataset.finding || tooth.dataset.condition || 'Sound / Healthy',
+              surfaces: String(tooth.dataset.surfaces || '').split('').filter(Boolean),
+              notes: tooth.dataset.notes || ''
+            }));
+
+            const response = await fetch('/api/appointments/' + encodeURIComponent(appointmentId) + '/teeth/batch', {
               method: 'POST',
               headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
               },
-              body: JSON.stringify({
-                tooth_id: toothId,
-                tooth_id_is_database_id: Boolean(tooth.dataset.toothId),
-                tooth_fdi: tooth.dataset.toothFdi || null,
-                condition: condition,
-                surfaces: String(tooth.dataset.surfaces || '').split('').filter(Boolean),
-                notes: tooth.dataset.notes || ''
-              })
+              body: JSON.stringify({ teeth: teethPayload })
             });
             const payload = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(payload.message || Object.values(payload.errors || {}).flat().join(', ') || 'Unable to save tooth finding.');
-            tooth.dataset.databaseCondition = condition;
-            delete tooth.dataset.finding;
-            savedTeethCount++;
+            if (!response.ok) throw new Error(payload.message || Object.values(payload.errors || {}).flat().join(', ') || 'Unable to save tooth findings.');
+
+            changed.forEach(tooth => {
+              const condition = tooth.dataset.finding || tooth.dataset.condition || 'Sound / Healthy';
+              tooth.dataset.databaseCondition = condition;
+              delete tooth.dataset.finding;
+            });
+            savedTeethCount = changed.length;
           }
 
           allTeeth.forEach(tooth => {
@@ -9028,30 +9032,34 @@ Instructions
             return Boolean(tooth.dataset.finding || (tooth.dataset.condition && tooth.dataset.condition !== tooth.dataset.databaseCondition));
           });
 
-          for (const tooth of changed) {
-            const toothId = tooth.dataset.toothId || tooth.dataset.tooth;
-            const condition = tooth.dataset.finding || tooth.dataset.condition || 'Sound / Healthy';
-            const response = await fetch('/api/appointments/' + encodeURIComponent(appointmentId) + '/teeth', {
+          if (changed.length > 0) {
+            const teethPayload = changed.map(tooth => ({
+              tooth_id: tooth.dataset.toothId || tooth.dataset.tooth,
+              tooth_id_is_database_id: Boolean(tooth.dataset.toothId),
+              tooth_fdi: tooth.dataset.toothFdi || null,
+              condition: tooth.dataset.finding || tooth.dataset.condition || 'Sound / Healthy',
+              surfaces: String(tooth.dataset.surfaces || '').split('').filter(Boolean),
+              notes: tooth.dataset.notes || ''
+            }));
+
+            const response = await fetch('/api/appointments/' + encodeURIComponent(appointmentId) + '/teeth/batch', {
               method: 'POST',
               headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
               },
-              body: JSON.stringify({
-                tooth_id: toothId,
-                tooth_id_is_database_id: Boolean(tooth.dataset.toothId),
-                tooth_fdi: tooth.dataset.toothFdi || null,
-                condition: condition,
-                surfaces: String(tooth.dataset.surfaces || '').split('').filter(Boolean),
-                notes: tooth.dataset.notes || ''
-              })
+              body: JSON.stringify({ teeth: teethPayload })
             });
             const payload = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(payload.message || Object.values(payload.errors || {}).flat().join(', ') || 'Unable to save tooth finding.');
-            tooth.dataset.databaseCondition = condition;
-            delete tooth.dataset.finding;
-            savedTeethCount++;
+            if (!response.ok) throw new Error(payload.message || Object.values(payload.errors || {}).flat().join(', ') || 'Unable to save tooth findings.');
+
+            changed.forEach(tooth => {
+              const condition = tooth.dataset.finding || tooth.dataset.condition || 'Sound / Healthy';
+              tooth.dataset.databaseCondition = condition;
+              delete tooth.dataset.finding;
+            });
+            savedTeethCount = changed.length;
           }
 
           allTeeth.forEach(tooth => {

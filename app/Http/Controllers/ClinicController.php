@@ -293,11 +293,147 @@ class ClinicController extends Controller
         });
     }
 
-    private function resolveToothReference(Request $r): Tooth
+    public function saveTeethBatch(Request $r, Appointment $appointment)
+    {
+        $this->clinical($r, $appointment);
+        if (! $appointment->patient_id) {
+            $existing = PatientRecord::where('phone', $appointment->guest_phone)
+                ->when($appointment->guest_email, fn ($q) => $q->orWhere('email', $appointment->guest_email))
+                ->first();
+            if ($existing) {
+                $appointment->update(['patient_id' => $existing->id]);
+            }
+        }
+
+        $v = $r->validate([
+            'teeth' => 'required|array',
+            'teeth.*.tooth_id' => 'nullable',
+            'teeth.*.tooth_fdi' => 'nullable',
+            'teeth.*.tooth_id_is_database_id' => 'nullable|boolean',
+            'teeth.*.condition' => 'required|string|max:100',
+            'teeth.*.surfaces' => 'nullable|array',
+            'teeth.*.surfaces.*' => 'string|in:M,D,O,I,B,L,P',
+            'teeth.*.notes' => 'nullable|string|max:10000',
+        ]);
+
+        return DB::transaction(function () use ($appointment, $r, $v) {
+            $session = ClinicalSession::firstOrCreate(
+                ['appointment_id' => $appointment->id],
+                ['dentist_id' => $appointment->dentist_id ?? $r->user()->id, 'patient_id' => $appointment->patient_id]
+            );
+            if (! $session->patient_id && $appointment->patient_id) {
+                $session->update(['patient_id' => $appointment->patient_id]);
+            }
+
+            $entries = [];
+            foreach ($v['teeth'] as $item) {
+                $tooth = $this->resolveToothReference($item);
+                $surfaces = $item['surfaces'] ?? null;
+                $notes = $item['notes'] ?? null;
+                $condition = $item['condition'];
+
+                $entries[] = DentalChartEntry::create([
+                    'clinical_session_id' => $session->id,
+                    'patient_id' => $appointment->patient_id,
+                    'dentist_id' => $r->user()->id,
+                    'tooth_id' => $tooth->id,
+                    'condition' => $condition,
+                    'surfaces' => $surfaces,
+                    'notes' => $notes,
+                ]);
+
+                if ($appointment->patient_id) {
+                    PatientToothRecord::updateOrCreate(
+                        ['patient_id' => $appointment->patient_id, 'tooth_id' => $tooth->id],
+                        [
+                            'condition' => $condition,
+                            'surface_conditions' => $surfaces,
+                            'notes' => $notes,
+                            'last_updated_by' => $r->user()->id,
+                        ]
+                    );
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'count' => count($entries),
+                'patient_id' => $appointment->patient_id,
+                'message' => count($entries).' tooth records successfully saved.',
+            ], 200);
+        });
+    }
+
+    public function savePatientTeethBatch(Request $r, PatientRecord $patient)
+    {
+        abort_unless(in_array($r->user()->role, ['dentist', 'admin'], true), 403);
+
+        $v = $r->validate([
+            'teeth' => 'required|array',
+            'teeth.*.tooth_id' => 'nullable',
+            'teeth.*.tooth_fdi' => 'nullable',
+            'teeth.*.tooth_id_is_database_id' => 'nullable|boolean',
+            'teeth.*.condition' => 'required|string|max:100',
+            'teeth.*.surfaces' => 'nullable|array',
+            'teeth.*.surfaces.*' => 'string|in:M,D,O,I,B,L,P',
+            'teeth.*.notes' => 'nullable|string|max:10000',
+        ]);
+
+        return DB::transaction(function () use ($patient, $r, $v) {
+            $latestAppt = $patient->appointments()->where('status', 'Completed')->latest('starts_at')->first();
+            if (! $latestAppt) {
+                abort(422, 'Dental chart records require a completed patient visit.');
+            }
+            $session = ClinicalSession::firstOrCreate(
+                ['appointment_id' => $latestAppt->id],
+                ['dentist_id' => $latestAppt->dentist_id ?? $r->user()->id, 'patient_id' => $patient->id]
+            );
+            if (! $session->patient_id) {
+                $session->update(['patient_id' => $patient->id]);
+            }
+
+            $entries = [];
+            foreach ($v['teeth'] as $item) {
+                $tooth = $this->resolveToothReference($item);
+                $surfaces = $item['surfaces'] ?? null;
+                $notes = $item['notes'] ?? null;
+                $condition = $item['condition'];
+
+                $entries[] = DentalChartEntry::create([
+                    'clinical_session_id' => $session->id,
+                    'patient_id' => $patient->id,
+                    'dentist_id' => $r->user()->id,
+                    'tooth_id' => $tooth->id,
+                    'condition' => $condition,
+                    'surfaces' => $surfaces,
+                    'notes' => $notes,
+                ]);
+
+                PatientToothRecord::updateOrCreate(
+                    ['patient_id' => $patient->id, 'tooth_id' => $tooth->id],
+                    [
+                        'condition' => $condition,
+                        'surface_conditions' => $surfaces,
+                        'notes' => $notes,
+                        'last_updated_by' => $r->user()->id,
+                    ]
+                );
+            }
+
+            return response()->json([
+                'success' => true,
+                'count' => count($entries),
+                'patient_id' => $patient->id,
+                'message' => count($entries).' tooth records successfully saved.',
+            ], 200);
+        });
+    }
+
+    private function resolveToothReference(Request|array $r): Tooth
     {
         // New chart clients send FDI explicitly. This removes the ambiguity between
         // a database primary key and legacy Universal tooth numbers such as "11".
-        $fdi = $r->input('tooth_fdi');
+        $fdi = is_array($r) ? ($r['tooth_fdi'] ?? null) : $r->input('tooth_fdi');
         if ($fdi !== null && $fdi !== '') {
             $tooth = Tooth::where('fdi_number', (int) $fdi)->first();
             abort_unless($tooth, 422, 'Unknown tooth reference.');
@@ -305,7 +441,9 @@ class ClinicController extends Controller
             return $tooth;
         }
 
-        $toothInput = $r->input('tooth_id') ?? $r->input('tooth_number');
+        $toothInput = is_array($r)
+            ? ($r['tooth_id'] ?? $r['tooth_number'] ?? null)
+            : ($r->input('tooth_id') ?? $r->input('tooth_number'));
         $universalMap = [
             '1' => 18, '2' => 17, '3' => 16, '4' => 15, '5' => 14, '6' => 13, '7' => 12, '8' => 11,
             '9' => 21, '10' => 22, '11' => 23, '12' => 24, '13' => 25, '14' => 26, '15' => 27, '16' => 28,
@@ -317,7 +455,11 @@ class ClinicController extends Controller
         $key = strtoupper(trim((string) $toothInput));
 
         // Hydrated charts send the real teeth.id. Keep that route compatible.
-        if ($r->boolean('tooth_id_is_database_id') && is_numeric($toothInput)) {
+        $isDbId = is_array($r)
+            ? ! empty($r['tooth_id_is_database_id'])
+            : $r->boolean('tooth_id_is_database_id');
+
+        if ($isDbId && is_numeric($toothInput)) {
             $tooth = Tooth::find((int) $toothInput);
             if ($tooth) {
                 return $tooth;

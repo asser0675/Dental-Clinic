@@ -94,6 +94,8 @@ Route::middleware('auth')->group(function (): void {
             Route::post('/appointments/{appointment}/complete', [AppointmentController::class, 'complete']);
             Route::post('/appointments/{appointment}/start-assessment', [AppointmentController::class, 'startAssessment']);
             Route::get('/patients/{patient}/chart', [ClinicController::class, 'chart']);
+            Route::post('/appointments/{appointment}/teeth/batch', [ClinicController::class, 'saveTeethBatch']);
+            Route::post('/patients/{patient}/teeth/batch', [ClinicController::class, 'savePatientTeethBatch']);
             Route::post('/appointments/{appointment}/teeth', [ClinicController::class, 'saveTooth']);
             Route::post('/patients/{patient}/teeth', [ClinicController::class, 'savePatientTooth']);
             Route::get('/blocks', [ClinicController::class, 'blocks']);

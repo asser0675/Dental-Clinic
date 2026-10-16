@@ -214,6 +214,8 @@
       btn.classList.remove(...allStateClasses);
       btn.classList.add('tooth-sound');
       delete btn._toothRecord;
+      delete btn.dataset.databaseCondition;
+      delete btn.dataset.finding;
       updateToothFindingBelow(btn, 'Sound / Healthy');
     });
 
@@ -226,7 +228,9 @@
       toothBtns.forEach(btn => {
         btn.classList.remove(...allStateClasses);
         btn.classList.add(statusCls);
-        btn.dataset.condition = tooth.condition || 'Sound / Healthy';
+        const cond = tooth.condition || 'Sound / Healthy';
+        btn.dataset.condition = cond;
+        btn.dataset.databaseCondition = cond;
         btn.dataset.presence = tooth.presence || 'Present';
         btn._toothRecord = tooth;
         updateToothFindingBelow(btn, tooth.condition);
@@ -666,33 +670,39 @@
     const patientId = dialog.dataset.rawPatientId;
     if (!patientId) return;
     const pickedOrModified = dialog.querySelectorAll('.tooth-unit:not(.tooth-sound), .tooth-unit.tooth-picked');
-    const promises = [];
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
+    const teethPayload = [];
     pickedOrModified.forEach(tooth => {
       const toothNum = tooth.dataset.tooth;
       const condition = tooth.dataset.condition || tooth.dataset.finding || 'Sound / Healthy';
       const notes = tooth.dataset.notes || '';
       const surfaces = tooth.dataset.surfaces ? tooth.dataset.surfaces.split('') : [];
-      promises.push(
-        fetch(`/api/patients/${patientId}/teeth`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
-          },
-          body: JSON.stringify({
-            tooth_id: toothNum,
-            condition: condition,
-            surfaces: surfaces,
-            notes: notes
-          })
-        })
-      );
+      teethPayload.push({
+        tooth_id: toothNum,
+        condition: condition,
+        surfaces: surfaces,
+        notes: notes
+      });
     });
-    if (promises.length > 0) {
-      await Promise.all(promises);
+
+    if (teethPayload.length > 0) {
+      const res = await fetch(`/api/patients/${patientId}/teeth/batch`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({ teeth: teethPayload })
+      });
+      if (!res.ok) {
+        await Promise.all(teethPayload.map(item => fetch(`/api/patients/${patientId}/teeth`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+          body: JSON.stringify(item)
+        })));
+      }
     }
   }
 
