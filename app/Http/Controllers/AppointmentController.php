@@ -67,7 +67,59 @@ class AppointmentController extends Controller
         if (! $patient && ! empty($v['guest_email'])) {
             $patient = PatientRecord::where('email', $v['guest_email'])->first();
         }
-        $v['patient_id'] = $patient?->id;
+
+        if ($patient) {
+            $v['patient_id'] = $patient->id;
+            $v['guest_name'] = ! empty($v['guest_name']) ? $v['guest_name'] : $patient->name;
+            $v['guest_phone'] = ! empty($v['guest_phone']) ? $v['guest_phone'] : $patient->phone;
+            $v['guest_email'] = ! empty($v['guest_email']) ? $v['guest_email'] : $patient->email;
+
+            if (! empty($v['guest_email']) && empty($patient->email)) {
+                $patient->update(['email' => $v['guest_email']]);
+            }
+
+            // Inherit past medical history and intake from the patient if not re-entered
+            $pastIntake = [];
+            foreach ($patient->appointments()->latest('starts_at')->get() as $pastAppt) {
+                if (! empty($pastAppt->intake_details) && is_array($pastAppt->intake_details)) {
+                    $pastIntake = $pastAppt->intake_details;
+                    break;
+                }
+            }
+
+            $intake['date_of_birth'] = ! empty($intake['date_of_birth'])
+                ? $intake['date_of_birth']
+                : ($patient->date_of_birth?->format('Y-m-d') ?? ($pastIntake['date_of_birth'] ?? null));
+            $intake['sex'] = ! empty($intake['sex'])
+                ? $intake['sex']
+                : ($patient->gender ?? ($pastIntake['sex'] ?? null));
+            $intake['address'] = ! empty($intake['address'])
+                ? $intake['address']
+                : ($pastIntake['address'] ?? null);
+            $intake['allergies'] = ! empty($intake['allergies'])
+                ? $intake['allergies']
+                : ($pastIntake['allergies'] ?? null);
+            $intake['medications'] = ! empty($intake['medications'])
+                ? $intake['medications']
+                : ($pastIntake['medications'] ?? null);
+            $intake['medical_history'] = ! empty($intake['medical_history'])
+                ? $intake['medical_history']
+                : ($pastIntake['medical_history'] ?? null);
+            $intake['anxiety'] = ! empty($intake['anxiety'])
+                ? $intake['anxiety']
+                : ($pastIntake['anxiety'] ?? null);
+            $intake['bleeding'] = ! empty($intake['bleeding'])
+                ? $intake['bleeding']
+                : ($pastIntake['bleeding'] ?? null);
+            $intake['pregnancy'] = ! empty($intake['pregnancy'])
+                ? $intake['pregnancy']
+                : ($pastIntake['pregnancy'] ?? null);
+
+            $v['intake_details'] = array_filter($intake, fn ($val) => $val !== null && $val !== '');
+        } else {
+            $v['patient_id'] = null;
+            $v['intake_details'] = $intake;
+        }
 
         $start = Carbon::parse($v['starts_at']);
         $service = Service::findOrFail($v['service_id']);

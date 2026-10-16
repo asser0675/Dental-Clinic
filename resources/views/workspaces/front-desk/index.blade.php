@@ -2918,16 +2918,32 @@ View
 <small>
          Mobile
         </small>
-<strong>
-         +63 917 555 0142
+<strong id="frontAppointmentSnapshotMobile">
+         —
         </strong>
 </div>
 <div class="info-field">
 <small>
          Email
         </small>
-<strong>
-         patient@samplemail.com
+<strong id="frontAppointmentSnapshotEmail">
+         —
+        </strong>
+</div>
+<div class="info-field">
+<small>
+         Allergies
+        </small>
+<strong id="frontAppointmentSnapshotAllergies">
+         —
+        </strong>
+</div>
+<div class="info-field">
+<small>
+         Medical notes
+        </small>
+<strong id="frontAppointmentSnapshotMedNotes">
+         —
         </strong>
 </div>
 </div>
@@ -3887,6 +3903,44 @@ async function openFrontAppointment(button) {
   const frontApptDobEl = document.getElementById('frontAppointmentDob');
   if (frontApptDobEl) frontApptDobEl.textContent = data.dob || '—';
 
+  const snapshotMobile = document.getElementById('frontAppointmentSnapshotMobile');
+  if (snapshotMobile) {
+    const rawMobile = appointment?.patient?.phone || appointment?.guest_phone || '';
+    snapshotMobile.textContent = (window.CerilloFormat && window.CerilloFormat.phone)
+      ? window.CerilloFormat.phone(rawMobile)
+      : (appointment?.patient?.formatted_phone || rawMobile || '—');
+  }
+
+  const snapshotEmail = document.getElementById('frontAppointmentSnapshotEmail');
+  if (snapshotEmail) {
+    const rawEmail = appointment?.patient?.email || appointment?.guest_email || '';
+    snapshotEmail.textContent = rawEmail || 'No email on file';
+  }
+
+  const intakeObj = (appointment?.intake_details && typeof appointment.intake_details === 'object')
+    ? appointment.intake_details
+    : (typeof appointment?.intake_details === 'string' ? (function(){ try { return JSON.parse(appointment.intake_details); } catch(_) { return {}; } })() : {});
+
+  const snapshotAllergies = document.getElementById('frontAppointmentSnapshotAllergies');
+  if (snapshotAllergies) {
+    snapshotAllergies.textContent = intakeObj.allergies || appointment?.patient?.allergies || 'None reported';
+  }
+
+  const snapshotMedNotes = document.getElementById('frontAppointmentSnapshotMedNotes');
+  if (snapshotMedNotes) {
+    const parts = [];
+    if (intakeObj.medical_history || appointment?.patient?.medical_history) {
+      parts.push(intakeObj.medical_history || appointment?.patient?.medical_history);
+    }
+    if (intakeObj.medications || appointment?.patient?.medications) {
+      parts.push('Meds: ' + (intakeObj.medications || appointment?.patient?.medications));
+    }
+    if (intakeObj.concern) {
+      parts.push('Concern: ' + intakeObj.concern);
+    }
+    snapshotMedNotes.textContent = parts.length ? parts.join(' · ') : 'No notes on file';
+  }
+
   const frontReassign = document.getElementById('frontReassignDentist');
   const frontOrthoNote = document.getElementById('frontOrthoAssignmentNote');
   if (frontReassign) {
@@ -4008,6 +4062,7 @@ async function openFrontAppointment(button) {
   frontAppointmentModal.dataset.patientId = data.patientId || data.appointmentId || button.dataset.patientId || data.patient || '';
   frontAppointmentModal.showModal();
 }
+window.openFrontAppointment = openFrontAppointment;
 
 function toggleCancellation() {
   const statusSelect = document.getElementById('frontAppointmentStatus');
@@ -4633,13 +4688,20 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
 </select>
 </label>
 </div>
-<div class="existing-patient-summary" id="existingPatientSummary">
-<div><small>Patient ID</small><strong>—</strong></div>
-<div><small>Contact</small><strong>—</strong></div>
-<div><small>Email</small><strong>—</strong></div>
+<div class="existing-patient-summary" id="existingPatientSummary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px;padding:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;">
+<div><small style="color:#64748b;font-size:11px;font-weight:700;display:block;">Patient ID</small><strong id="exPatientCode" style="color:#0f172a;font-size:13px;">—</strong></div>
+<div><small style="color:#64748b;font-size:11px;font-weight:700;display:block;">Full Name</small><strong id="exPatientName" style="color:#0f172a;font-size:13px;">—</strong></div>
+<div><small style="color:#64748b;font-size:11px;font-weight:700;display:block;">Email Address</small><strong id="exPatientEmail" style="color:#0f172a;font-size:13px;">—</strong></div>
+<div><small style="color:#64748b;font-size:11px;font-weight:700;display:block;">Date of Birth / Age</small><strong id="exPatientDob" style="color:#0f172a;font-size:13px;">—</strong></div>
+<div><small style="color:#64748b;font-size:11px;font-weight:700;display:block;">Contact Number</small><strong id="exPatientPhone" style="color:#0f172a;font-size:13px;">—</strong></div>
+<div style="grid-column:1/-1;"><small style="color:#64748b;font-size:11px;font-weight:700;display:block;">Medical &amp; Allergy Alerts</small><strong id="exPatientMedical" style="color:#0284c7;font-size:13px;">—</strong></div>
 </div>
 </div>
-<div class="form-grid new-patient-fields" id="newPatientFields">
+<div class="form-grid new-patient-fields" id="newPatientFields" style="margin-top:14px;">
+<div style="grid-column:1/-1;margin-bottom:-4px;">
+<h5 id="patientFieldsHeader" style="margin:0;font-size:14px;font-weight:700;color:#1e293b;">Patient Details &amp; Contact</h5>
+<p id="patientFieldsSub" class="small muted" style="margin:2px 0 0;">Enter complete patient identity and communication details.</p>
+</div>
 <label>
          First name
          <input id="regFirstName" required=""/>
@@ -4667,8 +4729,8 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
 </select>
 </label>
 <label>
-         Email (optional)
-         <input id="regEmail" type="email"/>
+         Email address
+         <input id="regEmail" placeholder="patient@example.com" type="email"/>
 </label>
 <label>
          Primary phone
@@ -4696,17 +4758,21 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
          Address
          <input id="regAddress" required=""/>
 </label>
+<div style="grid-column:1/-1;margin-top:10px;margin-bottom:-4px;border-top:1px solid #e2e8f0;padding-top:12px;">
+<h5 style="margin:0;font-size:14px;font-weight:700;color:#0284c7;">Medical &amp; Allergy History</h5>
+<p class="small muted" style="margin:2px 0 0;">Review or record medical conditions, allergies, and safety alerts for this visit.</p>
+</div>
 <label>
          Allergies (optional)
-         <textarea id="regAllergies" placeholder="leave blank if none" rows="3"></textarea>
+         <textarea id="regAllergies" placeholder="e.g. Penicillin, latex, anesthesia allergy — or leave blank if none" rows="3"></textarea>
 </label>
 <label>
          Current medications (optional)
-         <textarea id="regMeds" placeholder="leave blank if none" rows="3"></textarea>
+         <textarea id="regMeds" placeholder="e.g. Amlodipine, maintenance drugs — or leave blank if none" rows="3"></textarea>
 </label>
 <label class="span-2">
          Medical history (optional)
-         <textarea id="regMedicalHistory" placeholder="Relevant medical conditions, surgeries, pregnancy, bleeding risk, etc." rows="3"></textarea>
+         <textarea id="regMedicalHistory" placeholder="Relevant medical conditions, surgeries, pregnancy, bleeding risk, hypertension, diabetes, etc." rows="3"></textarea>
 </label>
 <label>
          Dental anxiety
@@ -4959,6 +5025,8 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     const picker = document.getElementById('existingPatientPicker');
     const newFields = document.getElementById('newPatientFields');
     const select = document.getElementById('existingPatientSelect');
+    const headerTitle = document.getElementById('patientFieldsHeader');
+    const headerSub = document.getElementById('patientFieldsSub');
     const newRequired = ['regFirstName','regLastName','regDob','regPhone','regAddress'];
 
     function setMode(mode) {
@@ -4966,57 +5034,120 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
       button.classList.toggle('active', button.dataset.registrationMode === mode);
      });
      const existing = mode === 'existing';
-     picker.hidden = !existing;
-     newFields.hidden = existing;
-     select.required = existing;
+     if (picker) picker.hidden = !existing;
+     if (newFields) newFields.hidden = false;
+     if (select) select.required = existing;
      newRequired.forEach(function (id) {
       const input = document.getElementById(id);
       if (input) input.required = !existing;
      });
+     if (headerTitle) {
+      headerTitle.textContent = existing ? 'Verified Patient Details & Medical Updates' : 'Patient Details & Contact';
+     }
+     if (headerSub) {
+      headerSub.textContent = existing
+       ? 'Real-time verified details from patient record. You can review or update contact details and record new medical alerts for this visit.'
+       : 'Enter complete patient identity, contact details, and medical intake information.';
+     }
      modal.dataset.patientMode = mode;
+     if (existing && select && select.value) {
+      fillExistingPatient();
+     }
     }
 
     async function fillExistingPatient() {
-     const option = select.selectedOptions[0];
-     const cells = summary.querySelectorAll('strong');
+     const option = select?.selectedOptions[0];
+     const elCode = document.getElementById('exPatientCode');
+     const elName = document.getElementById('exPatientName');
+     const elEmail = document.getElementById('exPatientEmail');
+     const elDob = document.getElementById('exPatientDob');
+     const elPhone = document.getElementById('exPatientPhone');
+     const elMed = document.getElementById('exPatientMedical');
+
      if (!option || !option.value) {
-      if (cells[0]) cells[0].textContent = '—';
-      if (cells[1]) cells[1].textContent = '—';
-      if (cells[2]) cells[2].textContent = '—';
+      if (elCode) elCode.textContent = '—';
+      if (elName) elName.textContent = '—';
+      if (elEmail) elEmail.textContent = '—';
+      if (elDob) elDob.textContent = '—';
+      if (elPhone) elPhone.textContent = '—';
+      if (elMed) elMed.textContent = '—';
       return;
      }
-     if (cells[0]) cells[0].textContent = option.dataset.code || 'Loading...';
-     if (cells[1]) cells[1].textContent = window.CerilloFormat?.phone(option.dataset.phone) || option.dataset.phone || '—';
-     if (cells[2]) cells[2].textContent = option.dataset.email || '—';
+
+     const initialCode = option.dataset.code || '—';
+     const initialName = option.dataset.name || 'Loading patient...';
+     const initialPhone = window.CerilloFormat?.phone(option.dataset.phone) || option.dataset.phone || '—';
+     const initialEmail = option.dataset.email || '—';
+
+     if (elCode) elCode.textContent = initialCode;
+     if (elName) elName.textContent = initialName;
+     if (elEmail) elEmail.textContent = initialEmail || 'No email on file';
+     if (elPhone) elPhone.textContent = initialPhone;
+
      try {
       const response = await fetch('/api/patients/' + encodeURIComponent(option.value), { headers: { Accept: 'application/json' }, cache: 'no-store' });
       if (!response.ok) throw new Error('Patient details could not be loaded.');
       const payload = await response.json();
       const patient = payload.patient || {};
+      const intake = payload.intake || {};
       const fullName = String(patient.name || option.dataset.name || '').trim().split(/\s+/);
+      const rawDob = patient.date_of_birth ? String(patient.date_of_birth).slice(0, 10) : '';
+      let dobDisplay = '—';
+      if (rawDob) {
+       const age = Math.floor((Date.now() - new Date(rawDob).getTime()) / 31557600000);
+       dobDisplay = age >= 0 ? `${rawDob} (${age} yrs)` : rawDob;
+      }
+
+      const pEmail = patient.email || option.dataset.email || '';
+      const pPhone = window.CerilloFormat?.normalizePhone(patient.phone) || patient.phone || '';
+      const allergies = patient.allergies && !/^none( reported)?$/i.test(patient.allergies) ? patient.allergies : (intake.allergies || '');
+      const meds = patient.medications && !/^none$/i.test(patient.medications) ? patient.medications : (intake.medications || '');
+      const medHistory = patient.medical_history && !/^no known/i.test(patient.medical_history) ? patient.medical_history : (intake.medical_history || '');
+
       const map = {
        regFirstName: fullName.shift() || '',
        regLastName: fullName.join(' '),
-       regDob: patient.date_of_birth || '',
-       regEmail: patient.email || '',
-       regPhone: window.CerilloFormat?.normalizePhone(patient.phone) || patient.phone || '',
-       regAddress: patient.address && patient.address !== 'Not provided' ? patient.address : '',
-       regAllergies: patient.allergies && !/^none( reported)?$/i.test(patient.allergies) ? patient.allergies : 'None',
-       regMeds: patient.medications && !/^none$/i.test(patient.medications) ? patient.medications : 'None'
+       regDob: rawDob,
+       regSex: patient.gender || intake.sex || intake.gender || 'Female',
+       regEmail: pEmail,
+       regPhone: pPhone,
+       regPhone2: window.CerilloFormat?.normalizePhone(intake.phone2 || intake.secondary_phone) || '',
+       regAddress: patient.address && patient.address !== 'Not provided' ? patient.address : (intake.address || ''),
+       regAllergies: allergies,
+       regMeds: meds,
+       regMedicalHistory: medHistory,
+       regAnxiety: patient.anxiety || intake.anxiety || 'Low',
+       regBleeding: patient.bleeding_tendency || intake.bleeding || 'No known issue',
+       regPregnancy: patient.pregnancy_status || intake.pregnancy || 'Not applicable / No',
+       regLastDentalVisit: intake.last_visit ? String(intake.last_visit).slice(0, 10) : ''
       };
-      Object.entries(map).forEach(([id, value]) => { const input = document.getElementById(id); if (input) input.value = value || ''; });
-      if (cells[0]) cells[0].textContent = patient.formatted_patient_code || option.dataset.code || '—';
-      if (cells[1]) cells[1].textContent = patient.formatted_phone || window.CerilloFormat?.phone(patient.phone) || '—';
-      if (cells[2]) cells[2].textContent = patient.email || '—';
+
+      Object.entries(map).forEach(([id, value]) => {
+       const input = document.getElementById(id);
+       if (input) input.value = value || '';
+      });
+
+      if (elCode) elCode.textContent = patient.formatted_patient_code || option.dataset.code || '—';
+      if (elName) elName.textContent = patient.name || option.dataset.name || '—';
+      if (elEmail) elEmail.textContent = pEmail || 'No email on file';
+      if (elDob) elDob.textContent = dobDisplay;
+      if (elPhone) elPhone.textContent = patient.formatted_phone || window.CerilloFormat?.phone(pPhone) || '—';
+      if (elMed) {
+       const alertParts = [];
+       if (allergies) alertParts.push('Allergies: ' + allergies);
+       if (medHistory) alertParts.push('Medical: ' + medHistory);
+       if (meds) alertParts.push('Meds: ' + meds);
+       elMed.textContent = alertParts.length ? alertParts.join(' · ') : 'No known systemic conditions / allergies';
+      }
      } catch (error) {
-      if (cells[0]) cells[0].textContent = option.dataset.code || '—';
+      if (elCode) elCode.textContent = option.dataset.code || '—';
      }
     }
 
     modeButtons.forEach(function (button) {
      button.addEventListener('click', function () { setMode(button.dataset.registrationMode); });
     });
-    select.addEventListener('change', fillExistingPatient);
+    select?.addEventListener('change', fillExistingPatient);
     setMode(modal.dataset.patientMode || 'new');
    })();
   </script>
@@ -5937,7 +6068,7 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     }).join('');
     const today = new Date();
     dateInput.min = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-    dateInput.value = '';
+    dateInput.value = dateInput.min;
   }
   ['regFirstName', 'regLastName'].forEach(id => document.getElementById(id)?.addEventListener('input', event => {
     event.target.value = event.target.value.replace(/[^a-zA-Z\s]/g, '');
@@ -5977,8 +6108,7 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
   patientSelect?.addEventListener('change', () => {
     const option = patientSelect.selectedOptions[0];
     if (!option?.value) return;
-    document.getElementById('regEmail').value = option.dataset.email || '';
-    document.getElementById('regPhone').value = window.CerilloFormat?.normalizePhone(option.dataset.phone) || option.dataset.phone || '';
+    if (typeof fillExistingPatient === 'function') fillExistingPatient();
   });
   [serviceSelect, dentistSelect, dateInput].forEach(input => input?.addEventListener('change', () => loadSlots().catch(error => alert(error.message))));
   setInterval(() => {
@@ -6003,9 +6133,9 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     const last = document.getElementById('regLastName')?.value.trim() || '';
     const option = patientSelect?.selectedOptions[0];
     const data = {
-      guest_name: existingMode ? (option?.dataset.name || '') : `${first} ${last}`.trim(),
-      guest_phone: document.getElementById('regPhone').value,
-      guest_email: document.getElementById('regEmail').value || null,
+      guest_name: existingMode ? (option?.dataset.name || `${first} ${last}`.trim()) : `${first} ${last}`.trim(),
+      guest_phone: document.getElementById('regPhone').value || option?.dataset.phone || '',
+      guest_email: document.getElementById('regEmail').value || option?.dataset.email || null,
       dentist_id: dentistSelect.value,
       service_id: serviceSelect.value,
       starts_at: timeSelect.value,
@@ -6040,6 +6170,7 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     } catch (error) { alert(error.message); }
     finally { save.disabled = false; }
   }, true);
+
   loadCatalog().catch(() => {});
 })();
 </script>
@@ -6469,10 +6600,10 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     } else {
       if (checkoutAmountToPay) {
         checkoutAmountToPay.value = balance.toFixed(2);
-        checkoutAmountToPay.max = balance.toFixed(2);
+        checkoutAmountToPay.removeAttribute('max');
         checkoutAmountToPay.readOnly = false;
         checkoutAmountToPay.classList.remove('is-readonly-amount');
-        checkoutAmountToPay.title = 'The payable amount for this treatment.';
+        checkoutAmountToPay.title = 'Amount to pay (defaults to base price; can be adjusted to match dentist billing ledger).';
       }
       if (checkoutTreatmentDesc) {
         checkoutTreatmentDesc.textContent = `${option.dataset.serviceName || option.textContent} · Remaining ${money(balance)}`;

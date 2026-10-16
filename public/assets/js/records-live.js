@@ -1281,22 +1281,23 @@
     }
   }
 
-  function load() {
+  async function load() {
     const role = document.body?.dataset.workspaceRole || '';
-    const queue = [
-      loadPatients(),
-      loadAppointments(),
-    ];
-    if (role === 'admin' || role === 'front_desk') {
-      queue.push(loadTransactions());
+    try {
+      await loadPatients();
+      await loadAppointments();
+      if (role === 'admin' || role === 'front_desk') {
+        await loadTransactions();
+      }
+      if (role === 'admin') {
+        await loadAdminAccounts();
+        await loadAdminServices();
+        await loadAdminActivity();
+        await loadAdminReports();
+      }
+    } catch (error) {
+      console.error(error);
     }
-    if (role === 'admin') {
-      queue.push(loadAdminAccounts());
-      queue.push(loadAdminServices());
-      queue.push(loadAdminActivity());
-      queue.push(loadAdminReports());
-    }
-    Promise.all(queue).catch(error => console.error(error));
   }
   load();
   function prepareAdminAppointmentChart(dialog) {

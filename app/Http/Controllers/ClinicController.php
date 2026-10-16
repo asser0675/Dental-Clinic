@@ -380,20 +380,20 @@ class ClinicController extends Controller
         $service = Service::find($serviceId) ?? $appointment?->service;
 
         if ($appointment && $service) {
-            $alreadyPaid = (float) Transaction::where('appointment_id', $appointment->id)
-                ->where('status', 'completed')
-                ->sum('amount');
-            $charge = (float) ($appointment->service?->price ?? $service->price);
-            $remaining = max(0, $charge - $alreadyPaid);
-            abort_if($remaining <= 0, 422, 'This treatment has no outstanding balance.');
-
             $serviceName = (string) ($appointment->service?->name ?? $service->name);
             $installmentEligible = (bool) preg_match('/ortho|brace/i', $serviceName);
-            if (! $installmentEligible && abs((float) $v['amount'] - $remaining) > 0.009) {
-                abort(422, 'The payable amount for this treatment is fixed at PHP '.number_format($remaining, 2).'.');
-            }
-            if ($installmentEligible && (float) $v['amount'] > $remaining + 0.009) {
-                abort(422, 'Payment cannot exceed the remaining balance of PHP '.number_format($remaining, 2).'.');
+
+            // Services catalog prices serve as base prices; the actual payable amount reflects
+            // the clinical billing ledger as determined by the attending dentist.
+            if ($installmentEligible) {
+                $alreadyPaid = (float) Transaction::where('appointment_id', $appointment->id)
+                    ->where('status', 'completed')
+                    ->sum('amount');
+                $charge = (float) ($appointment->service?->price ?? $service->price);
+                $remaining = max(0, $charge - $alreadyPaid);
+                if ($remaining > 0 && (float) $v['amount'] > $remaining + 0.009) {
+                    abort(422, 'Payment cannot exceed the remaining balance of PHP '.number_format($remaining, 2).'.');
+                }
             }
         }
 
