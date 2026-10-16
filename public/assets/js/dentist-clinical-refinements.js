@@ -114,13 +114,13 @@
   }
 
   function patientChartIsReadOnly() {
-    const modal = document.getElementById('dentistPatientModal');
+    const modal = document.getElementById('dentistPatientModal') || document.getElementById('patientViewModal');
     if (!modal) return;
     modal.querySelectorAll('.premium-dental-chart .tooth-unit').forEach(tooth => {
-      tooth.setAttribute('aria-disabled', 'true');
-      tooth.setAttribute('tabindex', '-1');
-      tooth.classList.remove('tooth-picked', 'selected');
-      tooth.setAttribute('aria-pressed', 'false');
+      tooth.removeAttribute('aria-disabled');
+      tooth.removeAttribute('tabindex');
+      tooth.style.pointerEvents = 'auto';
+      tooth.style.cursor = 'pointer';
     });
   }
 

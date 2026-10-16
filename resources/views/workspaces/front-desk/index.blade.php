@@ -6079,31 +6079,40 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
   async function loadSlots() {
     const previousValue = timeSelect.value;
     const availabilityText = modal.querySelector('.availability-note span');
-    timeSelect.disabled = true;
-    timeSelect.innerHTML = '<option value="">Loading available times...</option>';
+    if (!previousValue && timeSelect.options.length <= 1) {
+      timeSelect.disabled = true;
+      timeSelect.innerHTML = '<option value="">Loading available times...</option>';
+    }
     if (!dentistSelect.value || !dateInput.value || !serviceSelect.value) {
       timeSelect.innerHTML = '<option value="">Select service, dentist and date first</option>';
       if (availabilityText) availabilityText.textContent = 'Choose a service, dentist and date to load real-time availability.';
       return [];
     }
-    const slots = await json(`/api/slots?dentist_id=${encodeURIComponent(dentistSelect.value)}&date=${encodeURIComponent(dateInput.value)}&service_id=${encodeURIComponent(serviceSelect.value)}&_=${Date.now()}`, { cache: 'no-store' });
-    const now = new Date();
-    const availableSlots = slots.filter(slot => {
-      if (!slot.available) return false;
-      const start = new Date(String(slot.starts_at).replace(' ', 'T'));
-      return !Number.isNaN(start.getTime()) && start.getTime() > now.getTime();
-    });
-    timeSelect.innerHTML = '<option value="">Select available time</option>' + availableSlots.map(slot => {
-      const parts = String(slot.starts_at).replace('T', ' ').slice(11, 16).split(':').map(Number);
-      const label = `${(parts[0] % 12) || 12}:${String(parts[1]).padStart(2, '0')} ${parts[0] >= 12 ? 'PM' : 'AM'}`;
-      return `<option value="${slot.starts_at}">${label}</option>`;
-    }).join('');
-    if (previousValue && availableSlots.some(slot => String(slot.starts_at) === previousValue)) timeSelect.value = previousValue;
-    timeSelect.disabled = availableSlots.length === 0;
-    if (availabilityText) availabilityText.textContent = availableSlots.length
-      ? `${availableSlots.length} real-time slot${availableSlots.length === 1 ? '' : 's'} available. Times already passed or booked are hidden.`
-      : 'No available times remain for this dentist and date.';
-    return availableSlots;
+    try {
+      const slots = await json(`/api/slots?dentist_id=${encodeURIComponent(dentistSelect.value)}&date=${encodeURIComponent(dateInput.value)}&service_id=${encodeURIComponent(serviceSelect.value)}&_=${Date.now()}`, { cache: 'no-store' });
+      const now = new Date();
+      const availableSlots = slots.filter(slot => {
+        if (!slot.available) return false;
+        const start = new Date(String(slot.starts_at).replace(' ', 'T'));
+        return !Number.isNaN(start.getTime()) && start.getTime() > now.getTime();
+      });
+      timeSelect.innerHTML = '<option value="">Select available time</option>' + availableSlots.map(slot => {
+        const parts = String(slot.starts_at).replace('T', ' ').slice(11, 16).split(':').map(Number);
+        const label = `${(parts[0] % 12) || 12}:${String(parts[1]).padStart(2, '0')} ${parts[0] >= 12 ? 'PM' : 'AM'}`;
+        return `<option value="${slot.starts_at}">${label}</option>`;
+      }).join('');
+      if (previousValue && availableSlots.some(slot => String(slot.starts_at) === previousValue)) {
+        timeSelect.value = previousValue;
+      }
+      timeSelect.disabled = availableSlots.length === 0;
+      if (availabilityText) availabilityText.textContent = availableSlots.length
+        ? `${availableSlots.length} real-time slot${availableSlots.length === 1 ? '' : 's'} available. Times already passed or booked are hidden.`
+        : 'No available times remain for this dentist and date.';
+      return availableSlots;
+    } catch (err) {
+      timeSelect.disabled = false;
+      throw err;
+    }
   }
   patientSelect?.addEventListener('change', () => {
     const option = patientSelect.selectedOptions[0];
@@ -6111,24 +6120,12 @@ $pCode = $p->formatted_patient_code ?? ('PT-'.date('Y').'-'.str_pad($p->id, 4, '
     if (typeof fillExistingPatient === 'function') fillExistingPatient();
   });
   [serviceSelect, dentistSelect, dateInput].forEach(input => input?.addEventListener('change', () => loadSlots().catch(error => alert(error.message))));
-  setInterval(() => {
-    if (modal.open && dentistSelect.value && dateInput.value && serviceSelect.value) {
-      loadSlots().catch(() => {});
-    }
-  }, 10000);
   save.addEventListener('click', async event => {
     event.preventDefault();
     event.stopImmediatePropagation();
     const existingMode = modal.querySelector('[data-registration-mode="existing"].active');
     const form = modal.querySelector('form');
     if (!form.reportValidity() || !timeSelect.value) { alert('Choose an available date and time before confirming.'); return; }
-    const selectedSlot = timeSelect.value;
-    const freshSlots = await loadSlots();
-    if (!selectedSlot || !freshSlots.some(slot => String(slot.starts_at) === selectedSlot && slot.available)) {
-      alert('That time is no longer available. The schedule has been refreshed; please choose another time.');
-      return;
-    }
-    timeSelect.value = selectedSlot;
     const first = document.getElementById('regFirstName')?.value.trim() || '';
     const last = document.getElementById('regLastName')?.value.trim() || '';
     const option = patientSelect?.selectedOptions[0];

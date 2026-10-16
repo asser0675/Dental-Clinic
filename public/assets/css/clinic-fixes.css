@@ -1201,19 +1201,22 @@ body.dark-mode .sidebar-category-divider {
   display: block !important;
 }
 
-/* Patient Records module: Teeth are read-only and non-clickable */
-#patientViewModal:not([data-opened-from-appointment="true"]) .tooth-unit,
-#dentistPatientModal:not([data-opened-from-appointment="true"]) .tooth-unit,
-dialog.clinical-record-modal:not([data-opened-from-appointment="true"]) .premium-dental-chart .tooth-unit {
-  pointer-events: none !important;
-  cursor: default !important;
-}
-
-/* Appointments module: Teeth are clickable and interactive */
-#patientViewModal[data-opened-from-appointment="true"] .tooth-unit,
-#dentistPatientModal[data-opened-from-appointment="true"] .tooth-unit,
+/* Dental chart teeth: always clickable and interactive across all modals */
+body .workspace-body[data-workspace-role="dentist"] #dentistPatientModal .premium-dental-chart .tooth-unit,
+body .workspace-body[data-workspace-role="dentist"] #dentistPatientModal .tooth-unit,
+body .workspace-body[data-workspace-role="admin"] #patientViewModal .premium-dental-chart .tooth-unit,
+body .workspace-body[data-workspace-role="admin"] #patientViewModal .tooth-unit,
+body #patientViewModal .premium-dental-chart .tooth-unit,
+body #dentistPatientModal .premium-dental-chart .tooth-unit,
+body #patientViewModal .tooth-unit,
+body #dentistPatientModal .tooth-unit,
+#patientViewModal .tooth-unit,
+#dentistPatientModal .tooth-unit,
 #dentistAppointmentDetailModal .tooth-unit,
-dialog.clinical-record-modal[data-opened-from-appointment="true"] .premium-dental-chart .tooth-unit {
+#appointmentModal .tooth-unit,
+dialog.clinical-record-modal .premium-dental-chart .tooth-unit,
+.premium-dental-chart .tooth-unit,
+.tooth-unit {
   pointer-events: auto !important;
   cursor: pointer !important;
 }

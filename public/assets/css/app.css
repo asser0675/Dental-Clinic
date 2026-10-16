@@ -9678,10 +9678,10 @@ body.admin-management-scope #dashboard .activity-list time { margin-bottom: 3px;
 body.admin-management-scope #dashboard .activity-list strong { color:#243650; font-size: 12px; }
 body.admin-management-scope #dashboard .activity-list p { margin-top:2px; font-size:10.5px; line-height:1.4; }
 
-/* Patient record Dental Chart is a historical record, not an editor. */
+/* Patient record Dental Chart tooth unit interactivity */
 #patientViewModal .premium-dental-chart .tooth-unit {
-  pointer-events: none !important;
-  cursor: default !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 #patientViewModal .premium-dental-chart .tooth-unit:hover,
 #patientViewModal .premium-dental-chart .tooth-unit:focus,
@@ -11299,11 +11299,10 @@ body.dark-mode hr { border-color: #2a3546 !important; }
 .workspace-body[data-workspace-role="dentist"] .premium-dental-chart .tooth-grid[data-dentition-grid="mixed"] .tooth-canine .tooth-silhouette { width: 35px !important; }
 .workspace-body[data-workspace-role="dentist"] .premium-dental-chart .tooth-grid[data-dentition-grid="mixed"] .tooth-incisor .tooth-silhouette { width: 33px !important; }
 
-/* Patient Records are finalized records: no tooth editing/click affordance here.
-   The Appointment Details odontogram remains fully interactive. */
+/* Dentist patient modal odontogram tooth unit interactivity */
 .workspace-body[data-workspace-role="dentist"] #dentistPatientModal .premium-dental-chart .tooth-unit {
-  pointer-events: none !important;
-  cursor: default !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 .workspace-body[data-workspace-role="dentist"] #dentistPatientModal .premium-dental-chart .tooth-unit:hover .tooth-silhouette,
 .workspace-body[data-workspace-role="dentist"] #dentistPatientModal .premium-dental-chart .tooth-unit:focus .tooth-silhouette {

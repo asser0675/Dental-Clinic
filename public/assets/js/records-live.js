@@ -242,27 +242,15 @@
     const chartTitle = chart.querySelector('.premium-chart-title h4');
     const chartDesc = chart.querySelector('.premium-chart-title p');
     if (chartTitle) chartTitle.textContent = 'Dental Chart Record';
-    const isClickable = modal.dataset.openedFromAppointment === 'true';
     if (chartDesc) {
-      chartDesc.textContent = isClickable
-        ? 'Click on teeth to record clinical findings and plan procedures for this appointment.'
-        : 'Recorded tooth conditions from completed clinical visits. This chart is read-only.';
+      chartDesc.textContent = 'Click on teeth to record clinical findings, view tooth history and plan procedures.';
     }
 
     chart.querySelectorAll('.tooth-unit').forEach(tooth => {
-      if (!isClickable) {
-        tooth.setAttribute('aria-disabled', 'true');
-        tooth.setAttribute('tabindex', '-1');
-        tooth.style.pointerEvents = 'none';
-        tooth.style.cursor = 'default';
-      } else {
-        tooth.removeAttribute('aria-disabled');
-        tooth.removeAttribute('tabindex');
-        tooth.style.pointerEvents = 'auto';
-        tooth.style.cursor = 'pointer';
-      }
-      tooth.classList.remove('tooth-picked', 'selected');
-      tooth.setAttribute('aria-pressed', 'false');
+      tooth.removeAttribute('aria-disabled');
+      tooth.removeAttribute('tabindex');
+      tooth.style.pointerEvents = 'auto';
+      tooth.style.cursor = 'pointer';
     });
 
     let panel = chart.querySelector('[data-patient-record-prescriptions]');
